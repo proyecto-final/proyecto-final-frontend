@@ -3,14 +3,18 @@ import colors from 'vuetify/es5/util/colors'
 export default {
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
   ssr: false,
+  server: {
+    port: process.env.NUXT_PORT,
+    host: process.env.NUXT_HOST
+  },
 
   // Target: https://go.nuxtjs.dev/config-target
   target: 'static',
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    titleTemplate: '%s - proyecto-final-frontend',
-    title: 'proyecto-final-frontend',
+    titleTemplate: '%s - Sherlock',
+    title: 'Sherlock',
     htmlAttrs: {
       lang: 'en'
     },
@@ -36,7 +40,9 @@ export default {
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
-  components: true,
+  components: [
+    { path: '~/components', prefix: '', pathPrefix: false }
+  ],
 
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
