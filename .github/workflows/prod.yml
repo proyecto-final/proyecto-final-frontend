@@ -1,0 +1,54 @@
+name: Sherlock_PROD
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+    branches:
+      - main
+      - master
+jobs:
+  build-and-deploy-prod-with-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+      - name: Cache node modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-node-modules
+        with:
+          # npm cache files are stored in `~/.npm` on Linux/macOS
+          path: ~/.yarn
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+      - name: Build prod
+        run: |
+          cp .env.prod .env
+          echo >> .env
+          echo "VUE_APP_VERSION=${{ github.sha }}" >> .env
+          echo >> .env
+          yarn install
+          yarn run build
+          yarn run generate
+          echo "${{ github.ref }} ${{ github.sha }}" > dist/release-version.txt
+          echo "{ tag:\"${{ github.ref }}\", commit:\"${{ github.sha }}\", branch:\"${{ github.ref }}\", action_uuid:\"${{ github.run_id }}	\", run_number:\"${{ github.run_number }}	\"} " > dist/release-version.json
+          mv dist
+      - uses: actions/upload-artifact@v3
+        with:
+          name: dist
+          path: |
+            dist/**
+      - name: Set credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+      - name: Deploy to prod
+        run: |
+          aws s3 sync ./dist s3://preview.emissary.ai

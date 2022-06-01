@@ -10,6 +10,8 @@
 
 <script>
 export default {
-  name: 'IndexPage'
+  mounted () {
+    this.$noty.error('ERROR')
+  }
 }
 </script>

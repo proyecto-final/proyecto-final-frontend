@@ -9,50 +9,27 @@ export default class NotificationSnackbar {
     this.observers.push(observer)
   }
 
-  toast (text, timeout, type, title, action) {
+  // { title, text, timeout, type, action, icon }
+  toast (text, type, params) {
     const parent = window.$nuxt
     const component = new (Vue.extend(Snackbar))({ parent }).$mount()
     document.querySelector('.v-main')?.appendChild(component.$el)
-    component.show({ text, timeout, type, title, snackbarAction: action })
+    component.show({ text, type, ...params })
   }
 
-  error (text, title, action, timeout = 5000) {
-    this.toast(text, timeout, 'error', title, action)
+  error (text, params) {
+    this.toast(text, 'error', params)
   }
 
-  warn (text, title, action, timeout = 5000) {
-    this.toast(text, timeout, 'warning', title, action)
+  warn (text, params) {
+    this.toast(text, 'warning', params)
   }
 
-  message (text, title, action, timeout = 5000) {
-    this.toast(text, timeout, 'message', title, action)
+  notify (text, params) {
+    this.toast(text, 'info', params)
   }
 
-  notify (text, title, action, timeout = 5000) {
-    this.toast(text, timeout, 'info', title, action)
-  }
-
-  success (text, title, action, timeout = 5000) {
-    this.toast(text, timeout, 'success', title, action)
-  }
-
-  desktopNotification (title, body) {
-    Notification.requestPermission((result) => {
-      if (result === 'granted') {
-        try {
-          // eslint-disable-next-line no-new
-          new Notification(title, {
-            body
-          })
-        } catch (e) {
-          navigator.serviceWorker.ready.then((registration) => {
-            registration.showNotification(title, {
-              body,
-              vibrate: [100, 50, 100]
-            })
-          })
-        }
-      }
-    })
+  success (text, params) {
+    this.toast(text, 'success', params)
   }
 }
