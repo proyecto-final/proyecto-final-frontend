@@ -37,7 +37,6 @@ jobs:
           yarn run generate
           echo "${{ github.ref }} ${{ github.sha }}" > dist/release-version.txt
           echo "{ tag:\"${{ github.ref }}\", commit:\"${{ github.sha }}\", branch:\"${{ github.ref }}\", action_uuid:\"${{ github.run_id }}	\", run_number:\"${{ github.run_number }}	\"} " > dist/release-version.json
-          mv dist
       - uses: actions/upload-artifact@v3
         with:
           name: dist
