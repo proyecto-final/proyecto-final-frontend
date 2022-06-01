@@ -17,7 +17,7 @@ export default function ({ app, store }, inject) {
   const notificationSnackbar = new NotificationSnackbar()
   inject('noty', notificationSnackbar)
   clazzList.forEach((clazzObject) => {
-    const instance = new clazzObject.Clazz({ $axios: app.$axios, store, router: app.router, $apollo: app.apolloProvider.defaultClient })
+    const instance = new clazzObject.Clazz({ $axios: app.$axios, store, router: app.router })
     inject(clazzObject.serviceName, instance)
   })
 }
