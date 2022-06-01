@@ -20,14 +20,10 @@
       <div class="d-flex justify-space-between">
         <div>
           <div v-if="title">
-            <EmBody2 bold>
-              {{ title }}
-            </EmBody2>
+            {{ title }}
           </div>
           <div>
-            <EmBody3>
-              {{ text }}
-            </EmBody3>
+            {{ text }}
           </div>
         </div>
         <div class="align-content-center d-flex">
@@ -46,15 +42,13 @@ export default {
     text: '',
     title: '',
     type: 'success',
-    timeout: -1,
-    snackbarAction: null
+    timeout: 5000,
+    snackbarAction: null,
+    icon: null
   }),
   computed: {
-    icon () {
-      return this.type === 'message' ? 'mdi-chat' : null
-    },
     color () {
-      return this.type === 'message' ? 'info' : this.type
+      return this.type
     }
   },
   watch: {
@@ -66,13 +60,14 @@ export default {
     }
   },
   methods: {
-    show ({ title, text, timeout, type, snackbarAction }) {
+    show ({ title, text, timeout, type, action, icon }) {
       this.title = title
       this.text = text
       this.type = type
+      this.icon = icon
       this.timeout = timeout || this.timeout
       this.snackbar = true
-      this.snackbarAction = snackbarAction
+      this.snackbarAction = action
     },
     close () {
       this.snackbar = false
