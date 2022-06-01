@@ -50,4 +50,4 @@ jobs:
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
       - name: Deploy to prod
         run: |
-          aws s3 sync ./dist s3://preview.emissary.ai
+          aws s3 sync ./dist s3://sherlock-security
