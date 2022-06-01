@@ -11,7 +11,7 @@
 <script>
 export default {
   mounted () {
-    this.$noty.error('ERROR')
+    this.$noty.success('ANDUVO')
   }
 }
 </script>
