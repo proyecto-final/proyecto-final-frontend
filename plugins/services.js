@@ -1,5 +1,6 @@
 import { camelCase } from 'lodash'
 import NotificationSnackbar from '~/services/helpers/NotificationSnackbar'
+import Rules from '~/services/helpers/Rules'
 
 // DYNAMIC IMPORT OF SERVICES FROM API
 const clazzList = []
@@ -20,4 +21,5 @@ export default function ({ app, store }, inject) {
     const instance = new clazzObject.Clazz({ $axios: app.$axios, store, router: app.router })
     inject(clazzObject.serviceName, instance)
   })
+  inject('rules', new Rules())
 }
