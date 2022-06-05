@@ -1,6 +1,6 @@
 export default function ({ store, $axios, redirect, app, $nuxt, $route }) {
   $axios.onResponse((response) => {
-    if ([403, 401].includes(response?.status)) {
+    if ([403].includes(response?.status)) {
       return redirect('/logout')
     }
     return response
@@ -8,7 +8,7 @@ export default function ({ store, $axios, redirect, app, $nuxt, $route }) {
 
   $axios.onError((error) => {
     const code = parseInt(error.response?.status || 0)
-    const has2Logout = code === 401
+    const has2Logout = code === 403
     if (has2Logout) {
       return redirect('/logout')
     }

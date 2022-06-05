@@ -34,6 +34,13 @@
                 :rules="[$rules.required('contraseña')]"
               />
             </div>
+            <v-expand-transition>
+              <div v-show="error">
+                <v-alert type="warning">
+                  {{ error }}
+                </v-alert>
+              </div>
+            </v-expand-transition>
             <div class="mb-8">
               <NuxtLink class="text-decoration-none" to="/forgot-password">
                 <ShSpecialLabel>
@@ -41,7 +48,7 @@
                 </ShSpecialLabel>
               </NuxtLink>
             </div>
-            <ShButton block large type="submit">
+            <ShButton block large type="submit" :loading="loading">
               Iniciar sesión
             </ShButton>
           </v-form>
@@ -57,14 +64,21 @@ export default {
     user: {
       username: '',
       password: ''
-    }
+    },
+    loading: false,
+    error: ''
   }),
   methods: {
     login () {
-      if (!this.$refs.form.validate()) {
+      if (!this.$refs.form.validate() || this.loading) {
         return
       }
-      this.$userService.authenticate(this.user)
+      this.error = ''
+      this.loading = true
+      this.$userService.authenticate(this.user).then((user) => {
+        this.$router.push('/')
+      }).catch(() => { this.error = 'Credenciales invalidas' })
+        .finally(() => { this.loading = false })
     }
   }
 }
