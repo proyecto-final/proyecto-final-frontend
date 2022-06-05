@@ -5,7 +5,7 @@
         <v-btn
           v-bind="{...$attrs,...attrs}"
           :class="{[buttonClass]: true}"
-          color="primary"
+          :color="color"
           icon
           :small="small"
           v-on="$listeners"

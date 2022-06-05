@@ -1,6 +1,6 @@
 <template>
   <v-row justify="center" class="h-100">
-    <v-col cols="12" sm="8" md="6" class="d-flex align-center">
+    <v-col cols="12" sm="8" md="6" lg="4" class="d-flex align-center">
       <v-card elevation="0" class="w-100">
         <v-card-text class="pa-8">
           <v-form ref="form" @submit.prevent="login">
@@ -36,7 +36,7 @@
             </div>
             <v-expand-transition>
               <div v-show="error">
-                <v-alert type="warning">
+                <v-alert type="warning" icon="mdi-alert">
                   {{ error }}
                 </v-alert>
               </div>

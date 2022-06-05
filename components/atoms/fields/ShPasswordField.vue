@@ -15,12 +15,14 @@
       <ShIconButton
         v-if="type === 'password'"
         icon="mdi-eye"
+        color="neutral"
         title="Mostrar contraseña"
         @click="type = 'text'"
       />
       <ShIconButton
         v-if="type === 'text'"
         icon="mdi-eye-off"
+        color="neutral"
         title="Ocultar contraseña"
         @click="type = 'password'"
       />
