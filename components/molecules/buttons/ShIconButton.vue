@@ -55,8 +55,3 @@ export default {
   }
 }
 </script>
-<style scoped>
-.position-absolute{
-  position: absolute;
-}
-</style>
