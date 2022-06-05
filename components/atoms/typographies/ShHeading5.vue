@@ -1,7 +1,7 @@
 <template>
-  <h4 class="sh-heading-4" :class="{'neutral-text': neutral}">
+  <h5 class="sh-heading-5" :class="{'neutral-text': neutral}">
     <slot />
-  </h4>
+  </h5>
 </template>
 <script>
 export default {
@@ -14,7 +14,7 @@ export default {
 }
 </script>
 <style scoped>
-.sh-heading-4 {
+.sh-heading-5 {
   font-family: 'Nunito-Regular';
   font-style: normal;
   font-weight: 600;
