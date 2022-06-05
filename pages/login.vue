@@ -1,13 +1,13 @@
 <template>
   <v-row justify="center" class="h-100">
-    <v-col cols="12" sm="8" md="6" lg="4" class="d-flex align-center">
+    <v-col cols="12" sm="8" md="6" lg="5" class="d-flex align-center">
       <v-card elevation="0" class="w-100">
         <v-card-text class="pa-8">
           <v-form ref="form" @submit.prevent="login">
             <div class="mb-4">
-              <ShContentHeader>
+              <ShHeading3 neutral>
                 Inicio de sesión
-              </ShContentHeader>
+              </ShHeading3>
             </div>
             <div class="d-flex justify-center mb-8">
               <div>
@@ -18,9 +18,9 @@
               </div>
             </div>
             <div class="mb-4">
-              <ShContentTitle>
+              <ShDisplayS>
                 Para acceder, ingresá tus datos
-              </ShContentTitle>
+              </ShDisplayS>
             </div>
             <div>
               <ShTextField
@@ -43,7 +43,7 @@
             </v-expand-transition>
             <div class="mb-8">
               <NuxtLink class="text-decoration-none" to="/forgot-password">
-                <ShSpecialLabel>
+                <ShSpecialLabel neutral>
                   ¿Olvidaste tu contraseña?
                 </ShSpecialLabel>
               </NuxtLink>

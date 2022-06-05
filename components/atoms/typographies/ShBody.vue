@@ -1,5 +1,5 @@
 <template>
-  <span class="sh-special-label" :class="{'neutral-text': neutral}">
+  <span class="sh-body" :class="{'neutral-text': neutral, 'strong-text': strong}">
     <slot />
   </span>
 </template>
@@ -9,16 +9,20 @@ export default {
     neutral: {
       type: Boolean,
       default: false
+    },
+    strong: {
+      type: Boolean,
+      default: false
     }
   }
 }
 </script>
 <style scoped>
-.sh-special-label {
+.sh-body {
   font-family: 'Nunito-Regular';
   font-style: normal;
   font-weight: 400;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 24px;
   color: var(--v-neutral-darken2);
 }

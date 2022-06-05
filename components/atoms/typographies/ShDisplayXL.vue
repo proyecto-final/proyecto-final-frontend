@@ -1,15 +1,15 @@
 <template>
-  <h2 class="sh-content-title">
+  <h1 class="sh-display-xl">
     <slot />
-  </h2>
+  </h1>
 </template>
 <style scoped>
-.sh-content-title {
+.sh-display-xl {
   font-family: 'Nunito-Regular';
-  font-style: normal;
+    font-style: normal;
   font-weight: 700;
-  font-size: 20px;
-  line-height: 28px;
+  font-size: 38px;
+  line-height: 44px;
   color: var(--v-neutral-darken2);
 }
 </style>

@@ -11,3 +11,15 @@
 .text-decoration-none{
   text-decoration: none !important;
 }
+
+.neutral-text{
+  color: var(--v-neutral-base) !important;
+}
+
+.neutral-darken-text{
+  color: var(--v-neutral-darken2);
+}
+
+.strong-text{
+  font-weight: 700 !important;
+}

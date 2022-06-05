@@ -1,7 +1,7 @@
 <template>
-  <span class="sh-special-label" :class="{'neutral-text': neutral}">
+  <h3 class="sh-heading-3" :class="{'neutral-text': neutral}">
     <slot />
-  </span>
+  </h3>
 </template>
 <script>
 export default {
@@ -14,11 +14,11 @@ export default {
 }
 </script>
 <style scoped>
-.sh-special-label {
+.sh-heading-3 {
   font-family: 'Nunito-Regular';
   font-style: normal;
-  font-weight: 400;
-  font-size: 14px;
+  font-weight: 600;
+  font-size: 16px;
   line-height: 24px;
   color: var(--v-neutral-darken2);
 }
