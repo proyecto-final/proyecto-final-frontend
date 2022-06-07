@@ -48,7 +48,7 @@
                 </ShSpecialLabel>
               </NuxtLink>
             </div>
-            <ShButton block large type="submit" :loading="loading">
+            <ShButton block type="submit" :loading="loading">
               Iniciar sesión
             </ShButton>
           </v-form>

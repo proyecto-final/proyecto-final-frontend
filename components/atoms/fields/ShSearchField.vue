@@ -1,11 +1,7 @@
 <template>
-  <v-text-field
-    class="neutral-background"
-    filled
-    dense
-    rounded
-    height="48"
+  <ShTextField
     v-bind="$attrs"
+    class="align-magnify"
     v-on="$listeners"
   >
     <template v-for="(_, scopedSlotName) in $scopedSlots" #[scopedSlotName]="slotData">
@@ -14,10 +10,16 @@
     <template v-for="(_, slotName) in $slots" #[slotName]>
       <slot :name="slotName" />
     </template>
-  </v-text-field>
+    <template #prepend-inner>
+      <v-icon>
+        mdi-magnify
+      </v-icon>
+    </template>
+  </ShTextField>
 </template>
 <style scoped>
-.neutral-background > ::v-deep.v-input__control > .v-input__slot {
-  background: var(--v-neutral-lighten2) !important  ;
+.align-magnify ::v-deep .v-input__prepend-inner{
+  align-self: center;
+  margin-top: 0 !important;
 }
 </style>

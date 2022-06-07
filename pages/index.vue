@@ -6,6 +6,11 @@
         <ShButton>
           Hola
         </ShButton>
+        <v-card-text>
+          <div>
+            <ShSearchField placeholder="Buscar por nombre" />
+          </div>
+        </v-card-text>
       </v-card>
     </v-col>
   </v-row>
