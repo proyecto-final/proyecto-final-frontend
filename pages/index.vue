@@ -1,7 +1,7 @@
 <template>
   <v-row justify="center" align="center">
     <v-col cols="12" sm="8" md="6">
-      <v-card class="logo py-4 d-flex justify-center">
+      <v-card class="logo py-4">
         <v-card-title> Test </v-card-title>
         <ShButton>
           Hola
@@ -9,6 +9,11 @@
         <v-card-text>
           <div>
             <ShSearchField placeholder="Buscar por nombre" />
+          </div>
+          <div>
+            <ShButton disabled text type="submit" :loading="loading">
+              Iniciar sesión
+            </ShButton>
           </div>
         </v-card-text>
       </v-card>

@@ -9,6 +9,12 @@
   </v-btn>
 </template>
 <style scoped>
+.theme--light.sh-button::before{
+  opacity: 0.10;
+}
+.theme--light.sh-button:hover::before{
+  opacity: 0.20;
+}
 .sh-button{
   font-family: 'Nunito-Regular';
   font-style: normal;
