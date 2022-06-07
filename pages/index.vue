@@ -13,5 +13,8 @@
 
 <script>
 export default {
+  created () {
+    this.$store.commit('navigation/SET_PAGE_TITLE', 'Index')
+  }
 }
 </script>

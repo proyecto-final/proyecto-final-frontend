@@ -1,5 +1,11 @@
-.bg-default{
+.bg-login{
   background-color: var(--v-background-base);
-  color: red;
 }
 
+.bg-default{
+  background-color: var(--v-background-lighten2);
+}
+
+.bg-gray {
+  background-color: var(--v-neutral-lighten2);
+}
