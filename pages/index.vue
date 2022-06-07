@@ -11,9 +11,17 @@
             <ShSearchField placeholder="Buscar por nombre" />
           </div>
           <div>
-            <ShButton disabled text type="submit" :loading="loading">
+            <ShButton text type="submit">
               Iniciar sesión
             </ShButton>
+          </div>
+          <div>
+            <ShChip color="warning">
+              Procesando...
+            </ShChip>
+            <ShChip color="primary">
+              Procesando...
+            </ShChip>
           </div>
         </v-card-text>
       </v-card>
