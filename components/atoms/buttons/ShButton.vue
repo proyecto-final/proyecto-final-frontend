@@ -12,7 +12,7 @@
 .sh-button{
   font-family: 'Nunito-Regular';
   font-style: normal;
-  font-weight: 600;
+  font-weight: 500;
   font-size: 16px;
   line-height: 24px;
 }
