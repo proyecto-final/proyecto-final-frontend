@@ -1,0 +1,25 @@
+@font-face {
+  font-family: "Nunito-Regular";
+  src: local("Nunito-Regular"),
+   url(~assets/fonts/Nunito-Regular.ttf) format("truetype");
+}
+
+.text-transform-none{
+  text-transform: none !important;
+}
+
+.text-decoration-none{
+  text-decoration: none !important;
+}
+
+.neutral-text{
+  color: var(--v-neutral-base) !important;
+}
+
+.neutral-darken-text{
+  color: var(--v-neutral-darken2);
+}
+
+.strong-text{
+  font-weight: 700 !important;
+}

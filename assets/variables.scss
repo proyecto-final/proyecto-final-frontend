@@ -2,3 +2,14 @@
 //
 // The variables you want to modify
 // $font-size-root: 20px;
+
+$btn-border-radius: 12px;
+$btn-sizes:	(
+  'small': 32,
+  'default': 40,
+  'large': 48
+);
+
+$card-border-radius: 24px;
+$alert-border-radius: 12px;
+$text-field-rounded-border-radius: 12px;

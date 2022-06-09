@@ -3,6 +3,9 @@
     <v-col cols="12" sm="8" md="6">
       <v-card class="logo py-4 d-flex justify-center">
         <v-card-title> Test </v-card-title>
+        <ShButton>
+          Hola
+        </ShButton>
       </v-card>
     </v-col>
   </v-row>
@@ -10,8 +13,5 @@
 
 <script>
 export default {
-  mounted () {
-    this.$noty.success('ANDUVO')
-  }
 }
 </script>
