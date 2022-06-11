@@ -22,6 +22,7 @@
         :mini-variant="closed"
         app
         floating
+        mobile-breakpoint="-1"
         mini-variant-width="90"
         width="280"
       >
