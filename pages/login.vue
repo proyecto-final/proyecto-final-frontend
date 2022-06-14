@@ -11,10 +11,7 @@
             </div>
             <div class="d-flex justify-center mb-8">
               <div>
-                <v-img
-                  src="logo.svg"
-                  width="200"
-                />
+                <ShLogo width="200" />
               </div>
             </div>
             <div class="mb-4">
@@ -48,7 +45,7 @@
                 </ShSpecialLabel>
               </NuxtLink>
             </div>
-            <ShButton block large type="submit" :loading="loading">
+            <ShButton block type="submit" :loading="loading">
               Iniciar sesión
             </ShButton>
           </v-form>

@@ -20,6 +20,14 @@
   color: var(--v-neutral-darken2);
 }
 
+.inherit-text{
+  color: inherit !important;
+}
+
 .strong-text{
   font-weight: 700 !important;
+}
+
+.white-text{
+  color: white !important;
 }
