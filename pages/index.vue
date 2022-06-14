@@ -23,6 +23,16 @@
               Procesando...
             </ShChip>
           </div>
+          <div>
+            Primer caso: cantidad de avatars supera el limite
+            <ShAvatars :avatars-to-show="3" :avatars="[{text:'MU', color:'#BC98F3'},{text:'RD', color:'#FF6961'}, {text:'ED', color:'#F7CAE7'}, {text:'JC', color:'#636363'}, {text:'JC', color:'#A0D2F3'}]" />
+            Segundo caso: cantidad de avatars menor al limite
+            <ShAvatars :avatars-to-show="6" :avatars="[{text:'MU', color:'#BC98F3'},{text:'RD', color:'#FF6961'}, {text:'ED', color:'#F7CAE7'}, {text:'JC', color:'#636363'}, {text:'JC', color:'#A0D2F3'}]" />
+            Tercer caso: cantidad de avatars coincide con el limite
+            <ShAvatars :avatars-to-show="5" :avatars="[{text:'MU', color:'#BC98F3'},{text:'RD', color:'#FF6961'}, {text:'ED', color:'#F7CAE7'}, {text:'JC', color:'#636363'}, {text:'JC', color:'#A0D2F3'}]" />
+            Caso default: se muestran todos los avatars
+            <ShAvatars :avatars="[{text:'MU', color:'#BC98F3'},{text:'RD', color:'#FF6961'}, {text:'ED', color:'#F7CAE7'}, {text:'JC', color:'#636363'}, {text:'JC', color:'#A0D2F3'},{text:'MU', color:'#BC98F3'},{text:'RD', color:'#FF6961'}, {text:'ED', color:'#F7CAE7'}, {text:'JC', color:'#636363'}, {text:'JC', color:'#A0D2F3'}]" />
+          </div>
         </v-card-text>
       </v-card>
     </v-col>
