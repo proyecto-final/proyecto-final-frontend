@@ -26,6 +26,13 @@
         </ShHeading5>
       </slot>
     </template>
+    <template v-for="(header) in headers" #[`item.${header.value}`]="itemData">
+      <slot :name="`item.${header.value}`" v-bind="itemData">
+        <ShBodySmall>
+          {{ itemData.item[header.value] }}
+        </ShBodySmall>
+      </slot>
+    </template>
   </v-data-table>
 </template>
 <script>
