@@ -8,6 +8,7 @@
             hide-details
             :clearable="true"
             placeholder="Buscar por nombre"
+            maxlength="32"
             @input="fetchDebounced"
           />
         </v-col>
@@ -97,6 +98,8 @@ export default {
     }).then((result) => {
       this.organizations = result.rows
       this.serverItemsLength = result.count
+    }).catch(() => {
+      this.$noty.warn('Hubo un error al cargar las organizaciones')
     })
   },
   created () {
