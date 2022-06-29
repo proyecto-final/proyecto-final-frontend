@@ -110,6 +110,11 @@ export default {
           to: '/organization'
         },
         {
+          icon: 'mdi-web',
+          text: 'Organizaciones',
+          to: '/organizations'
+        },
+        {
           icon: 'mdi-account',
           text: 'Perfil',
           to: '/profile'
