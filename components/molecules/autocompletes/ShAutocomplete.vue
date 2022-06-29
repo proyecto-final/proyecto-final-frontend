@@ -10,7 +10,9 @@
     v-on="$listeners"
   >
     <template #label>
-      <ShSpecialLabel> {{ label }} </ShSpecialLabel>
+      <ShSpecialLabel v-if="label">
+        {{ label }}
+      </ShSpecialLabel>
     </template>
   </v-autocomplete>
 </template>
@@ -19,7 +21,7 @@ export default {
   props: {
     label: {
       type: String,
-      required: true
+      default: ''
     }
   }
 }
