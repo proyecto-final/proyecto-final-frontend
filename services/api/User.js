@@ -1,11 +1,11 @@
-export default class ExampleService {
+export default class User {
   constructor ({ $axios, store, router }) {
     this.$axios = $axios
     this.store = store
     this.router = router
   }
 
-  loadAllContacts (params) {
-    return this.$axios.$get('/api/endpoint/', { params })
+  authenticate (user) {
+    return this.$axios.$post('/api/user/authenticate', user)
   }
 }

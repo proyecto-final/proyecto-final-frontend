@@ -1,6 +1,24 @@
 @import './variables.scss';
+@import './text.scss';
+@import './color.scss';
+@import './dimension.scss';
+@import './general.scss';
+@import './transitions.scss';
 
-// General
-html, body{
-  overflow-y: auto !important;
+html, body, .sh-scrollbar{
+  overflow-x: hidden;
+  overflow-y: auto;
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: #C1C6DD !important;
+    padding-left: 2px;
+    border-radius: 7px;
+  }
 }
