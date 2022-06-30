@@ -5,7 +5,7 @@
     </ShHeading2>
     <v-row justify="end" align="center">
       <v-col cols="12" sm="8" md="6">
-        <v-card flat>
+        <v-card elevation="1">
           <v-card-text>
             <div class="d-flex justify-space-between ma-7">
               <div>
@@ -43,14 +43,17 @@
                 </ShBodySmall>
               </div>
             </div>
-            <div class="d-flex justify-space-between ma-7">
-              <div>
+            <div class="d-flex justify-space-between ma-7 align-center">
+              <div class="d-flex flex-column">
                 <ShBodySmall class="neutral-text">
                   Contraseña
                 </ShBodySmall>
+                <ShBodySmall class="neutral-text">
+                  Cambiá tu contraseña
+                </ShBodySmall>
               </div>
               <div>
-                <v-icon class="neutral-text strong-text">
+                <v-icon color="neutral base">
                   mdi-chevron-right
                 </v-icon>
               </div>
