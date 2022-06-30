@@ -100,7 +100,7 @@ export default {
           accent: colors.grey.darken3,
           secondary: colors.amber.darken3,
           info: colors.teal.lighten1,
-          warning: '#8C4E02',
+          warning: colors.orange.darken2,
           error: colors.deepOrange.accent4,
           success: '#086E08',
           background: {
