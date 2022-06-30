@@ -73,7 +73,7 @@
           </v-list>
         </div>
       </v-navigation-drawer>
-      <div class="mx-4">
+      <div class="ma-4">
         <Nuxt />
       </div>
     </v-main>
