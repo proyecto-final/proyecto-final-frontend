@@ -73,9 +73,9 @@
           </v-list>
         </div>
       </v-navigation-drawer>
-      <v-container>
+      <div class="mx-4">
         <Nuxt />
-      </v-container>
+      </div>
     </v-main>
   </v-app>
 </template>
