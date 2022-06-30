@@ -6,6 +6,11 @@
     <template v-for="(_, slotName) in $slots" #[slotName]>
       <slot :name="slotName" />
     </template>
+    <template #default>
+      <ShSpecialButton class="white-text">
+        <slot />
+      </ShSpecialButton>
+    </template>
   </v-btn>
 </template>
 <style scoped>

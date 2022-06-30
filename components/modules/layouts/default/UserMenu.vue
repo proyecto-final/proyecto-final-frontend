@@ -1,6 +1,6 @@
 <template>
   <div :class="{ 'bg-gray rounded-border': open }" class="clickable pa-2 smooth-transition">
-    <v-menu v-model="open" offset-y nudge-bottom="24">
+    <v-menu v-model="open" offset-y nudge-bottom="24" min-width="150">
       <template #activator="{ on }">
         <span v-on="on">
           <v-avatar color="green darken-2" size="32">
@@ -18,8 +18,8 @@
       </template>
       <template #default>
         <v-list>
-          <v-list-item>
-            Logout
+          <v-list-item @click="$router.push('/logout')">
+            <ShBody>Cerrar sesión</ShBody>
           </v-list-item>
         </v-list>
       </template>
