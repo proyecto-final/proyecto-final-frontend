@@ -6,6 +6,11 @@
     <template v-for="(_, slotName) in $slots" #[slotName]>
       <slot :name="slotName" />
     </template>
+    <template #default>
+      <ShSpecialButton class="white-text">
+        <slot />
+      </ShSpecialButton>
+    </template>
   </v-btn>
 </template>
 <style scoped>
@@ -18,7 +23,7 @@
 .sh-button{
   font-family: 'Nunito-Regular';
   font-style: normal;
-  font-weight: 600;
+  font-weight: 500;
   font-size: 16px;
   line-height: 24px;
 }

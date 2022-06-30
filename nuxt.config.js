@@ -111,7 +111,8 @@ export default {
             lighten2: '#DFE2F5',
             base: '#585E76',
             darken2: '#242736'
-          }
+          },
+          avatar6: '#77C07B'
         }
       }
     }

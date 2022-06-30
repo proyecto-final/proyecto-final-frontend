@@ -22,6 +22,7 @@
         :mini-variant="closed"
         app
         floating
+        mobile-breakpoint="-1"
         mini-variant-width="90"
         width="280"
       >
@@ -107,6 +108,11 @@ export default {
           icon: 'mdi-domain',
           text: 'Organización',
           to: '/organization'
+        },
+        {
+          icon: 'mdi-web',
+          text: 'Organizaciones',
+          to: '/organizations'
         },
         {
           icon: 'mdi-account',
