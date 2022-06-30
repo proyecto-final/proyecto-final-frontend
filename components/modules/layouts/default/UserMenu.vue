@@ -18,8 +18,8 @@
       </template>
       <template #default>
         <v-list>
-          <v-list-item>
-            Logout
+          <v-list-item @click="$router.push('/logout')">
+            <ShBody>Cerrar sesión</ShBody>
           </v-list-item>
         </v-list>
       </template>

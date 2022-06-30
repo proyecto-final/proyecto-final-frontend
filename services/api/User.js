@@ -8,4 +8,8 @@ export default class User {
   authenticate (user) {
     return this.$axios.$post('/api/user/authenticate', user)
   }
+
+  logout () {
+    return this.$axios.$post('/api/user/logout')
+  }
 }
