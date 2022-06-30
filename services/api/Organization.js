@@ -8,4 +8,8 @@ export default class Organization {
   get (params) {
     return this.$axios.$get('/api/organization', { params })
   }
+
+  save (organization) {
+    return this.$axios.$post('/api/organization', organization)
+  }
 }

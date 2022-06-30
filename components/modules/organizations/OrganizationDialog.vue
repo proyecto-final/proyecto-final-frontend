@@ -4,6 +4,8 @@
     confirm-text="Crear"
     title="Crear organización"
     :async-confirm-function="save"
+    v-on="$listeners"
+    @open="setOrganization"
   >
     <template #activator="{on}">
       <ShButton :block="$vuetify.breakpoint.smAndDown" v-on="on">
@@ -21,28 +23,36 @@
           :rules="[$rules.required('nombre')]"
         />
       </div>
-      <div>
-        <ShTextField
-          v-model="organization.color"
-          label="Color *"
-          :rules="[$rules.required('nombre')]"
-        />
+      <div class="mb-4">
+        <ShHeading4 neutral class="mb-2">
+          Seleccionar color personalizado
+        </ShHeading4>
+        <ShColorPicker v-model="organization.color" />
       </div>
     </template>
   </ShAsyncDialog>
 </template>
 <script>
+const getEmptyOrganization = () => ({
+  name: '',
+  color: ''
+})
 export default {
   data: () => ({
-    organization: {
-      name: '',
-      color: ''
-    }
+    organization: getEmptyOrganization()
   }),
   methods: {
     save () {
-      console.log('SAVE')
-      return Promise.resolve(true)
+      return this.$organizationService.save(this.organization).catch((error) => {
+        const msg = error.response?.data?.msg
+        if (msg) {
+          this.$noty.warn(msg.join(', '))
+        }
+        return false
+      })
+    },
+    setOrganization () {
+      this.organization = getEmptyOrganization()
     }
   }
 }
