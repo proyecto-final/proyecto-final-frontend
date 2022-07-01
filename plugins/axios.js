@@ -12,9 +12,6 @@ export default function ({ store, $axios, redirect, app, $nuxt, $route }) {
     if (has2Logout) {
       return redirect('/logout')
     }
-    if (code === 403) {
-      return redirect('/invalid-url')
-    }
   })
   $axios.onRequest((request) => {
     request.headers.common['Content-Language'] = 'en'
