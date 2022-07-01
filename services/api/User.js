@@ -12,4 +12,8 @@ export default class User {
   getProfile (user) {
     return this.$axios.$get('/api/user/profile', user)
   }
+
+  logout () {
+    return this.$axios.$post('/api/user/logout')
+  }
 }
