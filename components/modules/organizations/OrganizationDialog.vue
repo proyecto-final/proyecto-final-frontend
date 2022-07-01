@@ -20,7 +20,7 @@
         <ShTextField
           v-model="organization.name"
           label="Nombre *"
-          :rules="[$rules.required('nombre')]"
+          :rules="[$rules.required('nombre'), $rules.fieldLength('nombre', 8, 32)]"
         />
       </div>
       <div class="mb-4">
