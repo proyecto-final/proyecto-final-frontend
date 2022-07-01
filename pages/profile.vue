@@ -66,13 +66,25 @@
 </template>
 <script>
 export default {
+  data: () => ({
+    nameSurename: {
+      type: String,
+      required: true
+    },
+    username: {
+      type: String,
+      required: true
+    },
+    email: {
+      type: String,
+      required: true
+    }
+  }),
+  fetch () {
+
+  },
   created () {
     this.$store.commit('navigation/SET_PAGE_TITLE', 'Perfil')
   }
 }
 </script>
-<style scoped>
-.sh-card {
-
-}
-</style>
