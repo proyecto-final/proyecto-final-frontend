@@ -9,7 +9,7 @@
           <v-card-text>
             <div class="d-flex justify-space-between ma-7">
               <div>
-                <ShBodySmall class="neutral-text">
+                <ShBodySmall class="neutral-lighten-text">
                   Nombre y apellido
                 </ShBodySmall>
               </div>
@@ -21,7 +21,7 @@
             </div>
             <div class="d-flex justify-space-between ma-7">
               <div>
-                <ShBodySmall class="neutral-text">
+                <ShBodySmall class="neutral-lighten-text">
                   Nombre de usuario
                 </ShBodySmall>
               </div>
@@ -33,7 +33,7 @@
             </div>
             <div class="d-flex justify-space-between ma-7">
               <div>
-                <ShBodySmall class="neutral-text">
+                <ShBodySmall class="neutral-lighten-text">
                   E-mail
                 </ShBodySmall>
               </div>
@@ -45,7 +45,7 @@
             </div>
             <div class="d-flex justify-space-between ma-7 align-center">
               <div class="d-flex flex-column">
-                <ShBodySmall class="neutral-text">
+                <ShBodySmall class="neutral-lighten-text">
                   Contraseña
                 </ShBodySmall>
                 <ShBodySmall class="neutral-text">
