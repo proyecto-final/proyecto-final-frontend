@@ -2,7 +2,7 @@
   <ShTextField
     :type="type"
     v-bind="$attrs"
-    class="sh-text-field"
+    class="sh-password-field"
     v-on="$listeners"
   >
     <template v-for="(_, scopedSlotName) in $scopedSlots" #[scopedSlotName]="slotData">
@@ -17,6 +17,7 @@
         icon="mdi-eye"
         color="neutral"
         title="Mostrar contraseña"
+        class="h-22-px"
         @click="type = 'text'"
       />
       <ShIconButton
@@ -37,9 +38,12 @@ export default {
 }
 </script>
 <style scoped>
-.sh-text-field ::v-deep.v-input__append-inner {
+.sh-password-field ::v-deep.v-input__append-inner {
   margin-top: 0px !important;
   display: flex;
   align-self: center;
+}
+.sh-password-field ::v-deep .v-input__slot{
+  padding-right: 10px !important;
 }
 </style>

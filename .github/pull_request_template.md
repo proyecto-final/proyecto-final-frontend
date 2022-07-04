@@ -1,10 +1,14 @@
 ### Summary
-[Link to relevant Shortcut issue]
+[Link a tarea de shortcut]
 
-[INSERT SUMMARY HERE]
+[Foto de la tarea]
 
-### Migration and Deployment Notes
-[INSERT NOTES HERE]
-
-
-If there is a related pull request in another repository, include notes about that.
+[Indicar tareas de backend o frontend necesarias para probar]
+### Check items
+- [ ] Flujo válido
+- [ ] Flujo inválido
+- [ ] Matcheo con diseño
+- [ ] Validación de inputs
+- [ ] Seguridad
+- [ ] Feedback ante errores(mensajes de error)
+- [ ] Feedback ante carga(animación de carga)
