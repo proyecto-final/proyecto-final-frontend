@@ -53,9 +53,9 @@
                 </ShBodySmall>
               </div>
               <div>
-                <v-icon color="neutral base">
-                  mdi-chevron-right
-                </v-icon>
+                <div>
+                  <ProfileChangePasswordDialog />
+                </div>
               </div>
             </div>
           </v-card-text>
