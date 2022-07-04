@@ -87,7 +87,7 @@ export default {
     },
     passwordMatches () {
       if (this.user.newPassword !== this.user.repeatNewPassword) {
-        return 'Las contraseñas no coinciden'
+        return 'La contraseña no coincide'
       }
     }
   }
