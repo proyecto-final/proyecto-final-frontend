@@ -9,7 +9,7 @@ export default class User {
     return this.$axios.$post('/api/user/authenticate', user)
   }
 
-  getProfile (user) {
-    return this.$axios.$get('/api/user/profile', user)
+  getProfile () {
+    return this.$axios.$get('/api/user/me')
   }
 }
