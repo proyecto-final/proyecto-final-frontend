@@ -14,9 +14,12 @@
     </template>
     <template #default>
       <template v-if="showSuccess">
-        <v-icon color="success">
+        <v-icon color="success" align-center>
           mdi-check-circle
         </v-icon>
+        <ShHeading2 neutral align-center>
+          Tu contraseña se cambió con éxito.
+        </ShHeading2>
       </template>
       <template v-else>
         <div>
