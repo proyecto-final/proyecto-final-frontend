@@ -1,6 +1,6 @@
 <template>
   <div class="d-flex justify-end">
-    <ShHeading2 class="neutral-text mt-3 ml-2">
+    <ShHeading2 neutral class="mt-3 ml-2">
       Información personal
     </ShHeading2>
     <v-row justify="end" align="center" class="mt-2">
@@ -9,52 +9,51 @@
           <v-card-text>
             <div class="d-flex justify-space-between ma-7">
               <div>
-                <ShBodySmall class="neutral-lighten-text">
+                <ShBodySmall neutral>
                   Nombre y apellido
                 </ShBodySmall>
               </div>
               <div>
-                <ShBodySmall class="neutral-text strong-text">
+                <ShBodySmall neutral strong>
                   {{ user.name }}
                 </ShBodySmall>
               </div>
             </div>
             <div class="d-flex justify-space-between ma-7">
               <div>
-                <ShBodySmall class="neutral-lighten-text">
+                <ShBodySmall neutral>
                   Nombre de usuario
                 </ShBodySmall>
               </div>
               <div>
-                <ShBodySmall class="neutral-text strong-text">
+                <ShBodySmall neutral strong>
                   {{ user.username }}
                 </ShBodySmall>
               </div>
             </div>
             <div class="d-flex justify-space-between ma-7">
               <div>
-                <ShBodySmall class="neutral-lighten-text">
+                <ShBodySmall neutral>
                   E-mail
                 </ShBodySmall>
               </div>
               <div>
-                <ShBodySmall class="neutral-text strong-text">
+                <ShBodySmall neutral strong>
                   {{ user.email }}
                 </ShBodySmall>
               </div>
             </div>
             <div class="d-flex justify-space-between ma-7 align-center">
               <div class="d-flex flex-column">
-                <ShBodySmall class="neutral-lighten-text">
+                <ShBodySmall neutral>
                   Contraseña
                 </ShBodySmall>
-                <ShBodySmall class="neutral-text">
-                  <!--Cambiar "neutral-text" cuando exista el color gris claro-->
+                <ShBodySmall class="neutral-lighten-text">
                   Cambiá tu contraseña
                 </ShBodySmall>
               </div>
               <div>
-                <v-icon color="neutral base">
+                <v-icon color="neutral">
                   mdi-chevron-right
                 </v-icon>
               </div>
