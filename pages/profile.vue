@@ -80,9 +80,6 @@ export default {
       required: true
     }
   }),
-  fetch () {
-
-  },
   created () {
     this.$store.commit('navigation/SET_PAGE_TITLE', 'Perfil')
   }
