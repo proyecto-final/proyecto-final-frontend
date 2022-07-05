@@ -104,9 +104,7 @@ export default {
       this.user = getEmptyPassword()
     },
     passwordMatches () {
-      if (this.user.newPassword !== this.user.repeatNewPassword) {
-        return 'La contraseña no coincide'
-      }
+      return this.user.newPassword === this.user.repeatNewPassword || 'La contraseña no coincide'
     }
   }
 }
