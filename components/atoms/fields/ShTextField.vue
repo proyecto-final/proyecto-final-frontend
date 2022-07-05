@@ -18,6 +18,6 @@
 </template>
 <style scoped>
 .neutral-background > ::v-deep.v-input__control > .v-input__slot {
-  background: var(--v-neutral-darken1) !important  ;
+  background: var(--v-neutral-lighten2) !important  ;
 }
 </style>

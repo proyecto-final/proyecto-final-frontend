@@ -108,9 +108,8 @@ export default {
             base: '#E0E2F5'
           },
           neutral: {
-            lighten2: '#989DB8',
+            lighten2: '#DFE2F5',
             base: '#585E76',
-            darken1: '#DFE2F5',
             darken2: '#242736'
           },
           avatar6: '#77C07B'
