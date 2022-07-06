@@ -54,9 +54,31 @@
           </ShNumberAvatar>
         </template>
         <template #[`item.actions`]="{ item }">
-          <ShButton text @click="$router.push(`/organization/${item.id}`)">
-            Ver organización
-          </ShButton>
+          <div class="d-flex">
+            <ShButton text @click="$router.push(`/organization/${item.id}`)">
+              Ver organización
+            </ShButton>
+            <v-menu v-model="display[item.id]" offset-y close-on-content-click>
+              <template #activator="{ on, attrs }">
+                <v-btn
+                  icon
+                  v-bind="attrs"
+                  v-on="on"
+                >
+                  <v-icon>
+                    mdi-dots-vertical
+                  </v-icon>
+                </v-btn>
+              </template>
+              <v-list>
+                <OrganizationEnableDialog
+                  :organization="item"
+                  @close="display[item.id] = false"
+                  @updated="(updatedOrganization) => setOrganization(item, updatedOrganization)"
+                />
+              </v-list>
+            </v-menu>
+          </div>
         </template>
       </ShTable>
     </div>
@@ -67,6 +89,7 @@ import { debounce } from 'lodash'
 export default {
   data: () => ({
     organizations: [],
+    display: {},
     options: {
       page: 1,
       itemsPerPage: 10
@@ -119,7 +142,10 @@ export default {
   methods: {
     fetchDebounced: debounce(function () {
       this.$fetch()
-    }, 500)
+    }, 500),
+    setOrganization (organization, updatedOrganization) {
+      Object.assign(organization, updatedOrganization)
+    }
   }
 }
 </script>
