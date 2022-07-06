@@ -55,13 +55,13 @@
                 <v-list-item-icon>
                   <v-avatar color="blue darken-2">
                     <ShSpecialLabel class="white-text">
-                      BO
+                      P1
                     </ShSpecialLabel>
                   </v-avatar>
                 </v-list-item-icon>
                 <v-list-item-title>
                   <ShBodySmall neutral>
-                    Business O.
+                    Proyecto 1
                   </ShBodySmall>
                 </v-list-item-title>
               </v-list-item>
