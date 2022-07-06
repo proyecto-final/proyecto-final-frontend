@@ -7,7 +7,6 @@
       <v-tab>
         Datos
       </v-tab>
-
       <v-tab-item class="pb-2">
         <div class="d-flex justify-end">
           <ShHeading2 class="neutral-text mt-3 ml-2">
@@ -75,7 +74,7 @@
         </div>
       </v-tab-item>
       <v-tab-item>
-        <v-btn-toggle v-model="tableToShow" mandatory class="my-2">
+        <v-btn-toggle v-model="tableToShow" mandatory class="mt-4 mb-6">
           <ShButton v-if="tableToShow === 'users'" value="users" text>
             Usuarios
           </ShButton>

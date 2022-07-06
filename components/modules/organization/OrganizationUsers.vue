@@ -6,7 +6,7 @@
           <ShSearchField
             v-model="filter.name"
             hide-details
-            :clearable="true"
+            clearable
             placeholder="Buscar por nombre"
             maxlength="32"
             @input="fetchDebounced"
@@ -28,19 +28,19 @@
           <ShAutocomplete
             v-model="filter.enabled"
             hide-details
-            :clearable="true"
+            clearable
             :items="[{ text: 'Habilitado', value: true }, { text: 'Deshabilitado', value: false }]"
-            placeholder="Filtrar por estado"
+            label="Filtrar por estado"
             @input="$fetch"
           />
         </v-col>
         <v-col cols="12" md="4" lg="3">
           <ShAutocomplete
-            v-model="filter.enabled"
+            v-model="filter.project"
             hide-details
-            :clearable="true"
+            clearable
             :items="[{ text: 'Work in progress...', value: true }]"
-            placeholder="Filtrar por proyecto"
+            label="Filtrar por proyecto"
           />
         </v-col>
       </v-row>
@@ -56,6 +56,39 @@
       >
         <template #[`item.enabled`]="{ item }">
           <ShEnabledChip :enabled="item.enabled" />
+        </template>
+        <template #[`item.name`]="{ item }">
+          <div>
+            <ShBodySmall>{{ item.name }} </ShBodySmall>
+          </div>
+          <div>
+            <ShBodySmall neutral>
+              {{ item.email }}
+            </ShBodySmall>
+          </div>
+        </template>
+        <template #[`item.updatedAt`]="{ item }">
+          <div>
+            <ShBodySmall>{{ item.updatedAt | date }} </ShBodySmall>
+          </div>
+          <div>
+            <ShBodySmall neutral>
+              Actualizado
+            </ShBodySmall>
+          </div>
+        </template>
+        <template #[`item.projects`]="{ }">
+          <v-icon>
+            mdi-account-hard-hat
+          </v-icon>
+        </template>
+        <template #[`item.role`]="{ }">
+          <v-icon>
+            mdi-account-hard-hat
+          </v-icon>
+        </template>
+        <template #[`item.actions`]="{ item }">
+          <ShButtonSwitch :enabled="item.enabled" text />
         </template>
       </ShTable>
     </div>
@@ -78,7 +111,8 @@ export default {
     },
     filter: {
       name: '',
-      enabled: null
+      enabled: null,
+      project: null
     },
     headers: [
       {
@@ -87,7 +121,7 @@ export default {
       },
       {
         text: 'Fecha',
-        value: 'date'
+        value: 'updatedAt'
       },
       {
         text: 'Estado',
@@ -100,6 +134,10 @@ export default {
       {
         text: 'Rol',
         value: 'role'
+      },
+      {
+        text: '',
+        value: 'actions'
       }
     ],
     serverItemsLength: 0

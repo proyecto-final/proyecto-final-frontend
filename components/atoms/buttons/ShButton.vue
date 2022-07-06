@@ -1,7 +1,7 @@
 <template>
   <v-btn
     :text="text"
-    color="primary"
+    :color="color"
     class="text-transform-none sh-button"
     v-bind="$attrs"
     rounded
@@ -14,9 +14,9 @@
       <slot :name="slotName" />
     </template>
     <template #default>
-      <ShSpecialButton :class="{ 'white-text': !text, 'primary-text': text }">
+      <ShSpecialButtonText :class="{ 'white-text': !text, 'primary-text': text }">
         <slot />
-      </ShSpecialButton>
+      </ShSpecialButtonText>
     </template>
   </v-btn>
 </template>
@@ -26,6 +26,10 @@ export default {
     text: {
       type: Boolean,
       default: false
+    },
+    color: {
+      type: String,
+      default: 'primary'
     }
   }
 }

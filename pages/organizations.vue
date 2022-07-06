@@ -6,7 +6,7 @@
           <ShSearchField
             v-model="filter.name"
             hide-details
-            :clearable="true"
+            clearable
             placeholder="Buscar por nombre"
             maxlength="32"
             @input="fetchDebounced"
@@ -23,7 +23,7 @@
           <ShAutocomplete
             v-model="filter.enabled"
             hide-details
-            :clearable="true"
+            clearable
             :items="[{ text: 'Habilitado', value: true }, { text: 'Deshabilitado', value: false }]"
             placeholder="Filtrar por estado"
             @input="$fetch"
