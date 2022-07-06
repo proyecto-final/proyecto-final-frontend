@@ -13,6 +13,10 @@ export default class User {
     return this.$axios.$get('/api/user/me')
   }
 
+  update (user) {
+    return this.$axios.$patch('/api/user', user)
+  }
+
   logout () {
     return this.$axios.$post('/api/user/logout')
   }
