@@ -9,10 +9,6 @@ export default class User {
     return this.$axios.$post('/api/user/authenticate', user)
   }
 
-  getProfile () {
-    return this.$axios.$get('/api/user/me')
-  }
-
   logout () {
     return this.$axios.$post('/api/user/logout')
   }
