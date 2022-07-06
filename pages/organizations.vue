@@ -58,7 +58,7 @@
             <ShButton text @click="$router.push(`/organization/${item.id}`)">
               Ver organización
             </ShButton>
-            <v-menu offset-y close-on-content-click>
+            <v-menu v-model="display[item.id]" offset-y close-on-content-click>
               <template #activator="{ on, attrs }">
                 <v-btn
                   icon
@@ -73,6 +73,7 @@
               <v-list>
                 <OrganizationEnableDialog
                   :organization="item"
+                  @close="display[item.id] = false"
                   @updated="(updatedOrganization) => setOrganization(item, updatedOrganization)"
                 />
               </v-list>
@@ -88,6 +89,7 @@ import { debounce } from 'lodash'
 export default {
   data: () => ({
     organizations: [],
+    display: {},
     options: {
       page: 1,
       itemsPerPage: 10

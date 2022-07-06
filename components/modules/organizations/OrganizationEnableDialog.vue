@@ -4,15 +4,16 @@
     :confirm-text="organization.enabled ? 'Deshabilitar' : 'Habilitar'"
     :title="organization.enabled ? 'Deshabilitar organización' : 'Habilitar organización'"
     :async-confirm-function="save"
+    v-on="$listeners"
   >
     <template #activator="{on}">
-      <span>
-        <v-list-item v-on="on">
+      <v-list-item v-on="on">
+        <v-list-item-title>
           <ShBody>
             {{ organization.enabled ? 'Deshabilitar' : 'Habilitar' }}
           </ShBody>
-        </v-list-item>
-      </span>
+        </v-list-item-title>
+      </v-list-item>
     </template>
     <template #default>
       <div>
