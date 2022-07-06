@@ -9,7 +9,7 @@
             clearable
             placeholder="Buscar por nombre"
             maxlength="32"
-            @input="fetchDebounced"
+            @input="search"
           />
         </v-col>
         <v-col cols="12" md="4" lg="3">
@@ -46,11 +46,22 @@
       </v-row>
     </div>
     <div class="mb-6">
+      <ShTableEmptyState v-if="users.length === 0 && !loading && !isFiltering" class="my-10" img-src="/empty-state/organization-users.svg">
+        <template #heading>
+          Panel de usuarios
+        </template>
+        <template #body>
+          Podrás visualizar los usuarios de tu organización<br>
+          y copiar el link de registro para que el<br>
+          usuario se cree su cuenta.
+        </template>
+      </ShTableEmptyState>
       <ShTable
+        v-else
         :items="users"
         :headers="headers"
         :options.sync="options"
-        :loading="$fetchState.pending"
+        :loading="loading"
         :server-items-length="serverItemsLength"
         @update:options="$fetch"
       >
@@ -110,7 +121,7 @@ export default {
       itemsPerPage: 10
     },
     filter: {
-      name: '',
+      name: null,
       enabled: null,
       project: null
     },
@@ -141,9 +152,11 @@ export default {
         width: '0'
       }
     ],
-    serverItemsLength: 0
+    serverItemsLength: 0,
+    loading: false
   }),
   fetch () {
+    this.loading = true
     this.$organizationService.getUsers(this.organizationId, {
       offset: (this.options.page - 1) * this.options.itemsPerPage,
       limit: this.options.itemsPerPage,
@@ -153,9 +166,20 @@ export default {
       this.serverItemsLength = result.count
     }).catch(() => {
       this.$noty.warn('Hubo un error al cargar los usuarios')
+    }).finally(() => {
+      this.loading = false
     })
   },
+  computed: {
+    isFiltering () {
+      return Object.values(this.filter).some(filterParam => filterParam !== null && filterParam !== '')
+    }
+  },
   methods: {
+    search () {
+      this.loading = true
+      this.fetchDebounced()
+    },
     fetchDebounced: debounce(function () {
       this.$fetch()
     }, 500)
