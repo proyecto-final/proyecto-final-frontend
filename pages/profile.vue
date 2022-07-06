@@ -82,6 +82,7 @@ export default {
   },
   created () {
     this.$store.commit('navigation/SET_PAGE_TITLE', 'Perfil')
+    this.$store.commit('navigation/CAN_GO_BACK', false)
   }
 }
 </script>

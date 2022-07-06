@@ -8,10 +8,15 @@
         color="white"
       >
         <div class="d-flex justify-space-between align-center w-100">
-          <div>
-            <ShDisplayS>
-              {{ pageTitle }}
-            </ShDisplayS>
+          <div class="d-flex align-center">
+            <div v-if="canGoBack" class="mr-2">
+              <ShIconButton icon="mdi-arrow-left" title="Volver" color="black" @click="goBack" />
+            </div>
+            <div>
+              <ShDisplayS>
+                {{ pageTitle }}
+              </ShDisplayS>
+            </div>
           </div>
           <div>
             <UserMenu />
@@ -119,7 +124,7 @@ export default {
         {
           icon: 'mdi-domain',
           text: 'Organización',
-          to: `/organization/${this.user.organizationId}`
+          to: `/organization/${this.user.organizationId}/mine`
         },
         {
           icon: 'mdi-web',
@@ -133,11 +138,16 @@ export default {
         }
       ]
     },
-    ...mapState('navigation', ['pageTitle']),
+    ...mapState('navigation', ['pageTitle', 'canGoBack']),
     ...mapState('user', ['user', 'isLoadingUser'])
   },
   created () {
     this.$store.dispatch('user/getUser')
+  },
+  methods: {
+    goBack () {
+      this.$router.back()
+    }
   }
 }
 </script>

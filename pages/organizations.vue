@@ -48,6 +48,16 @@
         <template #[`item.enabled`]="{ item }">
           <ShEnabledChip :enabled="item.enabled" />
         </template>
+        <template #[`item.userCount`]="{ item }">
+          <ShNumberAvatar>
+            {{ item.userCount }}
+          </ShNumberAvatar>
+        </template>
+        <template #[`item.actions`]="{ item }">
+          <ShButton text @click="$router.push(`/organization/${item.id}`)">
+            Ver organización
+          </ShButton>
+        </template>
       </ShTable>
     </div>
   </div>
@@ -81,6 +91,11 @@ export default {
       {
         text: 'Usuarios',
         value: 'userCount'
+      },
+      {
+        text: '',
+        value: 'actions',
+        width: 0
       }
     ],
     serverItemsLength: 0
@@ -99,6 +114,7 @@ export default {
   },
   created () {
     this.$store.commit('navigation/SET_PAGE_TITLE', 'Organizaciones')
+    this.$store.commit('navigation/CAN_GO_BACK', false)
   },
   methods: {
     fetchDebounced: debounce(function () {
