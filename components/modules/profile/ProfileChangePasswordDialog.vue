@@ -2,11 +2,11 @@
   <ShAsyncDialog
     width="500"
     :confirm-text="showSuccess ? 'Entendido' : 'Confirmar'"
-    :cancel-text="showSuccess ? '' : 'Cancelar'"
+    :hide-secondary-button="showSuccess"
     :title="showSuccess ? '' : 'Cambiar contraseña'"
     :async-confirm-function="save"
     v-on="$listeners"
-    @open="setPassword"
+    @open="resetDialog"
   >
     <template #activator="{on}">
       <v-icon color="neutral base" v-on="on">
@@ -56,7 +56,7 @@
         </div>
         <div>
           <ShPasswordField
-            v-model="user.currentPassword"
+            v-model="user.password"
             label="Contraseña actual"
             :rules="[$rules.required('contraseña')]"
           />
@@ -65,7 +65,8 @@
           <ShPasswordField
             v-model="user.newPassword"
             label="Contraseña nueva"
-            :rules="[$rules.required('contraseña')]"
+            :rules="[$rules.required('contraseña'), $rules.hasLengthBetween(8,32), $rules.hasLowercase,
+                     $rules.hasUppercase, $rules.hasNumber, $rules.hasSpecialCharacter]"
           />
         </div>
         <div>
@@ -81,7 +82,7 @@
 </template>
 <script>
 const getEmptyPassword = () => ({
-  currentPassword: '',
+  password: '',
   newPassword: '',
   repeatNewPassword: ''
 })
@@ -93,10 +94,9 @@ export default {
   methods: {
     save () {
       if (this.showSuccess) {
-        this.showSuccess = false
         return Promise.resolve(true)
       }
-      return this.$userService.savePassword(this.user).catch((error) => {
+      return this.$userService.update(this.user).catch((error) => {
         const msg = error.response?.data?.msg
         if (msg) {
           this.$noty.warn(msg.join(', '))
@@ -109,8 +109,9 @@ export default {
         return false
       })
     },
-    setPassword () {
+    resetDialog () {
       this.user = getEmptyPassword()
+      this.showSuccess = false
     },
     passwordMatches () {
       return this.user.newPassword === this.user.repeatNewPassword || 'La contraseña no coincide'

@@ -13,7 +13,7 @@ export default class User {
     return this.$axios.$get('/api/user/me')
   }
 
-  savePassword (user) {
+  update (user) {
     return this.$axios.$patch('/api/user', user)
   }
 
