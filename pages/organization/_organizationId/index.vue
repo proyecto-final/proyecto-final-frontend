@@ -1,20 +1,14 @@
 <template>
   <div>
-    <v-tabs>
+    <v-tabs background-color="transparent">
       <v-tab>
-        <v-icon left>
-          mdi-account
-        </v-icon>
         Información
       </v-tab>
       <v-tab>
-        <v-icon left>
-          mdi-lock
-        </v-icon>
         Datos
       </v-tab>
 
-      <v-tab-item>
+      <v-tab-item class="pb-2">
         <div class="d-flex justify-end">
           <ShHeading2 class="neutral-text mt-3 ml-2">
             Información organizacional
@@ -81,10 +75,27 @@
         </div>
       </v-tab-item>
       <v-tab-item>
-        <ShBodySmall class="neutral-text">
-          <!--Cambiar "neutral-text" cuando exista el color gris claro-->
-          Tablita and stuff
-        </ShBodySmall>
+        <v-tabs background-color="transparent">
+          <v-tab>
+            Usuarios
+          </v-tab>
+          <v-tab>
+            Proyectos
+          </v-tab>
+          <v-tab-item class="pb-2">
+            <OrganizationUsers :organization-id="organizationId" />
+          </v-tab-item>
+          <v-tab-item>
+            <div class="d-flex ma-7 align-center">
+              <ShBodySmall class="neutral-lighten-text">
+                Work in progress...
+              </ShBodySmall>
+              <v-icon color="neutral base">
+                mdi-account-hard-hat
+              </v-icon>
+            </div>
+          </v-tab-item>
+        </v-tabs>
       </v-tab-item>
     </v-tabs>
   </div>
@@ -99,10 +110,14 @@ export default {
   }),
   async fetch () {
     try {
-      const { organizationId } = await this.$userService.getProfile()
-      this.organization = await this.$organizationService.getSpecific(organizationId)
+      this.organization = await this.$organizationService.getSpecific(this.organizationId)
     } catch (er) {
       this.$noty.warn('Hubo un error al cargar la información de tu organización')
+    }
+  },
+  computed: {
+    organizationId () {
+      return this.$route.params.organizationId
     }
   },
   created () {

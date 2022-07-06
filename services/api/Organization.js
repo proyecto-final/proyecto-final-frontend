@@ -13,6 +13,10 @@ export default class Organization {
     return this.$axios.$get(`/api/organization/${organizationId}`)
   }
 
+  getUsers (organizationId, params) {
+    return this.$axios.$get(`/api/organization/${organizationId}/user`, { params })
+  }
+
   save (organization) {
     return this.$axios.$post('/api/organization', organization)
   }
