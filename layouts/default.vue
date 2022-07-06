@@ -123,7 +123,7 @@ export default {
         },
         {
           icon: 'mdi-domain',
-          text: 'Organización',
+          text: 'Mi Organización',
           to: `/organization/${this.user.organizationId}/mine`
         },
         {
