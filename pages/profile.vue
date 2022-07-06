@@ -4,7 +4,7 @@
       Información personal
     </ShHeading2>
     <v-row justify="end" align="center" class="mt-2">
-      <v-col cols="12" sm="8" md="6">
+      <v-col cols="12" sm="10" md="8">
         <v-card elevation="1" class="mr-14">
           <v-card-text>
             <div class="d-flex justify-space-between ma-7">
