@@ -9,7 +9,19 @@ export default class Organization {
     return this.$axios.$get('/api/organization', { params })
   }
 
+  getSpecific (organizationId) {
+    return this.$axios.$get(`/api/organization/${organizationId}`)
+  }
+
+  getUsers (organizationId, params) {
+    return this.$axios.$get(`/api/organization/${organizationId}/user`, { params })
+  }
+
   save (organization) {
     return this.$axios.$post('/api/organization', organization)
+  }
+
+  update (organization) {
+    return this.$axios.$patch(`/api/organization/${organization.id}`, organization)
   }
 }

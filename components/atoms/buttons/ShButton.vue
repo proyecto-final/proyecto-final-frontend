@@ -1,5 +1,12 @@
 <template>
-  <v-btn color="primary" class="text-transform-none sh-button" v-bind="$attrs" v-on="$listeners">
+  <v-btn
+    :text="text"
+    :color="color"
+    class="text-transform-none sh-button"
+    v-bind="$attrs"
+    rounded
+    v-on="$listeners"
+  >
     <template v-for="(_, scopedSlotName) in $scopedSlots" #[scopedSlotName]="slotData">
       <slot :name="scopedSlotName" v-bind="slotData" />
     </template>
@@ -7,12 +14,26 @@
       <slot :name="slotName" />
     </template>
     <template #default>
-      <ShSpecialButton class="white-text">
+      <ShSpecialButtonText :class="{ 'white-text': !text, 'primary-text': text }">
         <slot />
-      </ShSpecialButton>
+      </ShSpecialButtonText>
     </template>
   </v-btn>
 </template>
+<script>
+export default {
+  props: {
+    text: {
+      type: Boolean,
+      default: false
+    },
+    color: {
+      type: String,
+      default: 'primary'
+    }
+  }
+}
+</script>
 <style scoped>
 .theme--light.sh-button::before{
   opacity: 0.10;

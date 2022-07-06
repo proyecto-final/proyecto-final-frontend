@@ -12,6 +12,14 @@
   text-decoration: none !important;
 }
 
+.primary-text{
+  color: var(--v-primary-base) !important;
+}
+
+.error-text{
+  color: var(--v-error-base) !important;
+}
+
 .neutral-text{
   color: var(--v-neutral-base) !important;
 }
@@ -22,6 +30,10 @@
 
 .neutral-lighten-text{
   color: var(--v-neutral-lighten2) !important;
+}
+
+.avatar1-text {
+  color: var(--v-avatar1-base) !important;
 }
 
 .inherit-text{

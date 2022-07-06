@@ -7,9 +7,9 @@
       <slot :name="slotName" />
     </template>
     <template #default>
-      <ShSpecialButton>
+      <ShSpecialButtonText>
         <slot />
-      </ShSpecialButton>
+      </ShSpecialButtonText>
     </template>
   </v-btn>
 </template>

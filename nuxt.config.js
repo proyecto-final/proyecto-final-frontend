@@ -37,7 +37,8 @@ export default {
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
     '~/plugins/axios',
-    '~/plugins/services'
+    '~/plugins/services',
+    '~/plugins/filters'
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -113,6 +114,8 @@ export default {
             darken1: '#DFE2F5',
             darken2: '#242736'
           },
+          avatar1: '#9D3F7A',
+          avatar1Bg: '#F4E6F4',
           avatar6: '#77C07B'
         }
       }

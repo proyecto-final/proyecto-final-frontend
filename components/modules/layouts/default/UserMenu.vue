@@ -3,9 +3,10 @@
     <v-menu v-model="open" offset-y nudge-bottom="24" min-width="150">
       <template #activator="{ on }">
         <span v-on="on">
-          <v-avatar color="green darken-2" size="32">
+          <v-progress-circular v-if="isLoadingUser" indeterminate color="primary" />
+          <v-avatar v-else color="green darken-2" size="32">
             <ShSpecialLabelSmall class="white-text">
-              AA
+              {{ userInitials }}
             </ShSpecialLabelSmall>
           </v-avatar>
           <v-icon v-if="open">
@@ -27,9 +28,20 @@
   </div>
 </template>
 <script>
+import { mapState } from 'vuex'
 export default {
   data: () => ({
     open: false
-  })
+  }),
+  computed: {
+    userInitials () {
+      const getFirstAndLastWord = (_, index, arr) => index === 0 || (arr.length - 1) === index
+      return this.user.name?.split(' ')
+        .map(word => word[0])
+        .filter(getFirstAndLastWord)
+        .join('')
+    },
+    ...mapState('user', ['user', 'isLoadingUser'])
+  }
 }
 </script>

@@ -81,5 +81,7 @@ export default {
 <style scoped>
 .sh-table ::v-deep td {
     border-bottom: none !important;
+    padding-top: 16px !important;
+    padding-bottom: 16px !important;
 }
 </style>
