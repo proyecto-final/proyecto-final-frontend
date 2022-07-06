@@ -32,6 +32,7 @@
             <div>
               <slot name="secondary-button">
                 <ShSecondaryButton
+                  v-if="!hideSecondaryButton"
                   :loading="loadingFunction"
                   @click="close"
                 >
@@ -89,6 +90,10 @@ export default {
       default: ''
     },
     loading: {
+      type: Boolean,
+      default: false
+    },
+    hideSecondaryButton: {
       type: Boolean,
       default: false
     }
