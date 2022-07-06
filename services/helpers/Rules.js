@@ -22,4 +22,8 @@ export default class Rules {
   hasLowercase (value) {
     return /\p{Ll}/u.test(value) || 'El campo debe tener al menos una minúscula'
   }
+
+  fieldLength (field, min, max) {
+    return value => ((min <= value.length) && (value.length <= max)) || `El campo ${field} debe tener entre ${min} y ${max} caracteres`
+  }
 }
