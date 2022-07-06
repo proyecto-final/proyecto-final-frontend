@@ -10,6 +10,7 @@
     }"
     :headers="headersWithoutSortable"
     :options.sync="editableOptions"
+    no-data-text="No hay resultados para la búsqueda"
     :server-items-length="serverItemsLength"
     v-on="$listeners"
   >

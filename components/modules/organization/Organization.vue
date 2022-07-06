@@ -51,7 +51,6 @@
                       />
                     </div>
                   </div>
-
                   <div class="d-flex justify-space-between ma-7 align-center">
                     <div class="d-flex flex-column">
                       <ShBodySmall class="neutral-text">
