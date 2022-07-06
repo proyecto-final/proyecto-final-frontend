@@ -137,7 +137,8 @@ export default {
       },
       {
         text: '',
-        value: 'actions'
+        value: 'actions',
+        width: '0'
       }
     ],
     serverItemsLength: 0
