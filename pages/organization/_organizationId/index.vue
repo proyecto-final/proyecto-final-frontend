@@ -75,27 +75,33 @@
         </div>
       </v-tab-item>
       <v-tab-item>
-        <v-tabs background-color="transparent">
-          <v-tab>
+        <v-btn-toggle v-model="tableToShow" mandatory class="my-2">
+          <ShButton v-if="tableToShow === 'users'" value="users" text>
             Usuarios
-          </v-tab>
-          <v-tab>
+          </ShButton>
+          <ShSecondaryButton v-else value="users">
+            Usuarios
+          </ShSecondaryButton>
+          <ShButton v-if="tableToShow === 'projects'" value="projects" text>
             Proyectos
-          </v-tab>
-          <v-tab-item class="pb-2">
-            <OrganizationUsers :organization-id="organizationId" />
-          </v-tab-item>
-          <v-tab-item>
-            <div class="d-flex ma-7 align-center">
-              <ShBodySmall class="neutral-lighten-text">
-                Work in progress...
-              </ShBodySmall>
-              <v-icon color="neutral base">
-                mdi-account-hard-hat
-              </v-icon>
-            </div>
-          </v-tab-item>
-        </v-tabs>
+          </ShButton>
+          <ShSecondaryButton v-else value="projects" text>
+            Proyectos
+          </ShSecondaryButton>
+        </v-btn-toggle>
+        <div v-show="tableToShow === 'users'" class="pb-2">
+          <OrganizationUsers :organization-id="organizationId" />
+        </div>
+        <div v-show="tableToShow === 'projects'">
+          <div class="d-flex ma-7 align-center">
+            <ShBodySmall class="neutral-lighten-text">
+              Work in progress...
+            </ShBodySmall>
+            <v-icon color="neutral base">
+              mdi-account-hard-hat
+            </v-icon>
+          </div>
+        </div>
       </v-tab-item>
     </v-tabs>
   </div>
@@ -106,7 +112,8 @@ export default {
     organization: {
       name: '',
       color: ''
-    }
+    },
+    tableToShow: 0
   }),
   async fetch () {
     try {

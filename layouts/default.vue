@@ -35,41 +35,53 @@
                 </v-icon>
               </v-list-item-icon>
             </v-list-item>
-            <v-list-item class="px-0">
+            <v-list-item v-if="isLoadingUser">
               <v-list-item-icon>
-                <v-avatar color="blue darken-2">
-                  <ShSpecialLabel class="white-text">
-                    BO
-                  </ShSpecialLabel>
-                </v-avatar>
+                <v-progress-circular indeterminate color="primary" />
               </v-list-item-icon>
               <v-list-item-title>
-                <ShBodySmall neutral>
-                  Business O.
-                </ShBodySmall>
+                <ShBody neutral>
+                  Cargando...
+                </ShBody>
               </v-list-item-title>
             </v-list-item>
-            <div class="mt-5" />
-            <v-list-item-group color="primary">
-              <v-list-item
-                v-for="(menu, index) in menus"
-                :key="`menu-${index}`"
-                router
-                nuxt
-                :to="menu.to"
-              >
-                <v-list-item-icon class="my-2 align-self-center">
-                  <v-icon>
-                    {{ menu.icon }}
-                  </v-icon>
+            <template v-else>
+              <v-list-item class="px-0">
+                <v-list-item-icon>
+                  <v-avatar color="blue darken-2">
+                    <ShSpecialLabel class="white-text">
+                      BO
+                    </ShSpecialLabel>
+                  </v-avatar>
                 </v-list-item-icon>
                 <v-list-item-title>
-                  <ShSpecialLabel class="inherit-text">
-                    {{ menu.text }}
-                  </ShSpecialLabel>
+                  <ShBodySmall neutral>
+                    Business O.
+                  </ShBodySmall>
                 </v-list-item-title>
               </v-list-item>
-            </v-list-item-group>
+              <div class="mt-5" />
+              <v-list-item-group color="primary">
+                <v-list-item
+                  v-for="(menu, index) in menus"
+                  :key="`menu-${index}`"
+                  router
+                  nuxt
+                  :to="menu.to"
+                >
+                  <v-list-item-icon class="my-2 align-self-center">
+                    <v-icon>
+                      {{ menu.icon }}
+                    </v-icon>
+                  </v-list-item-icon>
+                  <v-list-item-title>
+                    <ShSpecialLabel class="inherit-text">
+                      {{ menu.text }}
+                    </ShSpecialLabel>
+                  </v-list-item-title>
+                </v-list-item>
+              </v-list-item-group>
+            </template>
           </v-list>
         </div>
       </v-navigation-drawer>
@@ -107,7 +119,7 @@ export default {
         {
           icon: 'mdi-domain',
           text: 'Organización',
-          to: '/organization'
+          to: `/organization/${this.user.organizationId}`
         },
         {
           icon: 'mdi-web',
@@ -121,7 +133,11 @@ export default {
         }
       ]
     },
-    ...mapState('navigation', ['pageTitle'])
+    ...mapState('navigation', ['pageTitle']),
+    ...mapState('user', ['user', 'isLoadingUser'])
+  },
+  created () {
+    this.$store.dispatch('user/getUser')
   }
 }
 </script>

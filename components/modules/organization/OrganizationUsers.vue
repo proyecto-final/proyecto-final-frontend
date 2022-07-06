@@ -14,7 +14,12 @@
         </v-col>
         <v-col cols="12" md="4" lg="3">
           <div class="d-flex justify-end">
-            <OrganizationDialog @onConfirm="$fetch" />
+            <ShButton>
+              <v-icon color="white">
+                mdi-content-copy
+              </v-icon>
+              Copiar link de registro
+            </ShButton>
           </div>
         </v-col>
       </v-row>
