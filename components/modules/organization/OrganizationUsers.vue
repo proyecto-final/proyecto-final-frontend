@@ -30,7 +30,7 @@
             hide-details
             clearable
             :items="[{ text: 'Habilitado', value: true }, { text: 'Deshabilitado', value: false }]"
-            label="Filtrar por estado"
+            placeholder="Filtrar por estado"
             @input="$fetch"
           />
         </v-col>
@@ -40,7 +40,7 @@
             hide-details
             clearable
             :items="[{ text: 'Work in progress...', value: true }]"
-            label="Filtrar por proyecto"
+            placeholder="Filtrar por proyecto"
           />
         </v-col>
       </v-row>
