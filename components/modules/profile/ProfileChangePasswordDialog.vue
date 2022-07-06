@@ -2,6 +2,7 @@
   <ShAsyncDialog
     width="500"
     :confirm-text="showSuccess ? 'Entendido' : 'Confirmar'"
+    :cancel-text="showSuccess ? '' : 'Cancelar'"
     :title="showSuccess ? '' : 'Cambiar contraseña'"
     :async-confirm-function="save"
     v-on="$listeners"
@@ -14,12 +15,16 @@
     </template>
     <template #default>
       <template v-if="showSuccess">
-        <v-icon color="success" align-center>
-          mdi-check-circle
-        </v-icon>
-        <ShHeading2 neutral align-center>
-          Tu contraseña se cambió con éxito.
-        </ShHeading2>
+        <div class="d-flex align-center justify-center">
+          <v-icon color="success" size="98px">
+            mdi-check-circle
+          </v-icon>
+        </div>
+        <div class="d-flex ma-7 align-center justify-center">
+          <ShHeading2>
+            Tu contraseña se cambió con éxito.
+          </ShHeading2>
+        </div>
       </template>
       <template v-else>
         <div>
@@ -88,9 +93,10 @@ export default {
   methods: {
     save () {
       if (this.showSuccess) {
+        this.showSuccess = false
         return Promise.resolve(true)
       }
-      return this.$userService.savePassword(this.user.currentPassword, this.user.newPassword).catch((error) => {
+      return this.$userService.savePassword(this.user).catch((error) => {
         const msg = error.response?.data?.msg
         if (msg) {
           this.$noty.warn(msg.join(', '))

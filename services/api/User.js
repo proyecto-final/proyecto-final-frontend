@@ -9,12 +9,12 @@ export default class User {
     return this.$axios.$post('/api/user/authenticate', user)
   }
 
-  getProfile (user) {
-    return this.$axios.$get('/api/user/me', user)
+  getProfile () {
+    return this.$axios.$get('/api/user/me')
   }
 
-  savePassword (currentPassword, newPassword) {
-    return this.$axios.$patch('/api/user', currentPassword, newPassword)
+  savePassword (user) {
+    return this.$axios.$patch('/api/user', user)
   }
 
   logout () {
