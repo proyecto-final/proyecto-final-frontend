@@ -24,7 +24,7 @@
         </v-col>
       </v-row>
       <v-row>
-        <v-col cols="12" md="4" lg="3">
+        <v-col cols="12" md="4" lg="2">
           <ShAutocomplete
             v-model="filter.date"
             hide-details
