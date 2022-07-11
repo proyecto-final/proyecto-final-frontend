@@ -29,7 +29,7 @@
             v-model="filter.date"
             hide-details
             clearable
-            :items="[{ text: 'Habilitado', value: true }, { text: 'Deshabilitado', value: false }]"
+            :items="[{ text: '{{item.updatedAt}}', value: true }]"
             placeholder="Filtrar por fecha"
             @input="$fetch"
           />
@@ -37,7 +37,7 @@
       </v-row>
     </div>
     <div class="mb-6">
-      <ShTableEmptyState v-if="projects.length === 0 && !loading && !isFiltering" class="my-10" img-src="/empty-state/organization-users.svg">
+      <ShTableEmptyState v-if="projects.length === 0 && !loading && !isFiltering" class="my-10" img-src="/empty-state/organization-projects.svg">
         <template #heading>
           Creá tu primer proyecto
         </template>
@@ -58,11 +58,6 @@
         <template #[`item.name`]="{ item }">
           <div>
             <ShBodySmall>{{ item.name }} </ShBodySmall>
-          </div>
-          <div>
-            <ShBodySmall neutral>
-              {{ item.email }}
-            </ShBodySmall>
           </div>
         </template>
         <template #[`item.updatedAt`]="{ item }">
@@ -142,7 +137,7 @@ export default {
     loading: false
   }),
   fetch () {
-    this.loading = true
+    // this.loading = true
   },
   computed: {
     isFiltering () {
@@ -151,7 +146,7 @@ export default {
   },
   methods: {
     search () {
-      this.loading = true
+      // this.loading = true
       this.fetchDebounced()
     },
     fetchDebounced: debounce(function () {
