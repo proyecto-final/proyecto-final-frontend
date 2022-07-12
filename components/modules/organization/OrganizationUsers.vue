@@ -98,6 +98,7 @@
             v-if="item.enabled"
             v-model="item.role"
             :items="roleOptions"
+            outlined
             @change="updateUserRole"
           />
           <ShBodySmall v-else neutral>
