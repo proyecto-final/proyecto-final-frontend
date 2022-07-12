@@ -93,10 +93,16 @@
             mdi-account-hard-hat
           </v-icon>
         </template>
-        <template #[`item.role`]="{ }">
-          <v-icon>
-            mdi-account-hard-hat
-          </v-icon>
+        <template #[`item.role`]="{ item }">
+          <v-select
+            v-if="item.enabled"
+            v-model="item.role"
+            :items="roleOptions"
+            @change="updateUserRole"
+          />
+          <ShBodySmall v-else neutral>
+            {{ item.role }}
+          </ShBodySmall>
         </template>
         <template #[`item.actions`]="{ item }">
           <ShButtonSwitch :enabled="item.enabled" text />
@@ -153,7 +159,8 @@ export default {
       }
     ],
     serverItemsLength: 0,
-    loading: false
+    loading: false,
+    roleOptions: ['Usuario', 'Owner']
   }),
   fetch () {
     this.loading = true
@@ -179,6 +186,9 @@ export default {
     search () {
       this.loading = true
       this.fetchDebounced()
+    },
+    updateUserRole (newRole) {
+      console.log(newRole)
     },
     fetchDebounced: debounce(function () {
       this.$fetch()
