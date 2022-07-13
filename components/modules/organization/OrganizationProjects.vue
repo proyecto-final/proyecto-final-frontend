@@ -14,7 +14,7 @@
         </v-col>
         <v-col cols="12" md="4" lg="3">
           <div class="d-flex justify-end">
-            <OrganizationCreateProjectDialog />
+            <OrganizationCreateProjectDialog :organization-id="organizationId" />
           </div>
         </v-col>
       </v-row>

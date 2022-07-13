@@ -21,7 +21,7 @@
       <div>
         <v-alert type="warning" icon="mdi-alert" class="justify-space-between mb-6 mt-2">
           <ShBodySmall class="white-text">
-            Recordá que el prefijo hace referencias a las iniciales de tu proyecto
+            Recordá que el prefijo hace referencia a las iniciales de tu proyecto.
           </ShBodySmall>
         </v-alert>
       </div>
@@ -47,35 +47,40 @@
         <ShHeading4 neutral class="mb-2">
           Seleccionar color personalizado
         </ShHeading4>
-
         <ShColorPicker v-model="project.color" />
-      </div>
-      <div class="mb-4">
-        <ShHeading4 neutral class="mb-2">
-          Asignar usuarios
-        </ShHeading4>
       </div>
     </template>
   </ShAsyncDialog>
 </template>
 <script>
 const getEmptyProject = () => ({
-  prefix: '',
   name: '',
-  color: '',
-  users: []
+  prefix: '',
+  color: ''
 })
 export default {
+  props: {
+    organizationId: {
+      type: String,
+      required: true
+    }
+  },
   data: () => ({
     project: getEmptyProject()
   }),
   methods: {
     save () {
-
-    },
-    setProject () {
-      this.project = getEmptyProject()
+      this.$organizationService.saveProject(this.organizationId, this.project).catch((error) => {
+        const msg = error.response?.data?.msg
+        if (msg) {
+          this.$noty.warn(msg.join(', '))
+        }
+        return false
+      })
     }
+  },
+  setProject () {
+    this.project = getEmptyProject()
   }
 }
 </script>
