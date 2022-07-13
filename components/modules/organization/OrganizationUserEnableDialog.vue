@@ -30,6 +30,10 @@
 <script>
 export default {
   props: {
+    organizationId: {
+      type: String,
+      required: true
+    },
     user: {
       type: Object,
       required: true
@@ -38,9 +42,9 @@ export default {
   methods: {
     save () {
       return this.$organizationService
-        .update({ id: this.organization.id, enabled: !this.organization.enabled })
+        .updateUser(this.organizationId, { id: this.organizationId, role: this.user.role, isAdmin: this.user.isAdmin, enabled: !this.user.enabled })
         .then((res) => {
-          this.$emit('updated', { ...this.organization, enabled: !this.organization.enabled })
+          this.$emit('updated', { ...this.user, enabled: !this.user.enabled })
           return true
         })
     }
