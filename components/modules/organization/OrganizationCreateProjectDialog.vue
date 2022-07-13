@@ -1,8 +1,8 @@
 <template>
   <ShAsyncDialog
     width="500"
-    :confirm-text="'Crear'"
-    :title="'Crear proyecto'"
+    :confirm-text="isEditing ? 'Guardar' : 'Crear'"
+    :title="isEditing ? 'Actualizar proyecto' : 'Crear proyecto'"
     :async-confirm-function="save"
     v-on="$listeners"
     @open="setProject"
@@ -25,25 +25,27 @@
           </ShBodySmall>
         </v-alert>
       </div>
-      <div>
-        <v-row>
-          <v-col cols="12" md="4" lg="4">
+      <v-row>
+        <v-col cols="12" md="4" lg="4">
+          <div v-if="!isEditing || isEditingPrefix">
             <ShTextField
               v-model="project.prefix"
               label="Prefijo"
               :rules="[$rules.required('prefijo'), $rules.fieldLength('prefijo', 2, 8)]"
             />
-          </v-col>
-          <v-col cols="12" md="4" lg="8">
+          </div>
+        </v-col>
+        <v-col cols="12" md="4" lg="8">
+          <div v-if="!isEditing || isEditingName">
             <ShTextField
               v-model="project.name"
               label="Nombre *"
               :rules="[$rules.required('nombre'), $rules.fieldLength('nombre', 2, 32)]"
             />
-          </v-col>
-        </v-row>
-      </div>
-      <div class="mb-4">
+          </div>
+        </v-col>
+      </v-row>
+      <div v-if="!isEditing || isEditingColor" class="mb-4">
         <ShHeading4 neutral class="mb-2">
           Seleccionar color personalizado
         </ShHeading4>
@@ -53,6 +55,7 @@
   </ShAsyncDialog>
 </template>
 <script>
+import { cloneDeep } from 'lodash'
 const getEmptyProject = () => ({
   name: '',
   prefix: '',
@@ -60,6 +63,26 @@ const getEmptyProject = () => ({
 })
 export default {
   props: {
+    project2Edit: {
+      type: Object,
+      default: null
+    },
+    isEditing: {
+      type: Boolean,
+      default: false
+    },
+    isEditingColor: {
+      type: Boolean,
+      default: false
+    },
+    isEditingPrefix: {
+      type: Boolean,
+      default: false
+    },
+    isEditingName: {
+      type: Boolean,
+      default: false
+    },
     organizationId: {
       type: String,
       required: true
@@ -70,7 +93,13 @@ export default {
   }),
   methods: {
     save () {
-      return this.$organizationService.saveProject(this.organizationId, this.project).catch((error) => {
+      const savePromise = this.isEditing
+        ? this.$organizationService.updateProject(this.organizationId, this.project).then((res) => {
+          this.$emit('updated', this.project)
+          return true
+        })
+        : this.$organizationService.saveProject(this.organizationId, this.project)
+      return savePromise.catch((error) => {
         const msg = error.response?.data?.msg
         if (msg) {
           this.$noty.warn(msg.join(', '))
@@ -80,7 +109,11 @@ export default {
     }
   },
   setProject () {
-    this.project = getEmptyProject()
+    if (this.isEditing) {
+      this.organization = cloneDeep(this.project2Edit)
+    } else {
+      this.project = getEmptyProject()
+    }
   }
 }
 </script>
