@@ -24,4 +24,8 @@ export default class Organization {
   update (organization) {
     return this.$axios.$patch(`/api/organization/${organization.id}`, organization)
   }
+
+  updateUser (organizationId, { id, role, isAdmin, enabled }) {
+    return this.$axios.$patch(`/api/organization/${organizationId}/user/${id}`, { role, isAdmin, enabled })
+  }
 }

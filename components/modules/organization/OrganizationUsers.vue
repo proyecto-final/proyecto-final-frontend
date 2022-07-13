@@ -99,7 +99,8 @@
             v-model="item.role"
             :items="roleOptions"
             outlined
-            @change="updateUserRole"
+            hide-details
+            @change="updateUserRole(item)"
           />
           <ShBodySmall v-else neutral>
             {{ item.role }}
@@ -161,7 +162,7 @@ export default {
     ],
     serverItemsLength: 0,
     loading: false,
-    roleOptions: ['Usuario', 'Owner']
+    roleOptions: ['User', 'Owner']
   }),
   fetch () {
     this.loading = true
@@ -188,8 +189,8 @@ export default {
       this.loading = true
       this.fetchDebounced()
     },
-    updateUserRole (newRole) {
-      console.log(newRole)
+    updateUserRole (user) {
+      this.$organizationService.updateUser(this.organizationId, user)
     },
     fetchDebounced: debounce(function () {
       this.$fetch()
