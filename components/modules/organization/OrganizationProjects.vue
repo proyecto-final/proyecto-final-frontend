@@ -23,18 +23,6 @@
           </div>
         </v-col>
       </v-row>
-      <v-row>
-        <v-col cols="12" md="4" lg="2">
-          <ShAutocomplete
-            v-model="filter.date"
-            hide-details
-            clearable
-            :items="[{ text: '{{item.updatedAt}}', value: true }]"
-            placeholder="Filtrar por fecha"
-            @input="$fetch"
-          />
-        </v-col>
-      </v-row>
     </div>
     <div class="mb-6">
       <ShTableEmptyState v-if="projects.length === 0 && !loading && !isFiltering" class="my-10" img-src="/empty-state/organization-projects.svg">
@@ -70,12 +58,12 @@
             </ShBodySmall>
           </div>
         </template>
-        <template #[`item.userCount`]="{ }">
+        <template #[`item.userCount`]="{ item }">
           <ShNumberAvatar>
             {{ item.userCount }}
           </ShNumberAvatar>
         </template>
-        <template #[`item.color`]="{ }">
+        <template #[`item.color`]="{ item }">
           <v-icon :color="item.color">
             mdi-checkbox-blank-circle
           </v-icon>
@@ -137,7 +125,19 @@ export default {
     loading: false
   }),
   fetch () {
-    // this.loading = true
+    this.loading = true
+    this.$organizationService.getProjects(this.organizationId, {
+      offset: (this.options.page - 1) * this.options.itemsPerPage,
+      limit: this.options.itemsPerPage,
+      ...this.filter
+    }).then((result) => {
+      this.projects = result.rows
+      this.serverItemsLength = result.count
+    }).catch(() => {
+      this.$noty.warn('Hubo un error al cargar los proyectos')
+    }).finally(() => {
+      this.loading = false
+    })
   },
   computed: {
     isFiltering () {
@@ -146,7 +146,7 @@ export default {
   },
   methods: {
     search () {
-      // this.loading = true
+      this.loading = true
       this.fetchDebounced()
     },
     fetchDebounced: debounce(function () {
