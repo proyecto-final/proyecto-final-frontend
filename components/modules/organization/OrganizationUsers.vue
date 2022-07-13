@@ -14,7 +14,7 @@
         </v-col>
         <v-col cols="12" md="4" lg="3">
           <div class="d-flex justify-end">
-            <ShButton>
+            <ShButton :loading="gettingLink" @click="save()">
               <v-icon color="white">
                 mdi-content-copy
               </v-icon>
@@ -153,7 +153,8 @@ export default {
       }
     ],
     serverItemsLength: 0,
-    loading: false
+    loading: false,
+    gettingLink: false
   }),
   fetch () {
     this.loading = true
@@ -182,7 +183,24 @@ export default {
     },
     fetchDebounced: debounce(function () {
       this.$fetch()
-    }, 500)
+    }, 500),
+    save () {
+      return this.$organizationService.getInvitationToken(this.organizationId)
+        .then(response => this.copyRegisterLinkToClipboard(response.invitationToken)).catch((error) => {
+          const msg = error.response?.data?.msg
+          if (msg) {
+            this.$noty.warn(msg.join(', '))
+          }
+          return false
+        })
+    },
+    copyRegisterLinkToClipboard (token) {
+      this.gettingLink = true
+      const registerURL = `${window.location.origin}/register?token=${token}`
+      navigator.clipboard.writeText(registerURL)
+      this.gettingLink = false
+      this.$noty.success('Se ha copiado el link de registro en el portapapeles')
+    }
   }
 }
 </script>

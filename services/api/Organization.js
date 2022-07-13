@@ -24,4 +24,8 @@ export default class Organization {
   update (organization) {
     return this.$axios.$patch(`/api/organization/${organization.id}`, organization)
   }
+
+  getInvitationToken (organizationId) {
+    return this.$axios.$post(`/api/organization/${organizationId}/invitation-token`)
+  }
 }
