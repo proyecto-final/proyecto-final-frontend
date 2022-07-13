@@ -31,7 +31,7 @@
             <ShTextField
               v-model="project.prefix"
               label="Prefijo"
-              :rules="[$rules.required('prefijo'), $rules.fieldLength('prefijo', 2, 4)]"
+              :rules="[$rules.required('prefijo'), $rules.fieldLength('prefijo', 2, 8)]"
             />
           </v-col>
           <v-col cols="12" md="4" lg="8">
@@ -70,7 +70,7 @@ export default {
   }),
   methods: {
     save () {
-      this.$organizationService.saveProject(this.organizationId, this.project).catch((error) => {
+      return this.$organizationService.saveProject(this.organizationId, this.project).catch((error) => {
         const msg = error.response?.data?.msg
         if (msg) {
           this.$noty.warn(msg.join(', '))
