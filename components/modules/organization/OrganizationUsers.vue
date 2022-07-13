@@ -99,7 +99,11 @@
           </v-icon>
         </template>
         <template #[`item.actions`]="{ item }">
-          <ShButtonSwitch :enabled="item.enabled" text />
+          <OrganizationUserEnableDialog
+            :user="item"
+            @close="display[item.id] = false"
+            @updated="(updatedUser) => setUser(item, updatedUser)"
+          />
         </template>
       </ShTable>
     </div>
@@ -182,7 +186,10 @@ export default {
     },
     fetchDebounced: debounce(function () {
       this.$fetch()
-    }, 500)
+    }, 500),
+    setUser (user, updatedUser) {
+      Object.assign(user, updatedUser)
+    }
   }
 }
 </script>
