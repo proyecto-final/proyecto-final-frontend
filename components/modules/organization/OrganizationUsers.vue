@@ -100,6 +100,7 @@
             :items="roleOptions"
             outlined
             hide-details
+            :menu-props="{ offsetY: true }"
             item-text="text"
             item-value="value"
             @change="updateUserRole(item)"
