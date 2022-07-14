@@ -42,7 +42,7 @@ export default {
   methods: {
     save () {
       return this.$organizationService
-        .updateUser(this.organizationId, { id: this.organizationId, role: this.user.role, isAdmin: this.user.isAdmin, enabled: !this.user.enabled })
+        .updateUser(this.organizationId, { id: this.user.id, role: this.user.role, isAdmin: this.user.isAdmin, enabled: !this.user.enabled })
         .then((res) => {
           this.$emit('updated', { ...this.user, enabled: !this.user.enabled })
           return true
