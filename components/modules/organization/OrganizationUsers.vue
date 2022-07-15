@@ -215,12 +215,11 @@ export default {
       this.$fetch()
     }, 500),
     copyRegisterLinkToClipboard () {
+      this.gettingLink = true
       return this.$organizationService.getInvitationToken(this.organizationId)
         .then((response) => {
-          this.gettingLink = true
           const registerURL = `${window.location.origin}/register?token=${response.invitationToken}`
           navigator.clipboard.writeText(registerURL)
-          this.gettingLink = false
           this.$noty.success('Se ha copiado el link de registro en el portapapeles')
         }).catch((error) => {
           const msg = error.response?.data?.msg
@@ -228,7 +227,7 @@ export default {
             this.$noty.warn(msg.join(', '))
           }
           return false
-        })
+        }).finally(() => { this.gettingLink = false })
     },
     setUser (user, updatedUser) {
       Object.assign(user, updatedUser)
