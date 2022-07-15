@@ -70,7 +70,11 @@ export default {
   }),
   methods: {
     save () {
-      return this.$organizationService.saveProject(this.organizationId, this.project).catch((error) => {
+      return this.$organizationService.saveProject(this.organizationId, this.project).then((project) => {
+        this.$emit('addProjectToTable', { ...project, userCount: 0 }
+        )
+        return true
+      }).catch((error) => {
         const msg = error.response?.data?.msg
         if (msg) {
           this.$noty.warn(msg.join(', '))

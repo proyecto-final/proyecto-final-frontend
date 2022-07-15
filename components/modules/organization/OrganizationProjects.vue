@@ -14,7 +14,7 @@
         </v-col>
         <v-col cols="12" md="4" lg="3">
           <div class="d-flex justify-end">
-            <OrganizationCreateProjectDialog v-if="projects.length !== 0 && !loading && !isFiltering" :organization-id="organizationId" />
+            <OrganizationCreateProjectDialog v-if="projects.length !== 0 && !loading && !isFiltering" :organization-id="organizationId" @addProjectToTable="addProject" />
           </div>
         </v-col>
       </v-row>
@@ -165,7 +165,12 @@ export default {
     },
     fetchDebounced: debounce(function () {
       this.$fetch()
-    }, 500)
+    }, 500),
+
+    addProject (project) {
+      console.log('asd', project)
+      this.projects.push(project)
+    }
   }
 }
 </script>
