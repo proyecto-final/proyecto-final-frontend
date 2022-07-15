@@ -70,12 +70,12 @@
             </ShBodySmall>
           </div>
         </template>
-        <template #[`item.userCount`]="{ }">
+        <template #[`item.userCount`]="{ item }">
           <ShNumberAvatar>
             {{ item.userCount }}
           </ShNumberAvatar>
         </template>
-        <template #[`item.color`]="{ }">
+        <template #[`item.color`]="{ item }">
           <v-icon :color="item.color">
             mdi-checkbox-blank-circle
           </v-icon>
@@ -141,7 +141,7 @@ export default {
   },
   computed: {
     isFiltering () {
-      return Object.values(this.filter).some(filterParam => filterParam !== null && filterParam !== '')
+      return Object.values(this.filter).some(filterParam => !!filterParam)
     }
   },
   methods: {

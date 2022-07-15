@@ -1,8 +1,8 @@
 <template>
   <ShAsyncDialog
     width="500"
-    :confirm-text="'Crear'"
-    :title="'Crear proyecto'"
+    confirm-text="Crear"
+    title="Crear proyecto"
     :async-confirm-function="save"
     v-on="$listeners"
     @open="setProject"
