@@ -2,7 +2,8 @@
   <ShAsyncDialog
     width="500"
     :confirm-text="user.enabled ? 'Deshabilitar' : 'Habilitar'"
-    :title="user.enabled ? 'Deshabilitar usuario' : 'Habilitar usuario'"
+    :title="`${user.enabled ? 'Deshabilitar' : 'Habilitar'} @
+    ${user.username}`"
     :async-confirm-function="save"
     v-on="$listeners"
   >
