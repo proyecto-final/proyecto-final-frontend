@@ -14,13 +14,21 @@
         </v-col>
         <v-col cols="12" md="4" lg="3">
           <div class="d-flex justify-end">
-            <OrganizationCreateProjectDialog v-if="projects.length !== 0 && !loading && !isFiltering" :organization-id="organizationId" @addProjectToTable="addProject" />
+            <OrganizationCreateProjectDialog
+              v-if="projects.length !== 0 && !loading && !isFiltering"
+              :organization-id="organizationId"
+              @created="$fetch"
+            />
           </div>
         </v-col>
       </v-row>
     </div>
     <div class="mb-6">
-      <ShTableEmptyState v-if="projects.length === 0 && !loading && !isFiltering" class="my-10" img-src="/empty-state/organization-projects.svg">
+      <ShTableEmptyState
+        v-if="projects.length === 0 && !loading && !isFiltering"
+        class="my-10"
+        img-src="/empty-state/organization-projects.svg"
+      >
         <template #heading>
           Creá tu primer proyecto
         </template>
@@ -80,8 +88,6 @@
             </ShButton>
             <v-btn
               icon
-              v-bind="attrs"
-              v-on="on"
             >
               <v-icon>
                 mdi-dots-vertical
@@ -165,12 +171,7 @@ export default {
     },
     fetchDebounced: debounce(function () {
       this.$fetch()
-    }, 500),
-
-    addProject (project) {
-      console.log('asd', project)
-      this.projects.push(project)
-    }
+    }, 500)
   }
 }
 </script>

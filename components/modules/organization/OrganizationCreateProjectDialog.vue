@@ -71,8 +71,7 @@ export default {
   methods: {
     save () {
       return this.$organizationService.saveProject(this.organizationId, this.project).then((project) => {
-        this.$emit('addProjectToTable', { ...project, userCount: 0 }
-        )
+        this.$emit('created', { ...project, userCount: 0 })
         return true
       }).catch((error) => {
         const msg = error.response?.data?.msg
@@ -81,10 +80,10 @@ export default {
         }
         return false
       })
+    },
+    setProject () {
+      this.project = getEmptyProject()
     }
-  },
-  setProject () {
-    this.project = getEmptyProject()
   }
 }
 </script>
