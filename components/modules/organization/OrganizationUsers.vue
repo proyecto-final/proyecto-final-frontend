@@ -193,7 +193,8 @@ export default {
   },
   computed: {
     isFiltering () {
-      return Object.values(this.filter).some(filterParam => filterParam !== null && filterParam !== '')
+      return Object.values(this.filter)
+        .some(filterParam => filterParam !== null && filterParam !== '')
     }
   },
   methods: {
