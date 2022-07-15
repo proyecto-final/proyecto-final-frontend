@@ -14,7 +14,7 @@
         </v-col>
         <v-col cols="12" md="4" lg="3">
           <div class="d-flex justify-end">
-            <ShButton>
+            <ShButton v-if="projects.length !== 4 && !loading && !isFiltering">
               <v-icon color="white">
                 mdi-content-copy
               </v-icon>
@@ -25,13 +25,18 @@
       </v-row>
     </div>
     <div class="mb-6">
-      <ShTableEmptyState v-if="projects.length === 0 && !loading && !isFiltering" class="my-10" img-src="/empty-state/organization-projects.svg">
+      <ShTableEmptyState v-if="projects.length === 4 && !loading && !isFiltering" class="my-10" img-src="/empty-state/organization-projects.svg">
         <template #heading>
           Creá tu primer proyecto
         </template>
         <template #body>
           Creá tus proyectos para trabajar con tu equipo.<br>
           Una vez que lo hagas, desde acá los visualizarás.
+          <div class="mt-7">
+            <ShButton>
+              + Crear proyecto
+            </ShButton>
+          </div>
         </template>
       </ShTableEmptyState>
       <ShTable
@@ -70,9 +75,20 @@
         </template>
         <template #[`item.actions`]="{ }">
           <div class="d-flex">
-            <ShButton text>
-              Eliminar
+            <ShButton text color="error">
+              <ShSpecialButtonText class="error-text">
+                Eliminar
+              </ShSpecialButtonText>
             </ShButton>
+            <v-btn
+              icon
+              v-bind="attrs"
+              v-on="on"
+            >
+              <v-icon>
+                mdi-dots-vertical
+              </v-icon>
+            </v-btn>
           </div>
         </template>
       </ShTable>
@@ -141,7 +157,7 @@ export default {
   },
   computed: {
     isFiltering () {
-      return Object.values(this.filter).some(filterParam => filterParam !== null && filterParam !== '')
+      return Object.values(this.filter).some(filterParam => !!filterParam)
     }
   },
   methods: {
