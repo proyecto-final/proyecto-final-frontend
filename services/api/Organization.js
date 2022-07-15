@@ -27,5 +27,8 @@ export default class Organization {
 
   saveProject (organizationId, project) {
     return this.$axios.$post(`/api/organization/${organizationId}/project`, project)
+
+  getProjects (organizationId, params) {
+    return this.$axios.$get(`/api/organization/${organizationId}/project`, { params })
   }
 }

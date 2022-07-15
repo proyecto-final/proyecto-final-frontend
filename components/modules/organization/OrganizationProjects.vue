@@ -14,31 +14,29 @@
         </v-col>
         <v-col cols="12" md="4" lg="3">
           <div class="d-flex justify-end">
-            <OrganizationCreateProjectDialog :organization-id="organizationId" />
+            <ShButton v-if="projects.length !== 0 && !loading && !isFiltering">
+              <v-icon color="white">
+                mdi-content-copy
+              </v-icon>
+              Aca va el dialog
+            </ShButton>
           </div>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col cols="12" md="4" lg="3">
-          <ShAutocomplete
-            v-model="filter.date"
-            hide-details
-            clearable
-            :items="[{ text: 'Habilitado', value: true }, { text: 'Deshabilitado', value: false }]"
-            placeholder="Filtrar por fecha"
-            @input="$fetch"
-          />
         </v-col>
       </v-row>
     </div>
     <div class="mb-6">
-      <ShTableEmptyState v-if="projects.length === 0 && !loading && !isFiltering" class="my-10" img-src="/empty-state/organization-users.svg">
+      <ShTableEmptyState v-if="projects.length === 0 && !loading && !isFiltering" class="my-10" img-src="/empty-state/organization-projects.svg">
         <template #heading>
           Creá tu primer proyecto
         </template>
         <template #body>
           Creá tus proyectos para trabajar con tu equipo.<br>
           Una vez que lo hagas, desde acá los visualizarás.
+          <div class="mt-7">
+            <ShButton>
+              + Crear proyecto
+            </ShButton>
+          </div>
         </template>
       </ShTableEmptyState>
       <ShTable
@@ -82,9 +80,20 @@
         </template>
         <template #[`item.actions`]="{ }">
           <div class="d-flex">
-            <ShButton text>
-              Eliminar
+            <ShButton text color="error">
+              <ShSpecialButtonText class="error-text">
+                Eliminar
+              </ShSpecialButtonText>
             </ShButton>
+            <v-btn
+              icon
+              v-bind="attrs"
+              v-on="on"
+            >
+              <v-icon>
+                mdi-dots-vertical
+              </v-icon>
+            </v-btn>
           </div>
         </template>
       </ShTable>
@@ -138,6 +147,18 @@ export default {
   }),
   fetch () {
     this.loading = true
+    this.$organizationService.getProjects(this.organizationId, {
+      offset: (this.options.page - 1) * this.options.itemsPerPage,
+      limit: this.options.itemsPerPage,
+      ...this.filter
+    }).then((result) => {
+      this.projects = result.rows
+      this.serverItemsLength = result.count
+    }).catch(() => {
+      this.$noty.warn('Hubo un error al cargar los proyectos')
+    }).finally(() => {
+      this.loading = false
+    })
   },
   computed: {
     isFiltering () {
