@@ -93,13 +93,32 @@
             mdi-account-hard-hat
           </v-icon>
         </template>
-        <template #[`item.role`]="{ }">
-          <v-icon>
-            mdi-account-hard-hat
-          </v-icon>
+        <template #[`item.role`]="{ item }">
+          <v-select
+            v-if="item.enabled"
+            v-model="item.role"
+            :items="roleOptions"
+            outlined
+            hide-details
+            :menu-props="{ offsetY: true }"
+            item-text="text"
+            item-value="value"
+            @change="updateUserRole(item)"
+          />
+          <ShBodySmall v-else neutral>
+            {{ getRoleTranslation(item.role) }}
+          </ShBodySmall>
         </template>
         <template #[`item.actions`]="{ item }">
-          <ShButtonSwitch :enabled="item.enabled" text />
+          <OrganizationUserEnableDialog
+            v-model="display[item.id]"
+            offset-y
+            close-on-content-click
+            :user="item"
+            :organization-id="organizationId"
+            @close="display[item.id] = false"
+            @updated="(updatedUser) => setUser(item, updatedUser)"
+          />
         </template>
       </ShTable>
     </div>
@@ -116,6 +135,7 @@ export default {
   },
   data: () => ({
     users: [],
+    display: {},
     options: {
       page: 1,
       itemsPerPage: 10
@@ -154,7 +174,8 @@ export default {
     ],
     serverItemsLength: 0,
     loading: false,
-    gettingLink: false
+    gettingLink: false,
+    roleOptions: [{ text: 'Usuario', value: 'User' }, { text: 'Propietario', value: 'Owner' }]
   }),
   fetch () {
     this.loading = true
@@ -173,13 +194,22 @@ export default {
   },
   computed: {
     isFiltering () {
-      return Object.values(this.filter).some(filterParam => filterParam !== null && filterParam !== '')
+      return Object.values(this.filter)
+        .some(filterParam => filterParam !== null && filterParam !== '')
     }
   },
   methods: {
+    getRoleTranslation (role) {
+      return this.roleOptions.find(option => option.value === role)?.text
+    },
     search () {
       this.loading = true
       this.fetchDebounced()
+    },
+    updateUserRole (user) {
+      this.$organizationService.updateUser(this.organizationId, user).catch(() => {
+        this.$noty.warn('Hubo un error al actualizar el usuario')
+      })
     },
     fetchDebounced: debounce(function () {
       this.$fetch()
@@ -199,6 +229,9 @@ export default {
           }
           return false
         })
+    },
+    setUser (user, updatedUser) {
+      Object.assign(user, updatedUser)
     }
   }
 }

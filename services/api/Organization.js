@@ -28,4 +28,16 @@ export default class Organization {
   getInvitationToken (organizationId) {
     return this.$axios.$post(`/api/organization/${organizationId}/invitation-token`)
   }
+
+  updateUser (organizationId, { id, role, isAdmin, enabled }) {
+    return this.$axios.$patch(`/api/organization/${organizationId}/user/${id}`, { role, isAdmin, enabled })
+  }
+
+  saveProject (organizationId, project) {
+    return this.$axios.$post(`/api/organization/${organizationId}/project`, project)
+  }
+
+  getProjects (organizationId, params) {
+    return this.$axios.$get(`/api/organization/${organizationId}/project`, { params })
+  }
 }
