@@ -28,4 +28,8 @@ export default class Organization {
   updateUser (organizationId, { id, role, isAdmin, enabled }) {
     return this.$axios.$patch(`/api/organization/${organizationId}/user/${id}`, { role, isAdmin, enabled })
   }
+
+  getProjects (organizationId, params) {
+    return this.$axios.$get(`/api/organization/${organizationId}/project`, { params })
+  }
 }
