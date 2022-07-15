@@ -24,4 +24,8 @@ export default class Organization {
   update (organization) {
     return this.$axios.$patch(`/api/organization/${organization.id}`, organization)
   }
+
+  getProjects (organizationId, params) {
+    return this.$axios.$get(`/api/organization/${organizationId}/project`, { params })
+  }
 }
