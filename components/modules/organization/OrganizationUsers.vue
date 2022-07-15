@@ -110,7 +110,15 @@
           </ShBodySmall>
         </template>
         <template #[`item.actions`]="{ item }">
-          <ShButtonSwitch :enabled="item.enabled" text />
+          <OrganizationUserEnableDialog
+            v-model="display[item.id]"
+            offset-y
+            close-on-content-click
+            :user="item"
+            :organization-id="organizationId"
+            @close="display[item.id] = false"
+            @updated="(updatedUser) => setUser(item, updatedUser)"
+          />
         </template>
       </ShTable>
     </div>
@@ -127,6 +135,7 @@ export default {
   },
   data: () => ({
     users: [],
+    display: {},
     options: {
       page: 1,
       itemsPerPage: 10
@@ -184,7 +193,8 @@ export default {
   },
   computed: {
     isFiltering () {
-      return Object.values(this.filter).some(filterParam => filterParam !== null && filterParam !== '')
+      return Object.values(this.filter)
+        .some(filterParam => filterParam !== null && filterParam !== '')
     }
   },
   methods: {
@@ -202,7 +212,10 @@ export default {
     },
     fetchDebounced: debounce(function () {
       this.$fetch()
-    }, 500)
+    }, 500),
+    setUser (user, updatedUser) {
+      Object.assign(user, updatedUser)
+    }
   }
 }
 </script>
