@@ -14,7 +14,7 @@
         </v-col>
         <v-col cols="12" md="4" lg="3">
           <div class="d-flex justify-end">
-            <ShButton v-if="projects.length !== 4 && !loading && !isFiltering">
+            <ShButton v-if="projects.length !== 0 && !loading && !isFiltering">
               <v-icon color="white">
                 mdi-content-copy
               </v-icon>
@@ -25,7 +25,7 @@
       </v-row>
     </div>
     <div class="mb-6">
-      <ShTableEmptyState v-if="projects.length === 4 && !loading && !isFiltering" class="my-10" img-src="/empty-state/organization-projects.svg">
+      <ShTableEmptyState v-if="projects.length === 0 && !loading && !isFiltering" class="my-10" img-src="/empty-state/organization-projects.svg">
         <template #heading>
           Creá tu primer proyecto
         </template>
