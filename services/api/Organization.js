@@ -29,7 +29,7 @@ export default class Organization {
     return this.$axios.$post(`/api/organization/${organizationId}/project`, project)
   }
 
-  updateProject (organizationId, project) {
-    return this.$axios.$patch(`/api/organization/${organizationId}`, project)
+  updateProject (organizationId, projectId, project) {
+    return this.$axios.$patch(`/api/organization/${organizationId}/project/${projectId}`, project)
   }
 }
