@@ -14,12 +14,7 @@
         </v-col>
         <v-col cols="12" md="4" lg="3">
           <div class="d-flex justify-end">
-            <ShButton v-if="projects.length !== 0 && !loading && !isFiltering">
-              <v-icon color="white">
-                mdi-content-copy
-              </v-icon>
-              Aca va el dialog
-            </ShButton>
+            <OrganizationCreateProjectDialog v-if="projects.length === 0 && !loading && !isFiltering" :organization-id="organizationId" />
           </div>
         </v-col>
       </v-row>
