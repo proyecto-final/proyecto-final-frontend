@@ -91,14 +91,7 @@
           <OrganizationUsers :organization-id="organizationId" />
         </div>
         <div v-show="tableToShow === 'projects'">
-          <div class="d-flex ma-7 align-center">
-            <ShBodySmall class="neutral-lighten-text">
-              Work in progress...
-            </ShBodySmall>
-            <v-icon color="neutral base">
-              mdi-account-hard-hat
-            </v-icon>
-          </div>
+          <OrganizationProjects :organization-id="organizationId" />
         </div>
       </v-tab-item>
     </v-tabs>
