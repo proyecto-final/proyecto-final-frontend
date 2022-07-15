@@ -28,9 +28,7 @@
           Creá tus proyectos para trabajar con tu equipo.<br>
           Una vez que lo hagas, desde acá los visualizarás.
           <div class="mt-7">
-            <ShButton>
-              + Crear proyecto
-            </ShButton>
+            <OrganizationCreateProjectDialog :organization-id="organizationId" />
           </div>
         </template>
       </ShTableEmptyState>
