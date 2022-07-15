@@ -14,18 +14,21 @@
         </v-col>
         <v-col cols="12" md="4" lg="3">
           <div class="d-flex justify-end">
-            <ShButton v-if="projects.length !== 0 && !loading && !isFiltering">
-              <v-icon color="white">
-                mdi-content-copy
-              </v-icon>
-              Aca va el dialog
-            </ShButton>
+            <OrganizationCreateProjectDialog
+              v-if="projects.length !== 0 && !loading && !isFiltering"
+              :organization-id="organizationId"
+              @created="$fetch"
+            />
           </div>
         </v-col>
       </v-row>
     </div>
     <div class="mb-6">
-      <ShTableEmptyState v-if="projects.length === 0 && !loading && !isFiltering" class="my-10" img-src="/empty-state/organization-projects.svg">
+      <ShTableEmptyState
+        v-if="projects.length === 0 && !loading && !isFiltering"
+        class="my-10"
+        img-src="/empty-state/organization-projects.svg"
+      >
         <template #heading>
           Creá tu primer proyecto
         </template>
@@ -33,9 +36,7 @@
           Creá tus proyectos para trabajar con tu equipo.<br>
           Una vez que lo hagas, desde acá los visualizarás.
           <div class="mt-7">
-            <ShButton>
-              + Crear proyecto
-            </ShButton>
+            <OrganizationCreateProjectDialog :organization-id="organizationId" />
           </div>
         </template>
       </ShTableEmptyState>
@@ -51,6 +52,11 @@
         <template #[`item.name`]="{ item }">
           <div>
             <ShBodySmall>{{ item.name }} </ShBodySmall>
+          </div>
+          <div>
+            <ShBodySmall neutral>
+              {{ item.email }}
+            </ShBodySmall>
           </div>
         </template>
         <template #[`item.updatedAt`]="{ item }">
@@ -82,8 +88,6 @@
             </ShButton>
             <v-btn
               icon
-              v-bind="attrs"
-              v-on="on"
             >
               <v-icon>
                 mdi-dots-vertical
