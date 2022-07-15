@@ -14,7 +14,7 @@
         </v-col>
         <v-col cols="12" md="4" lg="3">
           <div class="d-flex justify-end">
-            <ShButton>
+            <ShButton :loading="gettingLink" @click="copyRegisterLinkToClipboard()">
               <v-icon color="white">
                 mdi-content-copy
               </v-icon>
@@ -174,6 +174,7 @@ export default {
     ],
     serverItemsLength: 0,
     loading: false,
+    gettingLink: false,
     roleOptions: [{ text: 'Usuario', value: 'User' }, { text: 'Propietario', value: 'Owner' }]
   }),
   fetch () {
@@ -213,6 +214,21 @@ export default {
     fetchDebounced: debounce(function () {
       this.$fetch()
     }, 500),
+    copyRegisterLinkToClipboard () {
+      this.gettingLink = true
+      return this.$organizationService.getInvitationToken(this.organizationId)
+        .then((response) => {
+          const registerURL = `${window.location.origin}/register?token=${response.invitationToken}`
+          navigator.clipboard.writeText(registerURL)
+          this.$noty.success('Se ha copiado el link de registro en el portapapeles')
+        }).catch((error) => {
+          const msg = error.response?.data?.msg
+          if (msg) {
+            this.$noty.warn(msg.join(', '))
+          }
+          return false
+        }).finally(() => { this.gettingLink = false })
+    },
     setUser (user, updatedUser) {
       Object.assign(user, updatedUser)
     }
