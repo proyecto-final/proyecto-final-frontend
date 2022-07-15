@@ -93,10 +93,21 @@
             mdi-account-hard-hat
           </v-icon>
         </template>
-        <template #[`item.role`]="{ }">
-          <v-icon>
-            mdi-account-hard-hat
-          </v-icon>
+        <template #[`item.role`]="{ item }">
+          <v-select
+            v-if="item.enabled"
+            v-model="item.role"
+            :items="roleOptions"
+            outlined
+            hide-details
+            :menu-props="{ offsetY: true }"
+            item-text="text"
+            item-value="value"
+            @change="updateUserRole(item)"
+          />
+          <ShBodySmall v-else neutral>
+            {{ getRoleTranslation(item.role) }}
+          </ShBodySmall>
         </template>
         <template #[`item.actions`]="{ item }">
           <ShButtonSwitch :enabled="item.enabled" text />
@@ -153,7 +164,8 @@ export default {
       }
     ],
     serverItemsLength: 0,
-    loading: false
+    loading: false,
+    roleOptions: [{ text: 'Usuario', value: 'User' }, { text: 'Propietario', value: 'Owner' }]
   }),
   fetch () {
     this.loading = true
@@ -176,9 +188,17 @@ export default {
     }
   },
   methods: {
+    getRoleTranslation (role) {
+      return this.roleOptions.find(option => option.value === role)?.text
+    },
     search () {
       this.loading = true
       this.fetchDebounced()
+    },
+    updateUserRole (user) {
+      this.$organizationService.updateUser(this.organizationId, user).catch(() => {
+        this.$noty.warn('Hubo un error al actualizar el usuario')
+      })
     },
     fetchDebounced: debounce(function () {
       this.$fetch()
