@@ -36,7 +36,10 @@
           Creá tus proyectos para trabajar con tu equipo.<br>
           Una vez que lo hagas, desde acá los visualizarás.
           <div class="mt-7">
-            <OrganizationCreateProjectDialog :organization-id="organizationId" />
+            <OrganizationCreateProjectDialog
+              :organization-id="organizationId"
+              @created="$fetch"
+            />
           </div>
         </template>
       </ShTableEmptyState>
@@ -79,13 +82,17 @@
             mdi-checkbox-blank-circle
           </v-icon>
         </template>
-        <template #[`item.actions`]="{ }">
+        <template #[`item.actions`]="{ item }">
           <div class="d-flex">
-            <ShButton text color="error">
-              <ShSpecialButtonText class="error-text">
-                Eliminar
-              </ShSpecialButtonText>
-            </ShButton>
+            <OrganizationProjectDeleteDialog
+              v-model="display[item.id]"
+              offset-y
+              close-on-content-click
+              :project="item"
+              :organization-id="organizationId"
+              @close="display[item.id] = false"
+              @deleted="$fetch"
+            />
             <v-btn
               icon
             >
@@ -110,6 +117,7 @@ export default {
   },
   data: () => ({
     projects: [],
+    display: {},
     options: {
       page: 1,
       itemsPerPage: 10
