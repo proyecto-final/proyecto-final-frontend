@@ -4,7 +4,9 @@
     confirm-text="Eliminar"
     title="Eliminar proyecto"
     :async-confirm-function="deleteProject"
+    :can-confirm="project.name === projectToDeleteName"
     v-on="$listeners"
+    @open="resetDialog"
   >
     <template #activator="{on}">
       <v-list-item v-on="on">
@@ -27,6 +29,10 @@
         <ShBodySmall neutral>
           Para eliminar el proyecto, escribí el nombre: <strong>{{ project.name }}</strong>
         </ShBodySmall>
+        <ShTextField
+          v-model="projectToDeleteName"
+          label="Proyecto *"
+        />
       </div>
     </template>
   </ShAsyncDialog>
@@ -43,6 +49,9 @@ export default {
       required: true
     }
   },
+  data: () => ({
+    projectToDeleteName: ''
+  }),
   methods: {
     deleteProject () {
       return this.$organizationService
@@ -51,6 +60,12 @@ export default {
           this.$emit('deleted')
           return true
         })
+    },
+    projectNameMatches () {
+      return this.user.newPassword === this.user.repeatNewPassword || 'La contraseña no coincide'
+    },
+    resetDialog () {
+      this.projectToDeleteName = ''
     }
   }
 }

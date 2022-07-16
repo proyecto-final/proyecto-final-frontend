@@ -85,12 +85,10 @@
         <template #[`item.actions`]="{ item }">
           <div class="d-flex">
             <OrganizationProjectDeleteDialog
-              v-model="display[item.id]"
               offset-y
               close-on-content-click
               :project="item"
               :organization-id="organizationId"
-              @close="display[item.id] = false"
               @deleted="$fetch"
             />
             <v-btn
@@ -117,7 +115,6 @@ export default {
   },
   data: () => ({
     projects: [],
-    display: {},
     options: {
       page: 1,
       itemsPerPage: 10
