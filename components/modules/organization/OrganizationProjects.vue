@@ -53,11 +53,6 @@
           <div>
             <ShBodySmall>{{ item.name }} </ShBodySmall>
           </div>
-          <div>
-            <ShBodySmall neutral>
-              {{ item.email }}
-            </ShBodySmall>
-          </div>
         </template>
         <template #[`item.updatedAt`]="{ item }">
           <div>
@@ -99,22 +94,15 @@
                 </v-btn>
               </template>
               <v-list nav>
-                <v-list-item-group
-                  v-model="selectedItem"
-                  color="primary"
-                >
-                  <v-list-item
-                    v-for="(item, i) in items"
-                    :key="i"
-                  >
-                    <v-list-item-icon>
-                      <v-icon v-text="item.icon" />
-                    </v-list-item-icon>
-                    <v-list-item-content>
-                      <v-list-item-title v-text="item.text" />
-                    </v-list-item-content>
-                  </v-list-item>
-                </v-list-item-group>
+                <v-list-item>
+                  <OrganizationCreateProjectDialog
+                    :organization-id="organizationId"
+                    :project-id="item.id"
+                    is-editing
+                    :project2-edit="item"
+                    @updated="$fetch"
+                  />
+                </v-list-item>
               </v-list>
             </v-menu>
           </div>

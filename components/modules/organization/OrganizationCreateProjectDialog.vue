@@ -9,12 +9,22 @@
   >
     <template #activator="{on}">
       <slot name="activator" :on="on">
-        <ShButton :block="$vuetify.breakpoint.smAndDown" v-on="on">
+        <ShButton v-if="!isEditing" :block="$vuetify.breakpoint.smAndDown" v-on="on">
           <v-icon color="white">
             mdi-plus
           </v-icon>
           Crear proyecto
         </ShButton>
+        <v-btn
+          v-if="isEditing"
+          class="no-uppercase"
+          depressed
+          color="neutral"
+          text
+          v-on="on"
+        >
+          Editar proyecto
+        </v-btn>
       </slot>
     </template>
     <template #default>
@@ -28,7 +38,7 @@
       <div>
         <v-row>
           <v-col cols="12" md="4" lg="4">
-            <div v-if="!isEditing || isEditingPrefix">
+            <div>
               <ShTextField
                 v-model="project.prefix"
                 label="Prefijo"
@@ -37,7 +47,7 @@
             </div>
           </v-col>
           <v-col cols="12" md="4" lg="8">
-            <div v-if="!isEditing || isEditingName">
+            <div>
               <ShTextField
                 v-model="project.name"
                 label="Nombre *"
@@ -47,7 +57,7 @@
           </v-col>
         </v-row>
       </div>
-      <div v-if="!isEditing || isEditingColor" class="mb-4">
+      <div class="mb-4">
         <ShHeading4 neutral class="mb-2">
           Seleccionar color personalizado
         </ShHeading4>
@@ -73,25 +83,13 @@ export default {
       type: Boolean,
       default: false
     },
-    isEditingColor: {
-      type: Boolean,
-      default: false
-    },
-    isEditingPrefix: {
-      type: Boolean,
-      default: false
-    },
-    isEditingName: {
-      type: Boolean,
-      default: false
-    },
     organizationId: {
       type: String,
       required: true
     },
     projectId: {
-      type: String,
-      required: true
+      type: Number,
+      default: null
     }
   },
   data: () => ({
@@ -118,7 +116,7 @@ export default {
     },
     setProject () {
       if (this.isEditing) {
-        this.organization = cloneDeep(this.project2Edit)
+        this.project = cloneDeep(this.project2Edit)
       } else {
         this.project = getEmptyProject()
       }
@@ -126,3 +124,8 @@ export default {
   }
 }
 </script>
+<style scoped>
+.no-uppercase {
+     text-transform: unset !important;
+}
+</style>
