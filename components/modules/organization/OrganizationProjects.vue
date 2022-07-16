@@ -123,11 +123,6 @@ export default {
   data: () => ({
     projects: [],
     display: {},
-    selectedItem: null,
-    items: [
-      { text: 'Editar proyecto', icon: 'mdi-cog' },
-      { text: 'Vincular usuarios', icon: 'mdi-account' }
-    ],
     options: {
       page: 1,
       itemsPerPage: 10
