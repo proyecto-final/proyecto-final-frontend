@@ -36,7 +36,7 @@
           Creá tus proyectos para trabajar con tu equipo.<br>
           Una vez que lo hagas, desde acá los visualizarás.
           <div class="mt-7">
-            <OrganizationCreateProjectDialog :organization-id="organizationId" />
+            <OrganizationCreateProjectDialog :organization-id="organizationId" @created="$fetch" />
           </div>
         </template>
       </ShTableEmptyState>
@@ -79,20 +79,44 @@
             mdi-checkbox-blank-circle
           </v-icon>
         </template>
-        <template #[`item.actions`]="{ }">
+        <template #[`item.actions`]="{ item }">
           <div class="d-flex">
             <ShButton text color="error">
               <ShSpecialButtonText class="error-text">
                 Eliminar
               </ShSpecialButtonText>
             </ShButton>
-            <v-btn
-              icon
-            >
-              <v-icon>
-                mdi-dots-vertical
-              </v-icon>
-            </v-btn>
+            <v-menu v-model="display[item.id]" offset-y close-on-content-click>
+              <template #activator="{ on, attrs }">
+                <v-btn
+                  icon
+                  v-bind="attrs"
+                  v-on="on"
+                >
+                  <v-icon>
+                    mdi-dots-vertical
+                  </v-icon>
+                </v-btn>
+              </template>
+              <v-list nav>
+                <v-list-item-group
+                  v-model="selectedItem"
+                  color="primary"
+                >
+                  <v-list-item
+                    v-for="(item, i) in items"
+                    :key="i"
+                  >
+                    <v-list-item-icon>
+                      <v-icon v-text="item.icon" />
+                    </v-list-item-icon>
+                    <v-list-item-content>
+                      <v-list-item-title v-text="item.text" />
+                    </v-list-item-content>
+                  </v-list-item>
+                </v-list-item-group>
+              </v-list>
+            </v-menu>
           </div>
         </template>
       </ShTable>
@@ -110,6 +134,12 @@ export default {
   },
   data: () => ({
     projects: [],
+    display: {},
+    selectedItem: null,
+    items: [
+      { text: 'Editar proyecto', icon: 'mdi-cog' },
+      { text: 'Vincular usuarios', icon: 'mdi-account' }
+    ],
     options: {
       page: 1,
       itemsPerPage: 10
