@@ -4,7 +4,7 @@
     confirm-text="Eliminar"
     title="Eliminar proyecto"
     :async-confirm-function="deleteProject"
-    :can-confirm="project.name === projectToDeleteName"
+    :can-confirm="namesMatch"
     v-on="$listeners"
     @open="resetDialog"
   >
@@ -52,17 +52,27 @@ export default {
   data: () => ({
     projectToDeleteName: ''
   }),
+  computed: {
+    namesMatch () {
+      return this.project.name === this.projectToDeleteName
+    }
+  },
   methods: {
     deleteProject () {
+      if (!this.namesMatch) { return }
+
       return this.$organizationService
         .deleteProject(this.organizationId, this.project.id)
-        .then((res) => {
+        .catch((error) => {
+          const msg = error.response?.data?.msg
+          if (msg) {
+            this.$noty.warn(msg.join(', '))
+          }
+          return false
+        }).then((res) => {
           this.$emit('deleted')
           return true
         })
-    },
-    projectNameMatches () {
-      return this.user.newPassword === this.user.repeatNewPassword || 'La contraseña no coincide'
     },
     resetDialog () {
       this.projectToDeleteName = ''
