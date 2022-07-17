@@ -103,6 +103,9 @@
                     @updated="$fetch"
                   />
                 </v-list-item>
+                <v-list-item>
+                  <OrganizationLinkUsersDialog />
+                </v-list-item>
               </v-list>
             </v-menu>
           </div>
