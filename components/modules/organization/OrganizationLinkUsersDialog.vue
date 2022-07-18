@@ -54,6 +54,7 @@
             <ShIconButton icon="mdi-close" @click="removeUser(index)" />
           </div>
         </div>
+        <v-divider v-if="index !== (project.selectedUser.length - 1)" />
       </div>
     </template>
   </ShAsyncDialog>
