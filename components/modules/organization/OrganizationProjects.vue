@@ -104,7 +104,10 @@
                   />
                 </v-list-item>
                 <v-list-item>
-                  <OrganizationLinkUsersDialog />
+                  <OrganizationLinkUsersDialog
+                    :organization-id="organizationId"
+                    :project-id="item.id"
+                  />
                 </v-list-item>
               </v-list>
             </v-menu>

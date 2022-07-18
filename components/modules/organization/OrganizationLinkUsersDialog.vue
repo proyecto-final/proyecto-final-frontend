@@ -26,42 +26,60 @@
           Asignar usuarios
         </ShHeading4>
         <ShAutocomplete
-          v-model="userToAdd"
+          :search-input.sync="filter.name"
           hide-details
           clearable
           filled
           background-color="#DFE2F5"
           :items="availableUsers"
+          :item-text="user => `${user.name} - @${user.username}`"
+          return-object
           placeholder="Asignar usuarios"
           @input="addUser"
         />
-        {{ project.selectedUsers }}
+      </div>
+      <div v-for="(user,index) in project.selectedUsers" :key="index">
+        {{ user }}
       </div>
     </template>
   </ShAsyncDialog>
 </template>
 <script>
-const getEmptyProject = () => ({
-  prefix: '',
-  name: '',
-  color: '',
+import { debounce } from 'lodash'
+const getEmptyLinkedUsers = () => ({
   selectedUsers: []
 })
 export default {
+  props: {
+    organizationId: {
+      type: String,
+      required: true
+    },
+    projectId: {
+      type: Number,
+      default: null
+    }
+  },
   data: () => ({
-    project: getEmptyProject(),
+    project: getEmptyLinkedUsers(),
     userToAdd: null,
-    users: [
-      '@dummyUser1',
-      '@dummyUser2',
-      '@dummyUser3',
-      '@dummyUser4',
-      '@dummyUser5'
-    ]
+    users: [],
+    filter: {
+      name: ''
+    }
   }),
+  fetch () {
+    this.$organizationService.getUsers(this.organizationId, {
+      offset: 0,
+      limit: 10,
+      ...this.filter
+    }).then((result) => {
+      this.users = result.rows
+    })
+  },
   computed: {
     availableUsers () {
-      return this.users.filter(user => !this.project.selectedUsers.includes(user))
+      return this.users.filter(user => !this.project.selectedUsers.some(selectedUser => selectedUser.id === user.id))
     }
   },
   methods: {
@@ -72,11 +90,14 @@ export default {
       this.project.selectedUsers.push(userToAdd)
       this.userToAdd = null
     },
-    setProject () {
-      this.project = getEmptyProject()
-    }
+    setLinkedUsers () {
+      this.project = getEmptyLinkedUsers()
+      this.$fetch()
+    },
+    fetchDebounced: debounce(function () {
+      this.$fetch()
+    }, 500)
   }
-
 }
 </script>
 <style scoped>
