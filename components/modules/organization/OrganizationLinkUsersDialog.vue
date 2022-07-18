@@ -26,13 +26,15 @@
           Asignar usuarios
         </ShHeading4>
         <ShAutocomplete
+          v-model="userToAdd"
           :search-input.sync="filter.name"
+          cache-items
           hide-details
           clearable
           filled
           background-color="#DFE2F5"
           :items="availableUsers"
-          :item-text="user => `${user.name} - @${user.username}`"
+          item-text="description"
           return-object
           placeholder="Asignar usuarios"
           @input="addUser"
@@ -77,7 +79,7 @@ export default {
     userToAdd: null,
     users: [],
     filter: {
-      name: ''
+      name: null
     }
   }),
   fetch () {
@@ -86,7 +88,7 @@ export default {
       limit: 10,
       ...this.filter
     }).then((result) => {
-      this.users = result.rows
+      this.users = result.rows.map(user => ({ ...user, description: `${user.name} - @${user.username}` }))
     })
   },
   computed: {
@@ -101,6 +103,7 @@ export default {
     addUser (userToAdd) {
       this.project.selectedUsers.push(userToAdd)
       this.userToAdd = null
+      this.filter.name = ''
     },
     setLinkedUsers () {
       this.project = getEmptyLinkedUsers()
@@ -111,6 +114,13 @@ export default {
     }, 500),
     removeUser (user) {
       this.project.selectedUsers.splice(user, 1)
+    }
+  },
+  watch: {
+    'filter.name' (val) {
+      if (val) {
+        this.fetchDebounced()
+      }
     }
   }
 }
