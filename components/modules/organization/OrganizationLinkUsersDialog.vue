@@ -4,6 +4,7 @@
     confirm-text="Aceptar"
     title="Vincular usuarios al proyecto"
     :async-confirm-function="save"
+    :submit-on-enter="false"
     v-on="$listeners"
     @open="setLinkedUsers"
   >
@@ -28,7 +29,6 @@
         <ShAutocomplete
           v-model="userToAdd"
           :search-input.sync="filter.name"
-          cache-items
           hide-details
           clearable
           filled
@@ -37,11 +37,12 @@
           item-text="description"
           return-object
           placeholder="Asignar usuarios"
+          :loading="loading"
           @input="addUser"
         />
       </div>
-      <div v-for="(user,index) in project.selectedUsers" :key="index" class="px-4">
-        <div class="d-flex justify-space-between align-center">
+      <div v-for="(user,index) in selectedUsers" :key="index" class="px-4">
+        <div class="d-flex justify-space-between align-center py-3">
           <div class="d-flex flex-column">
             <ShBody>
               {{ user.name }}
@@ -54,16 +55,13 @@
             <ShIconButton icon="mdi-close" title="Quitar" @click="removeUser(index)" />
           </div>
         </div>
-        <v-divider v-if="index !== (project.selectedUsers.length - 1)" />
+        <v-divider v-if="index !== (selectedUsers.length - 1)" />
       </div>
     </template>
   </ShAsyncDialog>
 </template>
 <script>
 import { debounce } from 'lodash'
-const getEmptyLinkedUsers = () => ({
-  selectedUsers: []
-})
 export default {
   props: {
     organizationId: {
@@ -76,25 +74,35 @@ export default {
     }
   },
   data: () => ({
-    project: getEmptyLinkedUsers(),
+    selectedUsers: [],
     userToAdd: null,
     users: [],
+    loading: false,
     filter: {
       name: null
     }
   }),
   fetch () {
+    this.loading = true
     this.$organizationService.getUsers(this.organizationId, {
       offset: 0,
       limit: 10,
       ...this.filter
     }).then((result) => {
       this.users = result.rows.map(user => ({ ...user, description: `${user.name} - @${user.username}` }))
-    })
+    }).finally(() => { this.loading = false })
   },
   computed: {
     availableUsers () {
-      return this.users.filter(user => !this.project.selectedUsers.some(selectedUser => selectedUser.id === user.id))
+      return this.users.filter(user => !this.selectedUsers.some(selectedUser => selectedUser.id === user.id))
+    }
+  },
+  watch: {
+    'filter.name' (val) {
+      if (val) {
+        this.loading = true
+        this.fetchDebounced()
+      }
     }
   },
   methods: {
@@ -102,26 +110,19 @@ export default {
 
     },
     addUser (userToAdd) {
-      this.project.selectedUsers.push(userToAdd)
+      this.selectedUsers.push(userToAdd)
       this.userToAdd = null
       this.filter.name = ''
     },
     setLinkedUsers () {
-      this.project = getEmptyLinkedUsers()
+      this.selectedUsers = []
       this.$fetch()
     },
     fetchDebounced: debounce(function () {
       this.$fetch()
     }, 500),
     removeUser (user) {
-      this.project.selectedUsers.splice(user, 1)
-    }
-  },
-  watch: {
-    'filter.name' (val) {
-      if (val) {
-        this.fetchDebounced()
-      }
+      this.selectedUsers.splice(user, 1)
     }
   }
 }
