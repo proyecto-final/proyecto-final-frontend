@@ -40,22 +40,26 @@
           @input="addUser"
         />
       </div>
-      <div v-for="(user,index) in project.selectedUsers" :key="index">
-        <div class="d-flex justify-space-between">
-          <div class="d-flex flex-column">
+      <v-list>
+        <v-list-item v-for="(user,index) in project.selectedUsers" :key="index">
+          <v-list-item-title>
             <ShBody>
               {{ user.name }}
             </ShBody>
+          </v-list-item-title>
+          <v-list-item-subtitle>
             <ShBodySmall neutral>
               @{{ user.username }}
             </ShBodySmall>
-          </div>
-          <div>
-            <ShIconButton icon="mdi-close" @click="removeUser(index)" />
-          </div>
-        </div>
-        <v-divider v-if="index !== (project.selectedUser.length - 1)" />
-      </div>
+          </v-list-item-subtitle>
+          <v-list-item-action>
+            <v-list-item-icon>
+              <ShIconButton icon="mdi-close" @click="removeUser(index)" />
+            </v-list-item-icon>
+          </v-list-item-action>
+          <v-divider v-if="index !== (project.selectedUser.length - 1)" />
+        </v-list-item>
+      </v-list>
     </template>
   </ShAsyncDialog>
 </template>
