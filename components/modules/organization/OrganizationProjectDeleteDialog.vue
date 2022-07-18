@@ -63,15 +63,15 @@ export default {
 
       return this.$organizationService
         .deleteProject(this.organizationId, this.project.id)
-        .catch((error) => {
+        .then((res) => {
+          this.$emit('deleted')
+          return true
+        }).catch((error) => {
           const msg = error.response?.data?.msg
           if (msg) {
             this.$noty.warn(msg.join(', '))
           }
           return false
-        }).then((res) => {
-          this.$emit('deleted')
-          return true
         })
     },
     resetDialog () {
