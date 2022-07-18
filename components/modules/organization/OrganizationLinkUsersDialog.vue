@@ -54,10 +54,10 @@
           </v-list-item-subtitle>
           <v-list-item-action>
             <v-list-item-icon>
-              <ShIconButton icon="mdi-close" @click="removeUser(index)" />
+              <ShIconButton icon="mdi-close" title="Quitar" @click="removeUser(index)" />
             </v-list-item-icon>
           </v-list-item-action>
-          <v-divider v-if="index !== (project.selectedUser.length - 1)" />
+          <v-divider v-if="index !== (project.selectedUsers.length - 1)" />
         </v-list-item>
       </v-list>
     </template>
