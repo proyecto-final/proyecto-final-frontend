@@ -39,7 +39,19 @@
         />
       </div>
       <div v-for="(user,index) in project.selectedUsers" :key="index">
-        {{ user }}
+        <div class="d-flex justify-space-between">
+          <div class="d-flex flex-column">
+            <ShBody>
+              {{ user.name }}
+            </ShBody>
+            <ShBodySmall neutral>
+              @{{ user.username }}
+            </ShBodySmall>
+          </div>
+          <div>
+            <ShIconButton icon="mdi-close" @click="removeUser(index)" />
+          </div>
+        </div>
       </div>
     </template>
   </ShAsyncDialog>
@@ -96,7 +108,10 @@ export default {
     },
     fetchDebounced: debounce(function () {
       this.$fetch()
-    }, 500)
+    }, 500),
+    removeUser (user) {
+      this.project.selectedUsers.splice(user, 1)
+    }
   }
 }
 </script>
