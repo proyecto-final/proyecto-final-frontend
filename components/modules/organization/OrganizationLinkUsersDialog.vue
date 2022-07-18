@@ -40,8 +40,8 @@
           @input="addUser"
         />
       </div>
-      <div v-for="(user,index) in project.selectedUsers" :key="index">
-        <div class="d-flex justify-space-between">
+      <div v-for="(user,index) in project.selectedUsers" :key="index" class="px-4">
+        <div class="d-flex justify-space-between align-center">
           <div class="d-flex flex-column">
             <ShBody>
               {{ user.name }}
@@ -51,10 +51,10 @@
             </ShBodySmall>
           </div>
           <div>
-            <ShIconButton icon="mdi-close" @click="removeUser(index)" />
+            <ShIconButton icon="mdi-close" title="Quitar" @click="removeUser(index)" />
           </div>
         </div>
-        <v-divider v-if="index !== (project.selectedUser.length - 1)" />
+        <v-divider v-if="index !== (project.selectedUsers.length - 1)" />
       </div>
     </template>
   </ShAsyncDialog>
