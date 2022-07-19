@@ -44,7 +44,13 @@
           :rules="[$rules.required('archivo'), $rules.maxUploadedFiles(5), $rules.maxUploadedFilesSize(50e6)]"
           @change="addLogFile"
         />
-        <ShChip v-for="(file,index) in logFiles" :key="index" class="px-4 mr-2 mb-7" close>
+        <ShChip
+          v-for="(file,index) in logFiles"
+          :key="index"
+          class="px-4 mr-2 mb-7 mt-2"
+          close
+          @click:close="remove(file)"
+        >
           {{ `${file.name} (${file.size})` }}
         </ShChip>
       </div>
@@ -58,7 +64,7 @@
               :key="index"
               v-model="log.name"
               label="Nombre *"
-              :rules="[$rules.required('título')]"
+              :rules="[$rules.required('nombre')]"
               class="mt-6 mx-2"
             />
           </div>
@@ -100,11 +106,19 @@ export default {
         uploadedFile.size = file.size
         this.logFiles.push(uploadedFile)
       })
+    },
+    remove (file) {
+      this.logFiles.splice(this.logFiles.indexOf(file), 1)
+      this.filesToAdd.splice(this.logFiles.indexOf(file), 1)
     }
   }
 }
 </script>
 <style scoped>
+::v-deep .v-input__slot {
+  display: grid;
+}
+
 ::v-deep .v-input__prepend-inner{
   margin-right: 0px !important;
   display: flex;
