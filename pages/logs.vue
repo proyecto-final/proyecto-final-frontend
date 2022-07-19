@@ -185,10 +185,7 @@ export default {
     },
     fetchDebounced: debounce(function () {
       this.$fetch()
-    }, 500),
-    setOrganization (organization, updatedOrganization) {
-      Object.assign(organization, updatedOrganization)
-    }
+    }, 500)
   }
 }
 </script>
