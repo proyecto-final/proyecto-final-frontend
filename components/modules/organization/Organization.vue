@@ -61,9 +61,14 @@
                       </ShBodySmall>
                     </div>
                     <div>
-                      <v-icon color="neutral base">
-                        mdi-account-hard-hat
-                      </v-icon>
+                      <ShBodySmall v-if="projects.rows.length === 0">
+                        Sin proyectos vinculados.
+                      </ShBodySmall>
+                      <ShAvatars
+                        v-else
+                        :avatars-to-show="3"
+                        :avatars="projects.rows"
+                      />
                     </div>
                   </div>
                 </v-card-text>
@@ -104,11 +109,18 @@ export default {
       name: '',
       color: ''
     },
+    filter: {
+      name: null,
+      date: null
+    },
+    projects: [],
     tableToShow: 0
   }),
   async fetch () {
     try {
       this.organization = await this.$organizationService.getSpecific(this.organizationId)
+      this.projects = await this.$organizationService.getProjects(this.organizationId, { offset: 0, limit: 10, ...this.filter })
+      console.log(this.projects.rows)
     } catch (er) {
       this.$noty.warn('Hubo un error al cargar la información de tu organización')
     }
