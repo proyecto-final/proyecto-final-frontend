@@ -107,9 +107,8 @@ export default {
           uploadedFile.size = file.size
           this.logFiles.push(uploadedFile)
         })
-      } else {
-        this.filesToAdd = []
       }
+      this.filesToAdd = []
     },
     remove (file) {
       this.logFiles.splice(this.logFiles.indexOf(file), 1)
