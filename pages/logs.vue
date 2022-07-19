@@ -1,46 +1,7 @@
 <template>
   <div>
-    <div class="mb-6">
-      <v-row justify="space-between">
-        <v-col cols="12" md="4" lg="3">
-          <ShSearchField
-            v-if="!noLogsPresentAndNotLoadingAndNotFiltering"
-            v-model="filter.name"
-            hide-details
-            clearable
-            placeholder="Buscar por nombre"
-            maxlength="32"
-            @input="fetchDebounced"
-          />
-        </v-col>
-        <v-col cols="12" md="4" lg="3">
-          <div class="d-flex justify-end">
-            <ShButton v-if="!noLogsPresentAndNotLoadingAndNotFiltering" :block="$vuetify.breakpoint.smAndDown">
-              <v-icon color="white">
-                mdi-plus
-              </v-icon>
-              Cargar log
-            </ShButton>
-          </div>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col cols="12" md="4" lg="3">
-          <ShAutocomplete
-            v-if="!noLogsPresentAndNotLoadingAndNotFiltering"
-            v-model="filter.status"
-            hide-details
-            clearable
-            :items="[{ text: 'Cargado', value: 'loaded' }, { text: 'Procesando...', value: 'loading' }]"
-            placeholder="Filtrar por estado"
-            @input="$fetch"
-          />
-        </v-col>
-      </v-row>
-    </div>
-    <div class="mb-6">
+    <template v-if="showEmptyState">
       <ShTableEmptyState
-        v-if="noLogsPresentAndNotLoadingAndNotFiltering"
         class="my-10"
         img-src="/empty-state/logs.svg"
       >
@@ -60,8 +21,43 @@
           </div>
         </template>
       </ShTableEmptyState>
+    </template>
+    <div v-else>
+      <v-row justify="space-between">
+        <v-col cols="12" md="4" lg="3">
+          <ShSearchField
+            v-model="filter.name"
+            hide-details
+            clearable
+            placeholder="Buscar por nombre"
+            maxlength="32"
+            @input="fetchDebounced"
+          />
+        </v-col>
+        <v-col cols="12" md="4" lg="3">
+          <div class="d-flex justify-end">
+            <ShButton :block="$vuetify.breakpoint.smAndDown">
+              <v-icon color="white">
+                mdi-plus
+              </v-icon>
+              Cargar log
+            </ShButton>
+          </div>
+        </v-col>
+      </v-row>
+      <v-row class="mb-6">
+        <v-col cols="12" md="4" lg="3">
+          <ShAutocomplete
+            v-model="filter.status"
+            hide-details
+            clearable
+            :items="[{ text: 'Cargado', value: 'loaded' }, { text: 'Procesando...', value: 'loading' }]"
+            placeholder="Filtrar por estado"
+            @input="$fetch"
+          />
+        </v-col>
+      </v-row>
       <ShTable
-        v-else
         :items="logs"
         :headers="headers"
         :options.sync="options"
@@ -85,7 +81,9 @@
           </div>
         </template>
         <template #[`item.status`]="{ item }">
-          <ShStatusChip :status="item.status" />
+          <ShChip :color="item.status === 'loaded' ? 'success' : 'warning'">
+            {{ item.status === 'loaded' ? 'Cargado' : 'Procesando...' }}
+          </ShChip>
         </template>
         <template #[`item.actions`]="{ item }">
           <div class="d-flex">
@@ -160,17 +158,13 @@ export default {
     }).then((result) => {
       this.logs = result.rows
       this.serverItemsLength = result.count
-    }).catch(() => {
-      this.$noty.warn('Hubo un error al cargar los logs')
-    }).finally(() => {
-      this.loading = false
-    })
+    }).catch(() => { this.$noty.warn('Hubo un error al cargar los logs') }).finally(() => { this.loading = false })
   },
   computed: {
     isFiltering () {
       return Object.values(this.filter).some(filterParam => !!filterParam)
     },
-    noLogsPresentAndNotLoadingAndNotFiltering () {
+    showEmptyState () {
       return (this.logs.length === 0 && !this.loading && !this.isFiltering)
     }
   },
