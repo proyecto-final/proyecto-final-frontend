@@ -48,4 +48,8 @@ export default class Organization {
   getProject (organizationId, projectId) {
     return this.$axios.$get(`/api/organization/${organizationId}/project/${projectId}`)
   }
+
+  putProjectUsers (organizationId, projectId, users) {
+    return this.$axios.$put(`/api/organization/${organizationId}/project/${projectId}/users`, { users })
+  }
 }

@@ -10,15 +10,13 @@
   >
     <template #activator="{on}">
       <slot name="activator" :on="on">
-        <v-btn
-          class="no-uppercase"
-          depressed
-          color="neutral"
-          text
+        <v-list-item
           v-on="on"
         >
-          Vincular usuarios
-        </v-btn>
+          <ShHeading4 class="neutral-text">
+            Vincular usuarios
+          </ShHeading4>
+        </v-list-item>
       </slot>
     </template>
     <template #default>
@@ -110,7 +108,15 @@ export default {
   },
   methods: {
     save () {
-
+      const linkedUsers = this.selectedUsers.map(user => ({ id: user.id }))
+      return this.$organizationService.putProjectUsers(this.organizationId, this.projectId, linkedUsers)
+        .catch((error) => {
+          const msg = error.response?.data?.msg
+          if (msg) {
+            this.$noty.warn(msg.join(', '))
+          }
+          return false
+        })
     },
     addUser (userToAdd) {
       if (userToAdd) {
@@ -137,8 +143,3 @@ export default {
   }
 }
 </script>
-<style scoped>
-.no-uppercase {
-     text-transform: unset !important;
-}
-</style>
