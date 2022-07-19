@@ -19,7 +19,7 @@
     </template>
     <template #default>
       <div>
-        <v-alert type="warning" icon="mdi-alert" class="justify-space-between mb-6 mt-2">
+        <v-alert type="warning" icon="mdi-alert" class="justify-space-between mb-4 mt-2">
           <ShBodySmall class="white-text">
             Podrás subir hasta <strong>5</strong> logs juntos en formato <strong>.evtx o .log</strong>.<br>
             Recordá que el tamaño máximo por archivo es de <strong>50mb</strong>.
@@ -28,74 +28,63 @@
       </div>
       <div>
         <v-file-input
-          v-model="fileToAdd"
-          chips
+          v-model="filesToAdd"
           multiple
           rounded
+          clearable
           clear-icon
           background-color="bg-gray"
           show-size
           height="144"
-          placeholder="Arrastrá o agregá tus logs en formato evtx o log"
+          placeholder="Arrastrá o agregá tus logs en un formato evtx o log."
           prepend-inner-icon="mdi-plus-circle"
           prepend-icon=""
           type="file"
-          accept=".evtx,.log,.csv"
+          accept=".evtx,.log"
+          @change="addLogFile"
         />
-        <ShChip v-for="(file,index) in logFiles" :key="index" class="px-4 mr-2" close>
+        <ShChip v-for="(file,index) in logFiles" :key="index" class="px-4 mr-2 mb-9" close>
           {{ `${file.name} (${file.size})` }}
         </ShChip>
       </div>
-      <v-tabs background-color="transparent">
-        <v-tab v-for="(log,index) in logFiles" :key="index">
-          {{ `Log - ${index + 1}` }}
-        </v-tab>
-        <v-tab-item v-for="(log,index) in logFiles" :key="index" class="pb-2">
-          <div>
-            <ShTextField
-              v-model="logName"
-              label="Nombre *"
-              :rules="[$rules.required('título')]"
-              class="mt-6 mx-2"
-            />
-          </div>
-          <div>
-            <ShTextArea
-              v-model="logDescription"
-              label="Descripción"
-              class="mx-2"
-            />
-          </div>
-        </v-tab-item>
-      </v-tabs>
     </template>
   </ShAsyncDialog>
 </template>
 <script>
 export default {
-  props: {
-    organizationId: {
-      type: String,
-      required: true
-    }
-  },
   data: () => ({
-    logFiles: [
-      { name: 'nombre', description: 'descripcion', size: '403kb' },
-      { name: 'nombre2', description: 'descripcion2', size: '20mb' }
-    ],
-    fileToAdd: null
+    logFiles: [],
+    filesToAdd: null
   }),
   methods: {
     save () {
 
     },
     setInitialData () {
-
+      this.filesToAdd = null
     },
     addLogFile () {
-      this.logFiles.push(this.fileToAdd)
+      const uploadedFile = {
+        name: '',
+        description: '',
+        size: ''
+      }
+      console.log('logFiles Antes', this.logFiles)
+      this.filesToAdd.forEach((file) => {
+        uploadedFile.name = file.name
+        uploadedFile.size = file.size
+        this.logFiles.push(uploadedFile)
+      })
+      console.log('logFiles Despues', this.logFiles)
+      // this.logFiles.push(...this.filesToAdd.map(file => ({ ...file, description: '' })))
     }
   }
 }
 </script>
+<style scoped>
+::v-deep .v-input__prepend-inner{
+  margin-right: 0px !important;
+  display: flex;
+  align-self: center;
+}
+</style>
