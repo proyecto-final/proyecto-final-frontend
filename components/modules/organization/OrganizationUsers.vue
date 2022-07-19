@@ -90,7 +90,7 @@
         </template>
         <template #[`item.projects`]="{ item }">
           <ShBodySmall v-if="item.projects.length === 0">
-            Sin proyectos vinculados.
+            Sin proyectos vinculados
           </ShBodySmall>
           <ShAvatars
             v-else
