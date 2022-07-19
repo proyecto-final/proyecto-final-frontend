@@ -96,20 +96,30 @@ export default {
       this.logFiles = []
     },
     addLogFile () {
-      this.filesToAdd.forEach((file) => {
-        const uploadedFile = {
-          name: '',
-          description: '',
-          size: ''
-        }
-        uploadedFile.name = file.name
-        uploadedFile.size = file.size
-        this.logFiles.push(uploadedFile)
-      })
+      if (this.validateMaxSize(this.filesToAdd, 50e6) && this.validateMaxNumber(this.filesToAdd, 5)) {
+        this.filesToAdd.forEach((file) => {
+          const uploadedFile = {
+            name: '',
+            description: '',
+            size: ''
+          }
+          uploadedFile.name = file.name
+          uploadedFile.size = file.size
+          this.logFiles.push(uploadedFile)
+        })
+      } else {
+        this.filesToAdd = []
+      }
     },
     remove (file) {
       this.logFiles.splice(this.logFiles.indexOf(file), 1)
       this.filesToAdd.splice(this.logFiles.indexOf(file), 1)
+    },
+    validateMaxNumber (files, max) {
+      return files.length <= max
+    },
+    validateMaxSize (files, max) {
+      return (!files || !files.some(file => file.size > max))
     }
   }
 }
