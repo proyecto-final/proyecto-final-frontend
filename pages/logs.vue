@@ -15,7 +15,7 @@
         </v-col>
         <v-col cols="12" md="4" lg="3">
           <div class="d-flex justify-end">
-            <ShButton v-if="!noLogsPresentAndNotLoadingAndNotFiltering" :block="$vuetify.breakpoint.smAndDown" v-on="on">
+            <ShButton v-if="!noLogsPresentAndNotLoadingAndNotFiltering" :block="$vuetify.breakpoint.smAndDown">
               <v-icon color="white">
                 mdi-plus
               </v-icon>
@@ -51,7 +51,7 @@
           Cargá tus logs para empezar con su analisis.<br>
           Una vez que lo hagas, desde acá los verás.
           <div class="mt-7">
-            <ShButton :block="$vuetify.breakpoint.smAndDown" v-on="on">
+            <ShButton :block="$vuetify.breakpoint.smAndDown">
               <v-icon color="white">
                 mdi-plus
               </v-icon>
@@ -89,7 +89,7 @@
         </template>
         <template #[`item.actions`]="{ item }">
           <div class="d-flex">
-            <ShButton :disabled="item.status === 'loaded'" text @click="$router.push(`/logs/${item.id}`)">
+            <ShButton :disabled="item.status === 'loaded'" text @click="redirectToLogPage(item.id)">
               Ver log
             </ShButton>
             <v-menu v-model="display[item.id]" offset-y close-on-content-click>
@@ -153,15 +153,15 @@ export default {
   }),
   fetch () {
     this.loading = true
-    this.$organizationService.get({
+    this.$logService.get({
       offset: (this.options.page - 1) * this.options.itemsPerPage,
       limit: this.options.itemsPerPage,
       ...this.filter
     }).then((result) => {
-      this.logs = [{ name: 'Logcito 1', description: 'Desc log 1', date: '2022-07-17 22:21:58', status: 'loaded' }, { name: 'Logcito 2', description: 'Desc log 2', date: '2022-07-17 22:21:58', status: 'loading' }]
-      this.serverItemsLength = 2
+      this.logs = result.rows
+      this.serverItemsLength = result.count
     }).catch(() => {
-      this.$noty.warn('Hubo un error al cargar las organizaciones')
+      this.$noty.warn('Hubo un error al cargar los logs')
     }).finally(() => {
       this.loading = false
     })
@@ -182,6 +182,9 @@ export default {
     search () {
       this.loading = true
       this.fetchDebounced()
+    },
+    redirectToLogPage (itemId) {
+      this.$router.push(`/logs/${itemId}`)
     },
     fetchDebounced: debounce(function () {
       this.$fetch()
