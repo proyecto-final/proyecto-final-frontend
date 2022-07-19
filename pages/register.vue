@@ -125,20 +125,16 @@ export default {
         return
       }
       this.loading = true
-      this.$organizationService.createUser({
-        username: this.user.username,
-        name: this.user.name,
-        password: this.user.password,
-        email: this.user.email,
-        token: this.$route.query.token
+      this.$userService.createUser({
+        ...this.user, token: this.$route.query.token
       }).then(() => {
+        this.$noty.success('Se registró correctamente al usuario')
         this.$router.push('/login')
       }).catch((error) => {
         const msg = error.response?.data?.msg
         if (msg) {
           this.$noty.warn(msg.join(', '))
         }
-        return false
       }).finally(() => {
         this.loading = false
       })

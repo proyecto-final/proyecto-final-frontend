@@ -14,7 +14,7 @@
         </v-col>
         <v-col cols="12" md="4" lg="3">
           <div class="d-flex justify-end">
-            <ShButton :loading="gettingLink" @click="copyRegisterLinkToClipboard()">
+            <ShButton :loading="gettingLink" @click="copyRegisterLinkToClipboard">
               <v-icon color="white">
                 mdi-content-copy
               </v-icon>
