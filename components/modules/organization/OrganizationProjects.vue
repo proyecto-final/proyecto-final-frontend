@@ -105,6 +105,20 @@
                 </v-list-item>
               </v-list>
             </v-menu>
+            <OrganizationProjectDeleteDialog
+              offset-y
+              close-on-content-click
+              :project="item"
+              :organization-id="organizationId"
+              @deleted="$fetch"
+            />
+            <v-btn
+              icon
+            >
+              <v-icon>
+                mdi-dots-vertical
+              </v-icon>
+            </v-btn>
           </div>
         </template>
       </ShTable>
