@@ -26,4 +26,12 @@ export default class Rules {
   fieldLength (field, min, max) {
     return value => ((min <= value.length) && (value.length <= max)) || `El campo ${field} debe tener entre ${min} y ${max} caracteres`
   }
+
+  maxUploadedFiles (max) {
+    return files => (files.length <= max) || `La cantidad de archivos cargados debe ser menor a ${max}`
+  }
+
+  maxUploadedFilesSize (max) {
+    return files => !files || !files.some(file => file.size > max) || 'El tamaño de los archivos debe ser menor a 50MB'
+  }
 }

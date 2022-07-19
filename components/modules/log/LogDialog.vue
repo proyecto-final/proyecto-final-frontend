@@ -41,12 +41,37 @@
           prepend-icon=""
           type="file"
           accept=".evtx,.log"
+          :rules="[$rules.required('archivo'), $rules.maxUploadedFiles(5), $rules.maxUploadedFilesSize(50e6)]"
           @change="addLogFile"
         />
-        <ShChip v-for="(file,index) in logFiles" :key="index" class="px-4 mr-2 mb-9" close>
+        <ShChip v-for="(file,index) in logFiles" :key="index" class="px-4 mr-2 mb-7" close>
           {{ `${file.name} (${file.size})` }}
         </ShChip>
       </div>
+      <v-tabs background-color="transparent">
+        <v-tab v-for="(log,index) in logFiles" :key="index">
+          {{ `Log - ${index + 1}` }}
+        </v-tab>
+        <v-tab-item v-for="(log,index) in logFiles" :key="index" class="pb-2">
+          <div>
+            <ShTextField
+              :key="index"
+              v-model="log.name"
+              label="Nombre *"
+              :rules="[$rules.required('título')]"
+              class="mt-6 mx-2"
+            />
+          </div>
+          <div>
+            <ShTextArea
+              :key="index"
+              v-model="log.description"
+              label="Descripción"
+              class="mx-2"
+            />
+          </div>
+        </v-tab-item>
+      </v-tabs>
     </template>
   </ShAsyncDialog>
 </template>
@@ -54,29 +79,27 @@
 export default {
   data: () => ({
     logFiles: [],
-    filesToAdd: null
+    filesToAdd: []
   }),
   methods: {
     save () {
 
     },
     setInitialData () {
-      this.filesToAdd = null
+      this.filesToAdd = []
+      this.logFiles = []
     },
     addLogFile () {
-      const uploadedFile = {
-        name: '',
-        description: '',
-        size: ''
-      }
-      console.log('logFiles Antes', this.logFiles)
       this.filesToAdd.forEach((file) => {
+        const uploadedFile = {
+          name: '',
+          description: '',
+          size: ''
+        }
         uploadedFile.name = file.name
         uploadedFile.size = file.size
         this.logFiles.push(uploadedFile)
       })
-      console.log('logFiles Despues', this.logFiles)
-      // this.logFiles.push(...this.filesToAdd.map(file => ({ ...file, description: '' })))
     }
   }
 }
