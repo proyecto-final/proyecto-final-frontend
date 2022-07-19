@@ -216,7 +216,7 @@ export default {
     }, 500),
     copyRegisterLinkToClipboard () {
       this.gettingLink = true
-      return this.$organizationService.getInvitationToken(this.organizationId)
+      this.$organizationService.getInvitationToken(this.organizationId)
         .then((response) => {
           const registerURL = `${window.location.origin}/register?token=${response.invitationToken}`
           navigator.clipboard.writeText(registerURL)
@@ -226,7 +226,6 @@ export default {
           if (msg) {
             this.$noty.warn(msg.join(', '))
           }
-          return false
         }).finally(() => { this.gettingLink = false })
     },
     setUser (user, updatedUser) {
