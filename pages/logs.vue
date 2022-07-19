@@ -87,13 +87,13 @@
         </template>
         <template #[`item.actions`]="{ item }">
           <div class="d-flex">
-            <ShButton :disabled="item.status === 'loaded'" text @click="redirectToLogPage(item.id)">
+            <ShButton :disabled="item.status === 'loading'" text @click="redirectToLogPage(item.id)">
               Ver log
             </ShButton>
             <v-menu v-model="display[item.id]" offset-y close-on-content-click>
               <template #activator="{ on, attrs }">
                 <v-btn
-                  :disabled="item.status === 'loaded'"
+                  :disabled="item.status === 'loading'"
                   icon
                   v-bind="attrs"
                   v-on="on"
