@@ -15,12 +15,7 @@
         </v-col>
         <v-col cols="12" md="4" lg="3">
           <div class="d-flex justify-end">
-            <ShButton v-if="!(logs.length === 0 && !loading && !isFiltering)" :block="$vuetify.breakpoint.smAndDown" v-on="on">
-              <v-icon color="white">
-                mdi-plus
-              </v-icon>
-              Cargar log
-            </ShButton>
+            <LogDialog />
           </div>
         </v-col>
       </v-row>
