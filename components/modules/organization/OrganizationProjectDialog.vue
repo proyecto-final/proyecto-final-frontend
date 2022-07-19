@@ -47,13 +47,12 @@
             </div>
           </v-col>
           <v-col cols="12" md="4" lg="8">
-            <div>
-              <ShTextField
-                v-model="project.name"
-                label="Nombre *"
-                :rules="[$rules.required('nombre'), $rules.fieldLength('nombre', 2, 32)]"
-              />
-            </div>
+            <div />
+            <ShTextField
+              v-model="project.name"
+              label="Nombre *"
+              :rules="[$rules.required('nombre'), $rules.fieldLength('nombre', 2, 32)]"
+            />
           </v-col>
         </v-row>
       </div>
