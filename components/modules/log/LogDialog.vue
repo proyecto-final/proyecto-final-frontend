@@ -5,7 +5,7 @@
     title="Cargar log"
     :async-confirm-function="save"
     v-on="$listeners"
-    @open="setProject"
+    @open="setInitialData"
   >
     <template #activator="{on}">
       <slot name="activator" :on="on">
@@ -28,6 +28,7 @@
       </div>
       <div>
         <v-file-input
+          v-model="fileToAdd"
           chips
           multiple
           rounded
@@ -38,13 +39,12 @@
           placeholder="Arrastrá o agregá tus logs en formato evtx o log"
           prepend-inner-icon="mdi-plus-circle"
           prepend-icon=""
-        >
-          <template #selection="{ text }">
-            <ShChip close>
-              {{ text }}
-            </ShChip>
-          </template>
-        </v-file-input>
+          type="file"
+          accept=".evtx,.log,.csv"
+        />
+        <ShChip v-for="(file,index) in logFiles" :key="index" class="px-4 mr-2" close>
+          {{ `${file.name} (${file.size})` }}
+        </ShChip>
       </div>
       <v-tabs background-color="transparent">
         <v-tab v-for="(log,index) in logFiles" :key="index">
@@ -72,11 +72,6 @@
   </ShAsyncDialog>
 </template>
 <script>
-const getEmptyProject = () => ({
-  name: '',
-  prefix: '',
-  color: ''
-})
 export default {
   props: {
     organizationId: {
@@ -85,15 +80,21 @@ export default {
     }
   },
   data: () => ({
-    logFiles: [{ name: 'nombre', description: 'descripcion' }, { name: 'nombre2', description: 'descripcion2' }],
-    project: getEmptyProject()
+    logFiles: [
+      { name: 'nombre', description: 'descripcion', size: '403kb' },
+      { name: 'nombre2', description: 'descripcion2', size: '20mb' }
+    ],
+    fileToAdd: null
   }),
   methods: {
     save () {
 
     },
-    setProject () {
-      this.project = getEmptyProject()
+    setInitialData () {
+
+    },
+    addLogFile () {
+      this.logFiles.push(this.fileToAdd)
     }
   }
 }
