@@ -6,7 +6,7 @@
     :async-confirm-function="save"
     :submit-on-enter="false"
     v-on="$listeners"
-    @open="setLinkedUsers"
+    @open="setInitialData"
   >
     <template #activator="{on}">
       <slot name="activator" :on="on">
@@ -31,6 +31,7 @@
           :search-input.sync="filter.name"
           hide-details
           clearable
+          hide-no-data
           filled
           background-color="#DFE2F5"
           :items="availableUsers"
@@ -38,7 +39,6 @@
           return-object
           placeholder="Asignar usuarios"
           :loading="loading"
-          @input="addUser"
         />
       </div>
       <div v-for="(user,index) in selectedUsers" :key="index" class="px-4">
@@ -61,7 +61,7 @@
   </ShAsyncDialog>
 </template>
 <script>
-import { debounce } from 'lodash'
+import { debounce, cloneDeep } from 'lodash'
 export default {
   props: {
     organizationId: {
@@ -103,6 +103,9 @@ export default {
         this.loading = true
         this.fetchDebounced()
       }
+    },
+    userToAdd (val) {
+      this.addUser(val)
     }
   },
   methods: {
@@ -110,19 +113,26 @@ export default {
 
     },
     addUser (userToAdd) {
-      this.selectedUsers.push(userToAdd)
-      this.userToAdd = null
-      this.filter.name = ''
+      if (userToAdd) {
+        this.$nextTick(() => {
+          this.selectedUsers.push(cloneDeep(userToAdd))
+          this.userToAdd = null
+        })
+        this.filter.name = ''
+      }
     },
-    setLinkedUsers () {
-      this.selectedUsers = []
+    async setInitialData () {
+      this.selectedUsers = (await this.$organizationService
+        .getProject(this.organizationId, this.projectId)).users
       this.$fetch()
     },
     fetchDebounced: debounce(function () {
       this.$fetch()
     }, 500),
-    removeUser (user) {
-      this.selectedUsers.splice(user, 1)
+    removeUser (userIndex) {
+      this.selectedUsers.splice(userIndex, 1)
+      this.userToAdd = null
+      this.filter.name = ''
     }
   }
 }
