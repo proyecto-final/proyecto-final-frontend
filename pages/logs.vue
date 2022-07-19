@@ -4,7 +4,7 @@
       <v-row justify="space-between">
         <v-col cols="12" md="4" lg="3">
           <ShSearchField
-            v-if="!(logs.length === 0 && !loading && !isFiltering)"
+            v-if="!noLogsPresentAndNotLoadingAndNotFiltering"
             v-model="filter.name"
             hide-details
             clearable
@@ -15,7 +15,7 @@
         </v-col>
         <v-col cols="12" md="4" lg="3">
           <div class="d-flex justify-end">
-            <ShButton v-if="!(logs.length === 0 && !loading && !isFiltering)" :block="$vuetify.breakpoint.smAndDown" v-on="on">
+            <ShButton v-if="!noLogsPresentAndNotLoadingAndNotFiltering" :block="$vuetify.breakpoint.smAndDown" v-on="on">
               <v-icon color="white">
                 mdi-plus
               </v-icon>
@@ -27,7 +27,7 @@
       <v-row>
         <v-col cols="12" md="4" lg="3">
           <ShAutocomplete
-            v-if="!(logs.length === 0 && !loading && !isFiltering)"
+            v-if="!noLogsPresentAndNotLoadingAndNotFiltering"
             v-model="filter.status"
             hide-details
             clearable
@@ -40,7 +40,7 @@
     </div>
     <div class="mb-6">
       <ShTableEmptyState
-        v-if="logs.length === 0 && !loading && !isFiltering"
+        v-if="noLogsPresentAndNotLoadingAndNotFiltering"
         class="my-10"
         img-src="/empty-state/logs.svg"
       >
@@ -89,27 +89,13 @@
         </template>
         <template #[`item.actions`]="{ item }">
           <div class="d-flex">
-            <ShButton v-if="item.status === 'loaded'" text @click="$router.push(`/logs/${item.id}`)">
-              Ver log
-            </ShButton>
-            <ShButton v-else disabled>
+            <ShButton :disabled="item.status === 'loaded'" text @click="$router.push(`/logs/${item.id}`)">
               Ver log
             </ShButton>
             <v-menu v-model="display[item.id]" offset-y close-on-content-click>
               <template #activator="{ on, attrs }">
                 <v-btn
-                  v-if="item.status === 'loaded'"
-                  icon
-                  v-bind="attrs"
-                  v-on="on"
-                >
-                  <v-icon>
-                    mdi-dots-vertical
-                  </v-icon>
-                </v-btn>
-                <v-btn
-                  v-else
-                  disabled
+                  :disabled="item.status === 'loaded'"
                   icon
                   v-bind="attrs"
                   v-on="on"
@@ -183,6 +169,9 @@ export default {
   computed: {
     isFiltering () {
       return Object.values(this.filter).some(filterParam => !!filterParam)
+    },
+    noLogsPresentAndNotLoadingAndNotFiltering () {
+      return (this.logs.length === 0 && !this.loading && !this.isFiltering)
     }
   },
   created () {
