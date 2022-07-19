@@ -104,7 +104,13 @@
                 </v-btn>
               </template>
               <v-list>
-                Eliminar
+                <LogDeleteDialog
+                  offset-y
+                  close-on-content-click
+                  :log="item"
+                  :project-id="projectId"
+                  @deleted="$fetch"
+                />
               </v-list>
             </v-menu>
           </div>
@@ -116,6 +122,12 @@
 <script>
 import { debounce } from 'lodash'
 export default {
+  props: {
+    projectId: {
+      type: String,
+      required: true
+    }
+  },
   data: () => ({
     logs: [],
     display: {},
