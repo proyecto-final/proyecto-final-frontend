@@ -76,11 +76,13 @@
         </template>
         <template #[`item.actions`]="{ item }">
           <div class="d-flex">
-            <ShButton text color="error">
-              <ShSpecialButtonText class="error-text">
-                Eliminar
-              </ShSpecialButtonText>
-            </ShButton>
+            <OrganizationProjectDeleteDialog
+              offset-y
+              close-on-content-click
+              :project="item"
+              :organization-id="organizationId"
+              @deleted="$fetch"
+            />
             <v-menu v-model="display[item.id]" offset-y close-on-content-click>
               <template #activator="{ on, attrs }">
                 <v-btn
@@ -105,20 +107,6 @@
                 </v-list-item>
               </v-list>
             </v-menu>
-            <OrganizationProjectDeleteDialog
-              offset-y
-              close-on-content-click
-              :project="item"
-              :organization-id="organizationId"
-              @deleted="$fetch"
-            />
-            <v-btn
-              icon
-            >
-              <v-icon>
-                mdi-dots-vertical
-              </v-icon>
-            </v-btn>
           </div>
         </template>
       </ShTable>
