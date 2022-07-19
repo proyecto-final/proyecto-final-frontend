@@ -15,7 +15,7 @@
           </v-icon>
           Crear proyecto
         </ShButton>
-        <v-btn
+        <v-list-item
           v-if="isEditing"
           class="no-uppercase"
           depressed
@@ -23,8 +23,10 @@
           text
           v-on="on"
         >
-          Editar proyecto
-        </v-btn>
+          <ShHeading4 class="neutral-text">
+            Editar proyecto
+          </ShHeading4>
+        </v-list-item>
       </slot>
     </template>
     <template #default>
