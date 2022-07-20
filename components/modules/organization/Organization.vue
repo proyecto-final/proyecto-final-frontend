@@ -60,7 +60,7 @@
                         Mirá los proyectos de tu organización
                       </ShBodySmall>
                     </div>
-                    <div>
+                    <div class="d-flex">
                       <ShBodySmall v-if="projects.length === 0">
                         Sin proyectos vinculados
                       </ShBodySmall>
@@ -125,7 +125,7 @@ export default {
   async fetch () {
     try {
       this.organization = await this.$organizationService.getSpecific(this.organizationId)
-      this.projects = (await this.$organizationService.getProjects(this.organizationId, { offset: 0, limit: 10, ...this.filter })).rows
+      this.projects = (await this.$organizationService.getProjects(this.organizationId, { offset: 0, limit: 100, ...this.filter })).rows
     } catch (er) {
       this.$noty.warn('Hubo un error al cargar la información de tu organización')
     }
