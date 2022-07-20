@@ -16,7 +16,7 @@
           Crear proyecto
         </ShButton>
         <v-list-item
-          v-if="isEditing"
+          v-else
           class="no-uppercase"
           depressed
           color="neutral"
@@ -99,8 +99,8 @@ export default {
   methods: {
     save () {
       const savePromise = this.isEditing
-        ? this.$organizationService.updateProject(this.organizationId, this.projectId, this.project).then((project) => {
-          this.$emit('updated', { ...project })
+        ? this.$organizationService.updateProject(this.organizationId, this.projectId, this.project).then(() => {
+          this.$emit('updated')
           return true
         })
         : this.$organizationService.saveProject(this.organizationId, this.project).then((project) => {
