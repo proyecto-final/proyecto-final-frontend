@@ -44,52 +44,57 @@
           :rules="[$rules.required('archivo'), $rules.maxUploadedFiles(5), $rules.maxUploadedFilesSize(50e6)]"
           @change="addLogFile"
         />
-        <div v-for="(file,index) in logFiles" :key="index" class="px-4">
-          <div class="d-flex justify-space-between align-center py-3">
-            <div class="d-flex flex-column">
-              <ShBody>
-                {{ file.name }}
-              </ShBody>
-              <ShBodySmall neutral>
-                {{ file.size }}
-              </ShBodySmall>
-            </div>
-            <div>
-              <ShIconButton icon="mdi-close" title="Quitar" @click="remove(file)" />
-            </div>
-          </div>
-          <v-divider v-if="index !== (logFiles.length - 1)" />
-        </div>
-      </div>
-      <v-tabs background-color="transparent">
         <v-tooltip v-for="(log,index) in logFiles" :key="index" bottom>
           <template #activator="{on, attrs}">
-            <v-tab v-bind="attrs" v-on="on">
-              {{ log.name.length <= 8 ? log.name : log.name.substring(0,8) + "..." }}
-            </v-tab>
+            <div class="px-4">
+              <div class="d-flex justify-space-between align-center py-3">
+                <div v-bind="attrs" class="d-flex flex-column" v-on="on">
+                  <ShBody>
+                    {{ log.name.length <= 40 ? log.name : log.name.substring(0,40) + "..." }}
+                  </ShBody>
+                  <ShBodySmall neutral>
+                    {{ log.size }}
+                  </ShBodySmall>
+                </div>
+                <div>
+                  <ShIconButton icon="mdi-close" title="Quitar" @click="remove(index)" />
+                </div>
+              </div>
+              <v-divider v-if="index !== (logFiles.length - 1)" />
+            </div>
           </template>
-          <span>{{ log.name }}</span>
+          <span> {{ log.name }} </span>
         </v-tooltip>
-        <v-tab-item v-for="(log,index) in logFiles" :key="index" class="pb-2">
-          <div>
-            <ShTextField
-              :key="index"
-              v-model="log.name"
-              label="Nombre *"
-              :rules="[$rules.required('nombre')]"
-              class="mt-6 mx-2"
-            />
-          </div>
-          <div>
-            <ShTextArea
-              :key="index"
-              v-model="log.description"
-              label="Descripción"
-              class="mx-2"
-            />
-          </div>
-        </v-tab-item>
-      </v-tabs>
+        <v-tabs background-color="transparent">
+          <v-tooltip v-for="(log,index) in logFiles" :key="index" bottom>
+            <template #activator="{on, attrs}">
+              <v-tab v-bind="attrs" v-on="on">
+                {{ log.name.length <= 8 ? log.name : log.name.substring(0,8) + "..." }}
+              </v-tab>
+            </template>
+            <span>{{ log.name }}</span>
+          </v-tooltip>
+          <v-tab-item v-for="(log,index) in logFiles" :key="index" class="pb-2">
+            <div>
+              <ShTextField
+                :key="index"
+                v-model="log.name"
+                label="Nombre *"
+                :rules="[$rules.required('nombre')]"
+                class="mt-6 mx-2"
+              />
+            </div>
+            <div>
+              <ShTextArea
+                :key="index"
+                v-model="log.description"
+                label="Descripción"
+                class="mx-2"
+              />
+            </div>
+          </v-tab-item>
+        </v-tabs>
+      </div>
     </template>
   </ShAsyncDialog>
 </template>
