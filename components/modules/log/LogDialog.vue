@@ -55,9 +55,14 @@
         </ShChip>
       </div>
       <v-tabs background-color="transparent">
-        <v-tab v-for="(log,index) in logFiles" :key="index">
-          {{ log.name.length <= 8 ? log.name : log.name.substring(0,8) + "..." }}
-        </v-tab>
+        <v-tooltip v-for="(log,index) in logFiles" :key="index" bottom>
+          <template #activator="{on, attrs}">
+            <v-tab v-bind="attrs" v-on="on">
+              {{ log.name.length <= 8 ? log.name : log.name.substring(0,8) + "..." }}
+            </v-tab>
+          </template>
+          <span>{{ log.name }}</span>
+        </v-tooltip>
         <v-tab-item v-for="(log,index) in logFiles" :key="index" class="pb-2">
           <div>
             <ShTextField
