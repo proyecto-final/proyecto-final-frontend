@@ -117,6 +117,14 @@
               <v-list>
                 Eliminar
               </v-list>
+              <v-list>
+                <LogEditDialog
+                  :organization-id="organizationId"
+                  :project-id="item.id"
+                  :log2-edit="item"
+                  @updated="$fetch"
+                />
+              </v-list>
             </v-menu>
           </div>
         </template>
@@ -167,7 +175,7 @@ export default {
       limit: this.options.itemsPerPage,
       ...this.filter
     }).then((result) => {
-      this.logs = [{ name: 'Logcito 1', description: 'Desc log 1', date: '2022-07-17 22:21:58', status: 'loaded' }, { name: 'Logcito 2', description: 'Desc log 2', date: '2022-07-17 22:21:58', status: 'loading' }]
+      this.logs = [{ id: '1', name: 'Logcito 1', description: 'Desc log 1', date: '2022-07-17 22:21:58', status: 'loaded' }, { id: '2', name: 'Logcito 2', description: 'Desc log 2', date: '2022-07-17 22:21:58', status: 'loading' }]
       this.serverItemsLength = 2
     }).catch(() => {
       this.$noty.warn('Hubo un error al cargar las organizaciones')
