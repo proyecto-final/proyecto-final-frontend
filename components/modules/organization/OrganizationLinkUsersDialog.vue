@@ -31,7 +31,7 @@
           clearable
           hide-no-data
           filled
-          background-color="#DFE2F5"
+          class="bg-gray"
           :items="availableUsers"
           item-text="description"
           return-object
