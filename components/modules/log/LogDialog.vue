@@ -56,7 +56,7 @@
       </div>
       <v-tabs background-color="transparent">
         <v-tab v-for="(log,index) in logFiles" :key="index">
-          {{ `Log - ${index + 1}` }}
+          {{ log.name.length <= 8 ? log.name : log.name.substring(0,8) + "..." }}
         </v-tab>
         <v-tab-item v-for="(log,index) in logFiles" :key="index" class="pb-2">
           <div>
@@ -127,10 +127,12 @@ export default {
 ::v-deep .v-input__slot {
   display: grid;
 }
-
 ::v-deep .v-input__prepend-inner{
   margin-right: 0px !important;
   display: flex;
   align-self: center;
+}
+.v-tab {
+text-transform: none !important;
 }
 </style>
