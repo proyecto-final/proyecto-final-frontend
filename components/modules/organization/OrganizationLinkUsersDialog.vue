@@ -13,9 +13,9 @@
         <v-list-item
           v-on="on"
         >
-          <ShHeading4 class="neutral-text">
+          <ShBodySmall class="neutral-darken-text">
             Vincular usuarios
-          </ShHeading4>
+          </ShBodySmall>
         </v-list-item>
       </slot>
     </template>
