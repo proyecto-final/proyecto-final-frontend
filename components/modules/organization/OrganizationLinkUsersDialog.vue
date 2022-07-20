@@ -31,7 +31,7 @@
           clearable
           hide-no-data
           filled
-          class="bg-gray"
+          background-color="neutral darken-1"
           :items="availableUsers"
           item-text="description"
           return-object
@@ -109,7 +109,7 @@ export default {
   methods: {
     save () {
       const linkedUsers = this.selectedUsers.map(user => ({ id: user.id }))
-      return this.$organizationService.putProjectUsers(this.organizationId, this.projectId, linkedUsers)
+      return this.$organizationService.updateProjectUsers(this.organizationId, this.projectId, linkedUsers)
         .then(() => {
           this.$emit('updated')
           return true

@@ -49,7 +49,7 @@ export default class Organization {
     return this.$axios.$get(`/api/organization/${organizationId}/project/${projectId}`)
   }
 
-  putProjectUsers (organizationId, projectId, users) {
+  updateProjectUsers (organizationId, projectId, users) {
     return this.$axios.$put(`/api/organization/${organizationId}/project/${projectId}/users`, { users })
   }
 
