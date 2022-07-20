@@ -36,7 +36,10 @@
           Creá tus proyectos para trabajar con tu equipo.<br>
           Una vez que lo hagas, desde acá los visualizarás.
           <div class="mt-7">
-            <OrganizationCreateProjectDialog :organization-id="organizationId" @created="$fetch" />
+            <OrganizationCreateProjectDialog
+              :organization-id="organizationId"
+              @created="$fetch"
+            />
           </div>
         </template>
       </ShTableEmptyState>
@@ -76,11 +79,13 @@
         </template>
         <template #[`item.actions`]="{ item }">
           <div class="d-flex">
-            <ShButton text color="error">
-              <ShSpecialButtonText class="error-text">
-                Eliminar
-              </ShSpecialButtonText>
-            </ShButton>
+            <OrganizationProjectDeleteDialog
+              offset-y
+              close-on-content-click
+              :project="item"
+              :organization-id="organizationId"
+              @deleted="$fetch"
+            />
             <v-menu v-model="display[item.id]" offset-y close-on-content-click>
               <template #activator="{ on, attrs }">
                 <v-btn

@@ -51,5 +51,9 @@ export default class Organization {
 
   putProjectUsers (organizationId, projectId, users) {
     return this.$axios.$put(`/api/organization/${organizationId}/project/${projectId}/users`, { users })
+}
+
+  deleteProject (organizationId, projectId) {
+    return this.$axios.$delete(`/api/organization/${organizationId}/project/${projectId}`)
   }
 }
