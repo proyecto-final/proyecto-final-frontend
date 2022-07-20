@@ -29,6 +29,10 @@ export default class Organization {
     return this.$axios.$post(`/api/organization/${organizationId}/invitation-token`)
   }
 
+  validateToken (token) {
+    return this.$axios.$post('/api/organization/validate-invitation-token', { token })
+  }
+
   updateUser (organizationId, { id, role, isAdmin, enabled }) {
     return this.$axios.$patch(`/api/organization/${organizationId}/user/${id}`, { role, isAdmin, enabled })
   }
