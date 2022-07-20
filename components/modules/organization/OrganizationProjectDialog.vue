@@ -17,15 +17,11 @@
         </ShButton>
         <v-list-item
           v-else
-          class="no-uppercase"
-          depressed
-          color="neutral"
-          text
           v-on="on"
         >
-          <ShHeading4 class="neutral-text">
+          <ShBodySmall class="neutral-darken-text">
             Editar proyecto
-          </ShHeading4>
+          </ShBodySmall>
         </v-list-item>
       </slot>
     </template>
@@ -49,7 +45,6 @@
             </div>
           </v-col>
           <v-col cols="12" md="4" lg="8">
-            <div />
             <ShTextField
               v-model="project.name"
               label="Nombre *"
@@ -125,8 +120,3 @@ export default {
   }
 }
 </script>
-<style scoped>
-.no-uppercase {
-     text-transform: unset !important;
-}
-</style>
