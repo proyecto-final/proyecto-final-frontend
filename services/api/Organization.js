@@ -44,4 +44,8 @@ export default class Organization {
   getProjects (organizationId, params) {
     return this.$axios.$get(`/api/organization/${organizationId}/project`, { params })
   }
+
+  deleteProject (organizationId, projectId) {
+    return this.$axios.$delete(`/api/organization/${organizationId}/project/${projectId}`)
+  }
 }
