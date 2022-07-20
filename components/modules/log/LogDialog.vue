@@ -44,15 +44,22 @@
           :rules="[$rules.required('archivo'), $rules.maxUploadedFiles(5), $rules.maxUploadedFilesSize(50e6)]"
           @change="addLogFile"
         />
-        <ShChip
-          v-for="(file,index) in logFiles"
-          :key="index"
-          class="px-4 mr-2 mb-7 mt-2"
-          close
-          @click:close="remove(file)"
-        >
-          {{ `${file.name} (${file.size})` }}
-        </ShChip>
+        <div v-for="(file,index) in logFiles" :key="index" class="px-4">
+          <div class="d-flex justify-space-between align-center py-3">
+            <div class="d-flex flex-column">
+              <ShBody>
+                {{ file.name }}
+              </ShBody>
+              <ShBodySmall neutral>
+                {{ file.size }}
+              </ShBodySmall>
+            </div>
+            <div>
+              <ShIconButton icon="mdi-close" title="Quitar" @click="remove(file)" />
+            </div>
+          </div>
+          <v-divider v-if="index !== (logFiles.length - 1)" />
+        </div>
       </div>
       <v-tabs background-color="transparent">
         <v-tooltip v-for="(log,index) in logFiles" :key="index" bottom>
