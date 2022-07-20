@@ -113,33 +113,25 @@ export default {
       this.logFiles = []
     },
     addLogFile () {
-      if (this.validateMaxSize(this.filesToAdd, 50e6) && this.validateMaxNumber(this.filesToAdd, 5)) {
-        this.filesToAdd.forEach((file) => {
-          const uploadedFile = {
-            name: '',
-            description: '',
-            size: ''
-          }
-          uploadedFile.name = file.name
-          uploadedFile.size = this.formatFileSize(file.size, 1)
-          this.logFiles.push(uploadedFile)
-        })
-      }
+      this.filesToAdd.forEach((file) => {
+        const uploadedFile = {
+          name: '',
+          description: '',
+          size: ''
+        }
+        uploadedFile.name = file.name
+        uploadedFile.size = this.formatFileSize(file.size, 1)
+        this.logFiles.push(uploadedFile)
+      })
       this.filesToAdd = []
     },
     remove (file) {
       this.logFiles.splice(this.logFiles.indexOf(file), 1)
       this.filesToAdd.splice(this.logFiles.indexOf(file), 1)
     },
-    validateMaxNumber (files, max) {
-      return files.length <= max
-    },
-    validateMaxSize (files, max) {
-      return (!files || !files.some(file => file.size > max))
-    },
     formatFileSize (bytes, decimalPoint) {
       // decimalPoint is an optional parameter
-      if (bytes === 0) { return '0B' }
+      if (bytes === 0) { return '0 B' }
       const k = 1000
       const dm = decimalPoint || 2
       const sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
