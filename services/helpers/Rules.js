@@ -32,6 +32,6 @@ export default class Rules {
   }
 
   maxUploadedFilesSize (max) {
-    return files => !files || !files.some(file => file.size > max) || `El tamaño de los archivos debe ser menor a ${max}`
+    return files => !files || !files.some(file => file.size > max) || 'El tamaño de los archivos debe ser menor a 50MB'
   }
 }

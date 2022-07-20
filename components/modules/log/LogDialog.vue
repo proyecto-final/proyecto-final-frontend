@@ -109,7 +109,7 @@ export default {
             size: ''
           }
           uploadedFile.name = file.name
-          uploadedFile.size = file.size
+          uploadedFile.size = this.formatFileSize(file.size, 1)
           this.logFiles.push(uploadedFile)
         })
       }
@@ -124,6 +124,15 @@ export default {
     },
     validateMaxSize (files, max) {
       return (!files || !files.some(file => file.size > max))
+    },
+    formatFileSize (bytes, decimalPoint) {
+      // decimalPoint is an optional parameter
+      if (bytes === 0) { return '0B' }
+      const k = 1000
+      const dm = decimalPoint || 2
+      const sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+      const i = Math.floor(Math.log(bytes) / Math.log(k))
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i]
     }
   }
 }
