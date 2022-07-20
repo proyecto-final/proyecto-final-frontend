@@ -110,6 +110,10 @@ export default {
     save () {
       const linkedUsers = this.selectedUsers.map(user => ({ id: user.id }))
       return this.$organizationService.putProjectUsers(this.organizationId, this.projectId, linkedUsers)
+        .then(() => {
+          this.$emit('updated')
+          return true
+        })
         .catch((error) => {
           const msg = error.response?.data?.msg
           if (msg) {

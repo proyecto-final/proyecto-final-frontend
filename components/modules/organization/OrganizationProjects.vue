@@ -107,6 +107,7 @@
                   <OrganizationLinkUsersDialog
                     :organization-id="organizationId"
                     :project-id="item.id"
+                    @updated="$fetch"
                   />
                 </v-list-item>
               </v-list>
