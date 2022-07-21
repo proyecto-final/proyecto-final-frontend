@@ -56,11 +56,6 @@
           <div>
             <ShBodySmall>{{ item.name }} </ShBodySmall>
           </div>
-          <div>
-            <ShBodySmall neutral>
-              {{ item.email }}
-            </ShBodySmall>
-          </div>
         </template>
         <template #[`item.updatedAt`]="{ item }">
           <div>
@@ -91,13 +86,37 @@
               :organization-id="organizationId"
               @deleted="$fetch"
             />
-            <v-btn
-              icon
-            >
-              <v-icon>
-                mdi-dots-vertical
-              </v-icon>
-            </v-btn>
+            <v-menu v-model="display[item.id]" offset-y close-on-content-click>
+              <template #activator="{ on, attrs }">
+                <v-btn
+                  icon
+                  v-bind="attrs"
+                  v-on="on"
+                >
+                  <v-icon>
+                    mdi-dots-vertical
+                  </v-icon>
+                </v-btn>
+              </template>
+              <v-list nav>
+                <v-list-item>
+                  <OrganizationCreateProjectDialog
+                    :organization-id="organizationId"
+                    :project-id="item.id"
+                    is-editing
+                    :project2-edit="item"
+                    @updated="$fetch"
+                  />
+                </v-list-item>
+                <v-list-item>
+                  <OrganizationLinkUsersDialog
+                    :organization-id="organizationId"
+                    :project-id="item.id"
+                    @updated="$fetch"
+                  />
+                </v-list-item>
+              </v-list>
+            </v-menu>
           </div>
         </template>
       </ShTable>
@@ -115,6 +134,7 @@ export default {
   },
   data: () => ({
     projects: [],
+    display: {},
     options: {
       page: 1,
       itemsPerPage: 10
