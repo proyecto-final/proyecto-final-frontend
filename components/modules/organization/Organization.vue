@@ -71,9 +71,7 @@
                             text: project.prefix,
                             color: project.color}))"
                         />
-                        <v-icon color="neutral">
-                          mdi-chevron-right
-                        </v-icon>
+                        <OrganizationSwitchProjectsDialog :projects="projects" />
                       </template>
                     </div>
                   </div>
