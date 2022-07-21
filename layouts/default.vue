@@ -106,21 +106,7 @@ export default {
   computed: {
     menus () {
       return [
-        {
-          icon: 'mdi-file-code',
-          text: 'Logs',
-          to: '/logs'
-        },
-        {
-          icon: 'mdi-chart-box',
-          text: 'Timelines',
-          to: '/timelines'
-        },
-        {
-          icon: 'mdi-shield-search',
-          text: 'Buscar IP',
-          to: '/search-ip'
-        },
+        ...this.projectMenus[0].menus,
         {
           icon: 'mdi-domain',
           text: 'Mi Organización',
@@ -139,7 +125,7 @@ export default {
       ]
     },
     ...mapState('navigation', ['pageTitle', 'canGoBack']),
-    ...mapState('user', ['user', 'isLoadingUser'])
+    ...mapState('user', ['user', 'isLoadingUser', 'projectMenus'])
   },
   created () {
     this.$store.dispatch('user/getUser')
