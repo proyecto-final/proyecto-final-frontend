@@ -18,24 +18,30 @@
         hide-details
         clearable
         placeholder="Buscar proyectos"
+        class="mb-4"
       />
     </div>
     <div class="px-4">
-      <div v-for="(project, index) in projects" :key="index" class="d-flex justify-space-between align-center py-3">
-        <div>
-          <v-avatar :color="project.color">
-            <ShSpecialLabel class="white-text">
-              {{ project.prefix }}
-            </ShSpecialLabel>
-          </v-avatar>
+      <div v-for="(project, index) in projects" :key="index" class="d-flex justify-space-between align-center py-2">
+        <div class="d-flex justify-space-between">
+          <div>
+            <v-avatar size="58" :color="project.color">
+              <ShSpecialLabel class="white-text">
+                {{ project.prefix }}
+              </ShSpecialLabel>
+            </v-avatar>
+          </div>
+          <div class="d-flex align-center px-4">
+            <ShBodySmall class="neutral-darken1-text">
+              {{ project.name }}
+            </ShBodySmall>
+          </div>
         </div>
-        <div class="d-flex flex-column">
-          <ShBodySmall neutral>
-            {{ project.name }}
+        <div>
+          <ShIconButton v-if="!isActive" icon="mdi-swap-horizontal" title="Cambiar" />
+          <ShBodySmall v-else neutral>
+            Actual
           </ShBodySmall>
-        </div>
-        <div>
-          <ShIconButton icon="mdi-swap-horizontal" title="Cambiar" />
         </div>
       </div>
     </div>
@@ -50,7 +56,8 @@ export default {
     }
   },
   data: () => ({
-    activeProject: ''
+    activeProject: '',
+    isActive: false
   }),
   methods: {
     save () {
@@ -59,7 +66,7 @@ export default {
     setProjects () {
 
     },
-    switch () {
+    switch (index) {
 
     }
   }
