@@ -3,9 +3,14 @@
     <v-col cols="12" sm="8" md="6">
       <v-card class="logo py-4">
         <v-card-title> Test </v-card-title>
-        <ShButton>
-          Hola
-        </ShButton>
+        <div>
+          <ShSelect
+            v-model="e11"
+            :items="people"
+            item-text="name"
+            item-value="name"
+          />
+        </div>
         <v-card-text>
           <div>
             <ShSearchField placeholder="Buscar por nombre" />
@@ -40,6 +45,22 @@
 </template>
 <script>
 export default {
+  data: () => ({
+    e11: [],
+    people: [
+      { header: 'Group 1' },
+      { name: 'Sandra Adams', group: 'Group 1' },
+      { name: 'Ali Connors', group: 'Group 1' },
+      { name: 'Trevor Hansen', group: 'Group 1' },
+      { name: 'Tucker Smith', group: 'Group 1' },
+      { divider: true },
+      { header: 'Group 2' },
+      { name: 'Britta Holt', group: 'Group 2' },
+      { name: 'Jane Smith ', group: 'Group 2' },
+      { name: 'John Smith', group: 'Group 2' },
+      { name: 'Sandra Williams', group: 'Group 2' }
+    ]
+  }),
   created () {
     this.$store.commit('navigation/SET_PAGE_TITLE', 'Index')
   }
