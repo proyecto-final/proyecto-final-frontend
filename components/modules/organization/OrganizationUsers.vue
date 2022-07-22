@@ -14,7 +14,7 @@
         </v-col>
         <v-col cols="12" md="4" lg="3">
           <div class="d-flex justify-end">
-            <ShButton :loading="gettingLink" @click="copyRegisterLinkToClipboard()">
+            <ShButton :loading="gettingLink" @click="copyRegisterLinkToClipboard">
               <v-icon color="white">
                 mdi-content-copy
               </v-icon>
@@ -216,7 +216,7 @@ export default {
     }, 500),
     copyRegisterLinkToClipboard () {
       this.gettingLink = true
-      return this.$organizationService.getInvitationToken(this.organizationId)
+      this.$organizationService.getInvitationToken(this.organizationId)
         .then((response) => {
           const registerURL = `${window.location.origin}/register?token=${response.invitationToken}`
           navigator.clipboard.writeText(registerURL)
@@ -226,7 +226,6 @@ export default {
           if (msg) {
             this.$noty.warn(msg.join(', '))
           }
-          return false
         }).finally(() => { this.gettingLink = false })
     },
     setUser (user, updatedUser) {
