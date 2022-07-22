@@ -14,7 +14,7 @@
         </v-col>
         <v-col cols="12" md="4" lg="3">
           <div class="d-flex justify-end">
-            <OrganizationCreateProjectDialog
+            <OrganizationProjectDialog
               v-if="projects.length !== 0 && !loading && !isFiltering"
               :organization-id="organizationId"
               @created="$fetch"
@@ -36,10 +36,7 @@
           Creá tus proyectos para trabajar con tu equipo.<br>
           Una vez que lo hagas, desde acá los visualizarás.
           <div class="mt-7">
-            <OrganizationCreateProjectDialog
-              :organization-id="organizationId"
-              @created="$fetch"
-            />
+            <OrganizationProjectDialog :organization-id="organizationId" @created="$fetch" />
           </div>
         </template>
       </ShTableEmptyState>
@@ -100,7 +97,7 @@
               </template>
               <v-list nav>
                 <v-list-item>
-                  <OrganizationCreateProjectDialog
+                  <OrganizationProjectDialog
                     :organization-id="organizationId"
                     :project-id="item.id"
                     is-editing

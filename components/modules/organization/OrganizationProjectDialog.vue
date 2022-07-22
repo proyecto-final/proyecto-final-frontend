@@ -15,16 +15,14 @@
           </v-icon>
           Crear proyecto
         </ShButton>
-        <v-btn
-          v-if="isEditing"
-          class="no-uppercase"
-          depressed
-          color="neutral"
-          text
+        <v-list-item
+          v-else
           v-on="on"
         >
-          Editar proyecto
-        </v-btn>
+          <ShBodySmall class="neutral-darken-text">
+            Editar proyecto
+          </ShBodySmall>
+        </v-list-item>
       </slot>
     </template>
     <template #default>
@@ -98,8 +96,8 @@ export default {
   methods: {
     save () {
       const savePromise = this.isEditing
-        ? this.$organizationService.updateProject(this.organizationId, this.projectId, this.project).then((project) => {
-          this.$emit('updated', { ...project })
+        ? this.$organizationService.updateProject(this.organizationId, this.projectId, this.project).then(() => {
+          this.$emit('updated')
           return true
         })
         : this.$organizationService.saveProject(this.organizationId, this.project).then((project) => {
