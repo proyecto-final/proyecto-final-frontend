@@ -49,6 +49,14 @@ export default class Organization {
     return this.$axios.$patch(`/api/organization/${organizationId}/project/${projectId}`, project)
   }
 
+  getProject (organizationId, projectId) {
+    return this.$axios.$get(`/api/organization/${organizationId}/project/${projectId}`)
+  }
+
+  updateProjectUsers (organizationId, projectId, users) {
+    return this.$axios.$put(`/api/organization/${organizationId}/project/${projectId}/users`, { users })
+  }
+
   deleteProject (organizationId, projectId) {
     return this.$axios.$delete(`/api/organization/${organizationId}/project/${projectId}`)
   }

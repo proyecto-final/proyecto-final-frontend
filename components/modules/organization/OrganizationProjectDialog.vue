@@ -45,11 +45,13 @@
             </div>
           </v-col>
           <v-col cols="12" md="4" lg="8">
-            <ShTextField
-              v-model="project.name"
-              label="Nombre *"
-              :rules="[$rules.required('nombre'), $rules.fieldLength('nombre', 2, 32)]"
-            />
+            <div>
+              <ShTextField
+                v-model="project.name"
+                label="Nombre *"
+                :rules="[$rules.required('nombre'), $rules.fieldLength('nombre', 2, 32)]"
+              />
+            </div>
           </v-col>
         </v-row>
       </div>
@@ -120,3 +122,8 @@ export default {
   }
 }
 </script>
+<style scoped>
+.no-uppercase {
+     text-transform: unset !important;
+}
+</style>

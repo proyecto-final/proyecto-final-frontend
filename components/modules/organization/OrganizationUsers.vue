@@ -94,18 +94,15 @@
           </v-icon>
         </template>
         <template #[`item.role`]="{ item }">
-          <v-select
+          <ShSelect
             v-if="item.enabled"
             v-model="item.role"
             :items="roleOptions"
-            outlined
-            hide-details
-            :menu-props="{ offsetY: true }"
             item-text="text"
             item-value="value"
             @change="updateUserRole(item)"
           />
-          <ShBodySmall v-else neutral>
+          <ShBodySmall v-else>
             {{ getRoleTranslation(item.role) }}
           </ShBodySmall>
         </template>
@@ -164,7 +161,8 @@ export default {
       },
       {
         text: 'Rol',
-        value: 'role'
+        value: 'role',
+        width: '200px'
       },
       {
         text: '',

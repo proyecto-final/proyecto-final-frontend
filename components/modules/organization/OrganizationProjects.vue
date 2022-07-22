@@ -105,6 +105,13 @@
                     @updated="$fetch"
                   />
                 </v-list-item>
+                <v-list-item>
+                  <OrganizationLinkUsersDialog
+                    :organization-id="organizationId"
+                    :project-id="item.id"
+                    @updated="$fetch"
+                  />
+                </v-list-item>
               </v-list>
             </v-menu>
           </div>
