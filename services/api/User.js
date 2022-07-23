@@ -20,4 +20,8 @@ export default class User {
   logout () {
     return this.$axios.$post('/api/user/logout')
   }
+
+  createUser ({ username, name, password, email, token }) {
+    return this.$axios.$post('/api/organization/user', { username, name, password, email, token })
+  }
 }

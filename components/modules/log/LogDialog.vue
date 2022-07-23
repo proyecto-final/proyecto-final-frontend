@@ -19,7 +19,7 @@
     </template>
     <template #default>
       <div>
-        <v-alert type="warning" icon="mdi-alert" class="justify-space-between mb-4 mt-2">
+        <v-alert type="warning" icon="mdi-alert" class="justify-space-between mb-6 mt-2">
           <ShBodySmall class="white-text">
             Podrás subir hasta <strong>5</strong> logs juntos en formato <strong>.evtx o .log</strong>.<br>
             Recordá que el tamaño máximo por archivo es de <strong>50mb</strong>.
@@ -28,29 +28,21 @@
       </div>
       <div>
         <v-file-input
-          v-model="filesToAdd"
+          v-model="fileToAdd"
+          chips
           multiple
           rounded
-          clearable
           clear-icon
           background-color="bg-gray"
           show-size
           height="144"
-          placeholder="Arrastrá o agregá tus logs en un formato evtx o log."
+          placeholder="Arrastrá o agregá tus logs en formato evtx o log"
           prepend-inner-icon="mdi-plus-circle"
           prepend-icon=""
           type="file"
-          accept=".evtx,.log"
-          :rules="[$rules.required('archivo'), $rules.maxUploadedFiles(5), $rules.maxUploadedFilesSize(50e6)]"
-          @change="addLogFile"
+          accept=".evtx,.log,.csv"
         />
-        <ShChip
-          v-for="(file,index) in logFiles"
-          :key="index"
-          class="px-4 mr-2 mb-7 mt-2"
-          close
-          @click:close="remove(file)"
-        >
+        <ShChip v-for="(file,index) in logFiles" :key="index" class="px-4 mr-2" close>
           {{ `${file.name} (${file.size})` }}
         </ShChip>
       </div>
@@ -61,17 +53,15 @@
         <v-tab-item v-for="(log,index) in logFiles" :key="index" class="pb-2">
           <div>
             <ShTextField
-              :key="index"
-              v-model="log.name"
+              v-model="logName"
               label="Nombre *"
-              :rules="[$rules.required('nombre')]"
+              :rules="[$rules.required('título')]"
               class="mt-6 mx-2"
             />
           </div>
           <div>
             <ShTextArea
-              :key="index"
-              v-model="log.description"
+              v-model="logDescription"
               label="Descripción"
               class="mx-2"
             />
@@ -83,54 +73,29 @@
 </template>
 <script>
 export default {
+  props: {
+    organizationId: {
+      type: String,
+      required: true
+    }
+  },
   data: () => ({
-    logFiles: [],
-    filesToAdd: []
+    logFiles: [
+      { name: 'nombre', description: 'descripcion', size: '403kb' },
+      { name: 'nombre2', description: 'descripcion2', size: '20mb' }
+    ],
+    fileToAdd: null
   }),
   methods: {
     save () {
 
     },
     setInitialData () {
-      this.filesToAdd = []
-      this.logFiles = []
+
     },
     addLogFile () {
-      if (this.validateMaxSize(this.filesToAdd, 50e6) && this.validateMaxNumber(this.filesToAdd, 5)) {
-        this.filesToAdd.forEach((file) => {
-          const uploadedFile = {
-            name: '',
-            description: '',
-            size: ''
-          }
-          uploadedFile.name = file.name
-          uploadedFile.size = file.size
-          this.logFiles.push(uploadedFile)
-        })
-      }
-      this.filesToAdd = []
-    },
-    remove (file) {
-      this.logFiles.splice(this.logFiles.indexOf(file), 1)
-      this.filesToAdd.splice(this.logFiles.indexOf(file), 1)
-    },
-    validateMaxNumber (files, max) {
-      return files.length <= max
-    },
-    validateMaxSize (files, max) {
-      return (!files || !files.some(file => file.size > max))
+      this.logFiles.push(this.fileToAdd)
     }
   }
 }
 </script>
-<style scoped>
-::v-deep .v-input__slot {
-  display: grid;
-}
-
-::v-deep .v-input__prepend-inner{
-  margin-right: 0px !important;
-  display: flex;
-  align-self: center;
-}
-</style>

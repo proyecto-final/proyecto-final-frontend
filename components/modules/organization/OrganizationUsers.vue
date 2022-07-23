@@ -14,7 +14,7 @@
         </v-col>
         <v-col cols="12" md="4" lg="3">
           <div class="d-flex justify-end">
-            <ShButton :loading="gettingLink" @click="copyRegisterLinkToClipboard()">
+            <ShButton :loading="gettingLink" @click="copyRegisterLinkToClipboard">
               <v-icon color="white">
                 mdi-content-copy
               </v-icon>
@@ -88,24 +88,28 @@
             </ShBodySmall>
           </div>
         </template>
-        <template #[`item.projects`]="{ }">
-          <v-icon>
-            mdi-account-hard-hat
-          </v-icon>
+        <template #[`item.projects`]="{ item }">
+          <ShBodySmall v-if="item.projects.length === 0">
+            Sin proyectos vinculados
+          </ShBodySmall>
+          <ShAvatars
+            v-else
+            :avatars-to-show="3"
+            :avatars="item.projects.map(project => ({
+              text: project.prefix,
+              color: project.color}))"
+          />
         </template>
         <template #[`item.role`]="{ item }">
-          <v-select
+          <ShSelect
             v-if="item.enabled"
             v-model="item.role"
             :items="roleOptions"
-            outlined
-            hide-details
-            :menu-props="{ offsetY: true }"
             item-text="text"
             item-value="value"
             @change="updateUserRole(item)"
           />
-          <ShBodySmall v-else neutral>
+          <ShBodySmall v-else>
             {{ getRoleTranslation(item.role) }}
           </ShBodySmall>
         </template>
@@ -161,7 +165,8 @@ export default {
       },
       {
         text: 'Rol',
-        value: 'role'
+        value: 'role',
+        width: '200px'
       },
       {
         text: '',
@@ -213,7 +218,7 @@ export default {
     }, 500),
     copyRegisterLinkToClipboard () {
       this.gettingLink = true
-      return this.$organizationService.getInvitationToken(this.organizationId)
+      this.$organizationService.getInvitationToken(this.organizationId)
         .then((response) => {
           const registerURL = `${window.location.origin}/register?token=${response.invitationToken}`
           navigator.clipboard.writeText(registerURL)
@@ -223,7 +228,6 @@ export default {
           if (msg) {
             this.$noty.warn(msg.join(', '))
           }
-          return false
         }).finally(() => { this.gettingLink = false })
     },
     setUser (user, updatedUser) {
