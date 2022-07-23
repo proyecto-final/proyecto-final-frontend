@@ -28,22 +28,28 @@
           </v-alert>
         </div>
         <div>
-          <v-file-input
-            v-model="filesToAdd"
-            multiple
-            rounded
-            clearable
-            clear-icon
-            background-color="bg-gray"
-            show-size
-            height="144"
-            placeholder="Arrastrá o agregá tus logs en formato evtx o log"
-            prepend-inner-icon="mdi-plus-circle"
-            prepend-icon=""
-            type="file"
-            accept=".evtx,.log,.csv"
-            @change="addLogFile"
-          />
+          <div
+            v-cloak
+            @drop.prevent="setDropFile"
+            @dragover.prevent
+          >
+            <v-file-input
+              v-model="filesToAdd"
+              multiple
+              rounded
+              clearable
+              clear-icon
+              background-color="bg-gray"
+              show-size
+              height="144"
+              placeholder="Arrastrá o agregá tus logs en formato evtx o log"
+              prepend-inner-icon="mdi-plus-circle"
+              prepend-icon=""
+              type="file"
+              accept=".evtx,.log,.csv"
+              @change="addLogFile"
+            />
+          </div>
           <v-expand-transition>
             <div v-show="error">
               <v-alert type="warning" icon="mdi-alert">
@@ -145,6 +151,15 @@ export default {
     setInitialData () {
       this.filesToAdd = []
       this.logFiles = []
+    },
+    setDropFile (dropEvent) {
+      // Since files is not iterable with map
+      const files = []
+      for (let i = 0; i < dropEvent.dataTransfer.files.length; i++) {
+        files.push(dropEvent.dataTransfer.files[i])
+      }
+      this.filesToAdd = files
+      this.addLogFile()
     },
     addLogFile () {
       this.logFiles.push(...this.filesToAdd.map(file => ({
