@@ -77,6 +77,14 @@
                 </v-btn>
               </template>
               <v-list>
+                <LogUpdateDialog
+                  :project-id="projectId"
+                  :log-id="item._id"
+                  :log2-edit="item"
+                  @updated="$fetch"
+                />
+              </v-list>
+              <v-list>
                 <LogDeleteDialog
                   offset-y
                   close-on-content-click
