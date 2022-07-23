@@ -200,6 +200,7 @@ export default {
 }
 ::v-deep .v-input__prepend-inner{
   margin-right: 0px !important;
+  margin-top: 32px;
   display: flex;
   align-self: center;
 }
