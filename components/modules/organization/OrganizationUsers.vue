@@ -88,10 +88,17 @@
             </ShBodySmall>
           </div>
         </template>
-        <template #[`item.projects`]="{ }">
-          <v-icon>
-            mdi-account-hard-hat
-          </v-icon>
+        <template #[`item.projects`]="{ item }">
+          <ShBodySmall v-if="item.projects.length === 0">
+            Sin proyectos vinculados
+          </ShBodySmall>
+          <ShAvatars
+            v-else
+            :avatars-to-show="3"
+            :avatars="item.projects.map(project => ({
+              text: project.prefix,
+              color: project.color}))"
+          />
         </template>
         <template #[`item.role`]="{ item }">
           <ShSelect

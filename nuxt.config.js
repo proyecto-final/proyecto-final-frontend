@@ -38,7 +38,8 @@ export default {
   plugins: [
     '~/plugins/axios',
     '~/plugins/services',
-    '~/plugins/filters'
+    '~/plugins/filters',
+    '~/plugins/init'
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components

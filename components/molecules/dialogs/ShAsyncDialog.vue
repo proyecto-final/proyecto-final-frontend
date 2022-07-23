@@ -40,6 +40,7 @@
                 </ShSecondaryButton>
               </slot>
               <ShButton
+                v-if="!hidePrimaryButton"
                 class="ml-2"
                 :loading="loadingFunction"
                 :disabled="!canConfirm"
@@ -94,6 +95,10 @@ export default {
       default: false
     },
     hideSecondaryButton: {
+      type: Boolean,
+      default: false
+    },
+    hidePrimaryButton: {
       type: Boolean,
       default: false
     },
