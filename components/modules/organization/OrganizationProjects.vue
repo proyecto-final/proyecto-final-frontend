@@ -14,7 +14,7 @@
         </v-col>
         <v-col cols="12" md="4" lg="3">
           <div class="d-flex justify-end">
-            <OrganizationCreateProjectDialog
+            <OrganizationProjectDialog
               v-if="projects.length !== 0 && !loading && !isFiltering"
               :organization-id="organizationId"
               @created="$fetch"
@@ -36,7 +36,7 @@
           Creá tus proyectos para trabajar con tu equipo.<br>
           Una vez que lo hagas, desde acá los visualizarás.
           <div class="mt-7">
-            <OrganizationCreateProjectDialog :organization-id="organizationId" />
+            <OrganizationProjectDialog :organization-id="organizationId" @created="$fetch" />
           </div>
         </template>
       </ShTableEmptyState>
@@ -52,11 +52,6 @@
         <template #[`item.name`]="{ item }">
           <div>
             <ShBodySmall>{{ item.name }} </ShBodySmall>
-          </div>
-          <div>
-            <ShBodySmall neutral>
-              {{ item.email }}
-            </ShBodySmall>
           </div>
         </template>
         <template #[`item.updatedAt`]="{ item }">
@@ -79,20 +74,46 @@
             mdi-checkbox-blank-circle
           </v-icon>
         </template>
-        <template #[`item.actions`]="{ }">
+        <template #[`item.actions`]="{ item }">
           <div class="d-flex">
-            <ShButton text color="error">
-              <ShSpecialButtonText class="error-text">
-                Eliminar
-              </ShSpecialButtonText>
-            </ShButton>
-            <v-btn
-              icon
-            >
-              <v-icon>
-                mdi-dots-vertical
-              </v-icon>
-            </v-btn>
+            <OrganizationProjectDeleteDialog
+              offset-y
+              close-on-content-click
+              :project="item"
+              :organization-id="organizationId"
+              @deleted="$fetch"
+            />
+            <v-menu v-model="display[item.id]" offset-y close-on-content-click>
+              <template #activator="{ on, attrs }">
+                <v-btn
+                  icon
+                  v-bind="attrs"
+                  v-on="on"
+                >
+                  <v-icon>
+                    mdi-dots-vertical
+                  </v-icon>
+                </v-btn>
+              </template>
+              <v-list nav>
+                <v-list-item>
+                  <OrganizationProjectDialog
+                    :organization-id="organizationId"
+                    :project-id="item.id"
+                    is-editing
+                    :project2-edit="item"
+                    @updated="$fetch"
+                  />
+                </v-list-item>
+                <v-list-item>
+                  <OrganizationLinkUsersDialog
+                    :organization-id="organizationId"
+                    :project-id="item.id"
+                    @updated="$fetch"
+                  />
+                </v-list-item>
+              </v-list>
+            </v-menu>
           </div>
         </template>
       </ShTable>
@@ -110,6 +131,7 @@ export default {
   },
   data: () => ({
     projects: [],
+    display: {},
     options: {
       page: 1,
       itemsPerPage: 10

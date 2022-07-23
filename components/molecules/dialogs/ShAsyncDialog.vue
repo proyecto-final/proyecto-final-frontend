@@ -20,7 +20,7 @@
         <v-form
           ref="form"
           v-model="isValid"
-          @submit.prevent="confirm"
+          @submit.prevent="confirm(true)"
         >
           <ShBody>
             {{ text }}
@@ -44,7 +44,7 @@
                 class="ml-2"
                 :loading="loadingFunction"
                 :disabled="!canConfirm"
-                @click="confirm"
+                @click="confirm(false)"
               >
                 {{ confirmText }}
               </ShButton>
@@ -101,6 +101,10 @@ export default {
     hidePrimaryButton: {
       type: Boolean,
       default: false
+    },
+    submitOnEnter: {
+      type: Boolean,
+      default: true
     }
   },
   data: () => ({
@@ -128,7 +132,10 @@ export default {
     close () {
       this.show = false
     },
-    confirm () {
+    confirm (isEnter) {
+      if (isEnter && !this.submitOnEnter) {
+        return
+      }
       this.$refs.form.validate()
       if (!this.isValid) {
         return
