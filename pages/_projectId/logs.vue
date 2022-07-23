@@ -1,28 +1,6 @@
 <template>
   <div>
-    <template v-if="showEmptyState">
-      <ShTableEmptyState
-        class="my-10"
-        img-src="/empty-state/logs.svg"
-      >
-        <template #heading>
-          Cargá tu primer log
-        </template>
-        <template #body>
-          Cargá tus logs para empezar con su analisis.<br>
-          Una vez que lo hagas, desde acá los verás.
-          <div class="mt-7">
-            <ShButton :block="$vuetify.breakpoint.smAndDown">
-              <v-icon color="white">
-                mdi-plus
-              </v-icon>
-              Cargar log
-            </ShButton>
-          </div>
-        </template>
-      </ShTableEmptyState>
-    </template>
-    <div v-else>
+    <div>
       <v-row justify="space-between">
         <v-col cols="12" md="4" lg="3">
           <ShSearchField
@@ -170,9 +148,6 @@ export default {
   computed: {
     isFiltering () {
       return Object.values(this.filter).some(filterParam => !!filterParam)
-    },
-    showEmptyState () {
-      return (this.logs.length === 0 && !this.loading && !this.isFiltering)
     },
     projectId () {
       return this.$route.params.projectId
