@@ -49,7 +49,7 @@
             <div class="d-flex justify-space-between align-center py-3">
               <div class="d-flex flex-column">
                 <ShBody>
-                  {{ truncate2(log.title, 40) }}
+                  {{ truncateTo(log.title, 40) }}
                 </ShBody>
                 <ShBodySmall neutral>
                   {{ log.size }}
@@ -66,7 +66,7 @@
           <v-tooltip v-for="(log,index) in logFiles" :key="index" bottom>
             <template #activator="{on, attrs}">
               <v-tab v-bind="attrs" v-on="on">
-                {{ truncate2(log.title, 8) }}
+                {{ truncateTo(log.title, 8) }}
               </v-tab>
             </template>
             <span>{{ log.title }}</span>
@@ -110,7 +110,7 @@ export default {
   methods: {
     save () {
       const fileMetadatas = this.logFiles.map(({ title, description }) => ({ title, description }))
-      const files = this.logFiles.map(file => file.file)
+      const files = this.logFiles.map(({ file }) => file)
       return this.$logService.save(this.projectId,
         files,
         fileMetadatas)
@@ -153,7 +153,7 @@ export default {
       const i = Math.floor(Math.log(bytes) / Math.log(k))
       return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`
     },
-    truncate2 (str, maxLength) {
+    truncateTo (str, maxLength) {
       return str.length > maxLength ? str.substring(0, str.length - maxLength) + '...' : str
     }
   }
