@@ -176,9 +176,8 @@ export default {
         this.filesToAdd = []
       })
     },
-    remove (file) {
-      this.logFiles.splice(this.logFiles.indexOf(file), 1)
-      this.filesToAdd.splice(this.logFiles.indexOf(file), 1)
+    remove (idx) {
+      this.logFiles.splice(idx, 1)
     },
     formatFileSize (bytes, decimalPoint) {
       // decimalPoint is an optional parameter
