@@ -1,10 +1,11 @@
 <template>
   <div>
-    <div>
+    <div class="mb-6">
       <v-row justify="space-between">
         <v-col cols="12" md="4" lg="3">
           <ShSearchField
-            v-model="filter.title"
+            v-if="!(logs.length === 0 && !loading && !isFiltering)"
+            v-model="filter.name"
             hide-details
             clearable
             placeholder="Buscar por nombre"
@@ -14,28 +15,48 @@
         </v-col>
         <v-col cols="12" md="4" lg="3">
           <div class="d-flex justify-end">
-            <ShButton :block="$vuetify.breakpoint.smAndDown">
+            <LogDialog />
+          </div>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col cols="12" md="4" lg="3">
+          <ShAutocomplete
+            v-if="!(logs.length === 0 && !loading && !isFiltering)"
+            v-model="filter.status"
+            hide-details
+            clearable
+            :items="[{ text: 'Cargado', value: 'loaded' }, { text: 'Procesando...', value: 'loading' }]"
+            placeholder="Filtrar por estado"
+            @input="$fetch"
+          />
+        </v-col>
+      </v-row>
+    </div>
+    <div class="mb-6">
+      <ShTableEmptyState
+        v-if="logs.length === 0 && !loading && !isFiltering"
+        class="my-10"
+        img-src="/empty-state/logs.svg"
+      >
+        <template #heading>
+          Cargá tu primer log
+        </template>
+        <template #body>
+          Cargá tus logs para empezar con su analisis.<br>
+          Una vez que lo hagas, desde acá los verás.
+          <div class="mt-7">
+            <ShButton :block="$vuetify.breakpoint.smAndDown" v-on="on">
               <v-icon color="white">
                 mdi-plus
               </v-icon>
               Cargar log
             </ShButton>
           </div>
-        </v-col>
-      </v-row>
-      <v-row class="mb-6">
-        <v-col cols="12" md="4" lg="3">
-          <ShAutocomplete
-            v-model="filter.state"
-            hide-details
-            clearable
-            :items="[{ text: 'Cargado', value: 'processed' }, { text: 'Procesando...', value: 'processing' }]"
-            placeholder="Filtrar por estado"
-            @input="$fetch"
-          />
-        </v-col>
-      </v-row>
+        </template>
+      </ShTableEmptyState>
       <ShTable
+        v-else
         :items="logs"
         :headers="headers"
         :options.sync="options"
@@ -45,7 +66,7 @@
       >
         <template #[`item.name`]="{ item }">
           <div>
-            <ShBodySmall>{{ item.title }}</ShBodySmall>
+            <ShBodySmall>{{ item.name }}</ShBodySmall>
           </div>
           <div>
             <ShBodySmall neutral>
@@ -55,23 +76,35 @@
         </template>
         <template #[`item.date`]="{ item }">
           <div>
-            <ShBodySmall>{{ item.updatedAt | dateTime }} </ShBodySmall>
+            <ShBodySmall>{{ item.date | date }} </ShBodySmall>
           </div>
         </template>
         <template #[`item.status`]="{ item }">
-          <ShChip :color="item.state === 'processed' ? 'success' : 'warning'">
-            {{ item.state === 'processed' ? 'Cargado' : 'Procesando...' }}
-          </ShChip>
+          <ShStatusChip :status="item.status" />
         </template>
         <template #[`item.actions`]="{ item }">
           <div class="d-flex">
-            <ShButton :disabled="item.state === 'processing'" text @click="redirectToLogPage(item.id)">
+            <ShButton v-if="item.status === 'loaded'" text @click="$router.push(`/logs/${item.id}`)">
               Ver log
             </ShButton>
-            <v-menu v-model="display[item._id]" offset-y close-on-content-click>
+            <ShButton v-else disabled>
+              Ver log
+            </ShButton>
+            <v-menu v-model="display[item.id]" offset-y close-on-content-click>
               <template #activator="{ on, attrs }">
                 <v-btn
-                  :disabled="item.state === 'processing'"
+                  v-if="item.status === 'loaded'"
+                  icon
+                  v-bind="attrs"
+                  v-on="on"
+                >
+                  <v-icon>
+                    mdi-dots-vertical
+                  </v-icon>
+                </v-btn>
+                <v-btn
+                  v-else
+                  disabled
                   icon
                   v-bind="attrs"
                   v-on="on"
@@ -82,20 +115,14 @@
                 </v-btn>
               </template>
               <v-list>
-                <LogUpdateDialog
-                  :project-id="projectId"
-                  :log-id="item._id"
-                  :log2-edit="item"
-                  @updated="$fetch"
-                />
+                Eliminar
               </v-list>
               <v-list>
-                <LogDeleteDialog
-                  offset-y
-                  close-on-content-click
-                  :log="item"
-                  :project-id="projectId"
-                  @deleted="$fetch"
+                <LogEditDialog
+                  :project-id="item.projectId"
+                  :log-id="item.id"
+                  :log2-edit="item"
+                  @updated="$fetch"
                 />
               </v-list>
             </v-menu>
@@ -116,8 +143,8 @@ export default {
       itemsPerPage: 10
     },
     filter: {
-      title: '',
-      state: null
+      name: '',
+      status: null
     },
     headers: [
       {
@@ -143,22 +170,22 @@ export default {
   }),
   fetch () {
     this.loading = true
-    this.$logService.get(this.projectId, {
+    this.$organizationService.get({
       offset: (this.options.page - 1) * this.options.itemsPerPage,
       limit: this.options.itemsPerPage,
       ...this.filter
     }).then((result) => {
-      this.logs = result.rows
-      this.serverItemsLength = result.count
-    }).catch(() => { this.$noty.warn('Hubo un error al cargar los logs') })
-      .finally(() => { this.loading = false })
+      this.logs = [{ id: '1', name: 'Logcito 1', description: 'Desc log 1', date: '2022-07-17 22:21:58', status: 'loaded', projectId: '1' }, { id: '2', name: 'Logcito 2', description: 'Desc log 2', date: '2022-07-17 22:21:58', status: 'loading', projectId: '1' }]
+      this.serverItemsLength = 2
+    }).catch(() => {
+      this.$noty.warn('Hubo un error al cargar las organizaciones')
+    }).finally(() => {
+      this.loading = false
+    })
   },
   computed: {
     isFiltering () {
       return Object.values(this.filter).some(filterParam => !!filterParam)
-    },
-    projectId () {
-      return this.$route.params.projectId
     }
   },
   created () {
@@ -170,12 +197,12 @@ export default {
       this.loading = true
       this.fetchDebounced()
     },
-    redirectToLogPage (itemId) {
-      this.$router.push(`/logs/${itemId}`)
-    },
     fetchDebounced: debounce(function () {
       this.$fetch()
-    }, 500)
+    }, 500),
+    setOrganization (organization, updatedOrganization) {
+      Object.assign(organization, updatedOrganization)
+    }
   }
 }
 </script>

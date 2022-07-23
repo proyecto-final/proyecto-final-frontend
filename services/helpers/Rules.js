@@ -3,6 +3,10 @@ export default class Rules {
     return value => !!value || `El campo ${field} es obligatorio`
   }
 
+  maxLength (max) {
+    return value => value.length <= max || `El campo debe tener hasta ${max} caracteres`
+  }
+
   hasLengthBetween (min, max) {
     return value => (value.length >= min && value.length <= max) || `El campo debe tener entre ${min} y ${max} caracteres`
   }
@@ -25,5 +29,13 @@ export default class Rules {
 
   fieldLength (field, min, max) {
     return value => ((min <= value.length) && (value.length <= max)) || `El campo ${field} debe tener entre ${min} y ${max} caracteres`
+  }
+
+  maxUploadedFiles (max) {
+    return files => (files.length <= max) || `La cantidad de archivos cargados debe ser menor a ${max}`
+  }
+
+  maxUploadedFilesSize (max) {
+    return files => !files || files.every(file => file.size < max) || 'El tamaño de los archivos debe ser menor a 50MB'
   }
 }
