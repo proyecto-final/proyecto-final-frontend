@@ -19,20 +19,20 @@
       </slot>
     </template>
     <template #default>
-      <div>
-        <ShTextField
-          v-model="log.title"
-          label="Nombre *"
-          :rules="[$rules.required('nombre')]"
-          class="mr-4 mt-4"
-        />
-      </div>
-      <div>
-        <ShTextArea
-          v-model="log.description"
-          label="Descripción"
-          class="mr-4"
-        />
+      <div class="mr-2 mt-4">
+        <div>
+          <ShTextField
+            v-model="log.title"
+            label="Nombre *"
+            :rules="[$rules.required('nombre')]"
+          />
+        </div>
+        <div>
+          <ShTextArea
+            v-model="log.description"
+            label="Descripción"
+          />
+        </div>
       </div>
     </template>
   </ShAsyncDialog>
