@@ -64,7 +64,7 @@ export default {
   }),
   methods: {
     save () {
-      return this.$logService.updateLog(this.projectId, this.logId, this.log)
+      return this.$logService.update(this.projectId, this.logId, this.log)
         .then(() => {
           this.$emit('updated')
           return true
