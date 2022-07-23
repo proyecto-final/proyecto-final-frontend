@@ -29,6 +29,10 @@ export default class Organization {
     return this.$axios.$post(`/api/organization/${organizationId}/invitation-token`)
   }
 
+  validateToken (token) {
+    return this.$axios.$post('/api/organization/validate-invitation-token', { token })
+  }
+
   updateUser (organizationId, { id, role, isAdmin, enabled }) {
     return this.$axios.$patch(`/api/organization/${organizationId}/user/${id}`, { role, isAdmin, enabled })
   }
@@ -39,6 +43,18 @@ export default class Organization {
 
   getProjects (organizationId, params) {
     return this.$axios.$get(`/api/organization/${organizationId}/project`, { params })
+  }
+
+  updateProject (organizationId, projectId, project) {
+    return this.$axios.$patch(`/api/organization/${organizationId}/project/${projectId}`, project)
+  }
+
+  getProject (organizationId, projectId) {
+    return this.$axios.$get(`/api/organization/${organizationId}/project/${projectId}`)
+  }
+
+  updateProjectUsers (organizationId, projectId, users) {
+    return this.$axios.$put(`/api/organization/${organizationId}/project/${projectId}/users`, { users })
   }
 
   deleteProject (organizationId, projectId) {
