@@ -26,7 +26,7 @@ export default class Log {
     })
   }
 
-    updateLog (projectId, logId, log) {
+  update (projectId, logId, log) {
     return this.$axios.$patch(`/api/project/${projectId}/correlate/log/${logId}`, log)
   }
 }
