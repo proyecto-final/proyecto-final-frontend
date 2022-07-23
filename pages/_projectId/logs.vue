@@ -81,19 +81,27 @@
           </div>
         </template>
         <template #[`item.status`]="{ item }">
-          <ShChip :color="item.status === 'loaded' ? 'success' : 'warning'">
-            {{ item.status === 'loaded' ? 'Cargado' : 'Procesando...' }}
+          <ShChip :color="item.status === 'processed' ? 'success' : 'warning'">
+            {{ item.status === 'processed' ? 'Cargado' : 'Procesando...' }}
           </ShChip>
         </template>
         <template #[`item.actions`]="{ item }">
           <div class="d-flex">
+<<<<<<< HEAD:pages/logs.vue
             <ShButton :disabled="item.status === 'loading'" text @click="redirectToLogPage(item.id)">
+=======
+            <ShButton :disabled="item.status === 'processing'" text @click="redirectToLogPage(item.id)">
+>>>>>>> origin/feature/sc-124/crud-de-log-eliminacion-frontend:pages/_projectId/logs.vue
               Ver log
             </ShButton>
             <v-menu v-model="display[item.id]" offset-y close-on-content-click>
               <template #activator="{ on, attrs }">
                 <v-btn
+<<<<<<< HEAD:pages/logs.vue
                   :disabled="item.status === 'loading'"
+=======
+                  :disabled="item.status === 'processing'"
+>>>>>>> origin/feature/sc-124/crud-de-log-eliminacion-frontend:pages/_projectId/logs.vue
                   icon
                   v-bind="attrs"
                   v-on="on"
@@ -104,7 +112,13 @@
                 </v-btn>
               </template>
               <v-list>
-                Eliminar
+                <LogDeleteDialog
+                  offset-y
+                  close-on-content-click
+                  :log="item"
+                  :project-id="projectId"
+                  @deleted="$fetch"
+                />
               </v-list>
             </v-menu>
           </div>
@@ -166,6 +180,9 @@ export default {
     },
     showEmptyState () {
       return (this.logs.length === 0 && !this.loading && !this.isFiltering)
+    },
+    projectId () {
+      return this.$route.params.projectId
     }
   },
   created () {

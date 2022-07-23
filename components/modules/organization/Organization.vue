@@ -13,7 +13,7 @@
             Información organizacional
           </ShHeading2>
           <v-row justify="end" align="center" class="mt-2">
-            <v-col cols="12" sm="10" md="8" lg="7">
+            <v-col cols="12" sm="10" lg="8">
               <v-card elevation="1" class="mr-14">
                 <v-card-text>
                   <div class="d-flex justify-space-between ma-7">
@@ -60,10 +60,19 @@
                         Mirá los proyectos de tu organización
                       </ShBodySmall>
                     </div>
-                    <div>
-                      <v-icon color="neutral base">
-                        mdi-account-hard-hat
-                      </v-icon>
+                    <div class="d-flex align-center">
+                      <ShBodySmall v-if="projects.length === 0">
+                        Sin proyectos vinculados
+                      </ShBodySmall>
+                      <template v-else>
+                        <ShAvatars
+                          :avatars-to-show="3"
+                          :avatars="projects.map(project => ({
+                            text: project.prefix,
+                            color: project.color}))"
+                        />
+                        <ShProjectsDialog :projects="projects" />
+                      </template>
                     </div>
                   </div>
                 </v-card-text>
@@ -104,11 +113,17 @@ export default {
       name: '',
       color: ''
     },
+    filter: {
+      name: null,
+      date: null
+    },
+    projects: [],
     tableToShow: 0
   }),
   async fetch () {
     try {
       this.organization = await this.$organizationService.getSpecific(this.organizationId)
+      this.projects = (await this.$organizationService.getProjects(this.organizationId, { offset: 0, limit: 100, ...this.filter })).rows
     } catch (er) {
       this.$noty.warn('Hubo un error al cargar la información de tu organización')
     }
