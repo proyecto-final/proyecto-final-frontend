@@ -91,10 +91,34 @@ export default {
 
     },
     setInitialData () {
-
+      this.filesToAdd = []
+      this.logFiles = []
     },
     addLogFile () {
-      this.logFiles.push(this.fileToAdd)
+      this.filesToAdd.forEach((file) => {
+        const uploadedFile = {
+          name: '',
+          description: '',
+          size: ''
+        }
+        uploadedFile.name = file.name
+        uploadedFile.size = this.formatFileSize(file.size, 1)
+        this.logFiles.push(uploadedFile)
+      })
+      this.filesToAdd = []
+    },
+    remove (file) {
+      this.logFiles.splice(this.logFiles.indexOf(file), 1)
+      this.filesToAdd.splice(this.logFiles.indexOf(file), 1)
+    },
+    formatFileSize (bytes, decimalPoint) {
+      // decimalPoint is an optional parameter
+      if (bytes === 0) { return '0 B' }
+      const k = 1000
+      const dm = decimalPoint || 2
+      const sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+      const i = Math.floor(Math.log(bytes) / Math.log(k))
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i]
     }
   }
 }
