@@ -56,10 +56,9 @@ export default {
   methods: {
     deleteLog () {
       if (!this.namesMatch) { return }
-
       return this.$logService
         .deleteLog(this.projectId, this.log.id)
-        .then((res) => {
+        .then(() => {
           this.$emit('deleted')
           return true
         }).catch((error) => {

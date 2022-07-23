@@ -81,19 +81,19 @@
           </div>
         </template>
         <template #[`item.status`]="{ item }">
-          <ShChip :color="item.status === 'loaded' ? 'success' : 'warning'">
-            {{ item.status === 'loaded' ? 'Cargado' : 'Procesando...' }}
+          <ShChip :color="item.status === 'processed' ? 'success' : 'warning'">
+            {{ item.status === 'processed' ? 'Cargado' : 'Procesando...' }}
           </ShChip>
         </template>
         <template #[`item.actions`]="{ item }">
           <div class="d-flex">
-            <ShButton :disabled="item.status === 'loaded'" text @click="redirectToLogPage(item.id)">
+            <ShButton :disabled="item.status === 'processing'" text @click="redirectToLogPage(item.id)">
               Ver log
             </ShButton>
             <v-menu v-model="display[item.id]" offset-y close-on-content-click>
               <template #activator="{ on, attrs }">
                 <v-btn
-                  :disabled="item.status === 'loaded'"
+                  :disabled="item.status === 'processing'"
                   icon
                   v-bind="attrs"
                   v-on="on"
@@ -122,12 +122,6 @@
 <script>
 import { debounce } from 'lodash'
 export default {
-  props: {
-    projectId: {
-      type: String,
-      required: true
-    }
-  },
   data: () => ({
     logs: [],
     display: {},
@@ -178,6 +172,9 @@ export default {
     },
     showEmptyState () {
       return (this.logs.length === 0 && !this.loading && !this.isFiltering)
+    },
+    projectId () {
+      return this.$route.params.projectId
     }
   },
   created () {
