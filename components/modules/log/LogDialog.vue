@@ -121,9 +121,10 @@ export default {
   }),
   computed: {
     error () {
+      const MEGABYTES_5 = 1024 * 1024 * 5
       return this.logFiles.length > 5
         ? 'Solo puedes subir hasta 5 archivos'
-        : this.logFiles.some(file => file.size > 50e6) ? 'Solo puedes subir archivos de hasta 50mb' : ''
+        : this.logFiles.some(file => file.size > MEGABYTES_5) ? 'Solo puedes subir archivos de hasta 50mb' : ''
     }
   },
   methods: {
