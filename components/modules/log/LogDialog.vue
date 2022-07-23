@@ -128,6 +128,9 @@ export default {
   },
   methods: {
     save () {
+      if (this.error) {
+        return
+      }
       if (this.logFiles.length === 0) {
         this.$noty.error('Debes agregar al menos un log')
         return Promise.resolve(false)
