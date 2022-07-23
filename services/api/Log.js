@@ -6,10 +6,10 @@ export default class Log {
   }
 
   get (projectId, params) {
-    return this.$axios.delete(`/api/project/${projectId}/correlate/log/`, { params })
+    return this.$axios.$get(`/api/project/${projectId}/correlate/log`, { params })
   }
 
   deleteLog (projectId, logId) {
-    return this.$axios.delete(`/api/project/${projectId}/correlate/log/${logId}`)
+    return this.$axios.$delete(`/api/project/${projectId}/correlate/log/${logId}`)
   }
 }
