@@ -14,12 +14,7 @@
         </v-col>
         <v-col cols="12" md="4" lg="3">
           <div class="d-flex justify-end">
-            <ShButton :block="$vuetify.breakpoint.smAndDown">
-              <v-icon color="white">
-                mdi-plus
-              </v-icon>
-              Cargar log
-            </ShButton>
+            <LogDialog :project-id="projectId" @created="$fetch" />
           </div>
         </v-col>
       </v-row>

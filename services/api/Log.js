@@ -12,4 +12,17 @@ export default class Log {
   deleteLog (projectId, logId) {
     return this.$axios.$delete(`/api/project/${projectId}/correlate/log/${logId}`)
   }
+
+  save (projectId, files, metadatas) {
+    const formData = new FormData()
+    files.forEach((file) => {
+      formData.append('files', file, file.name)
+    })
+    formData.append('metadata', JSON.stringify(metadatas))
+    return this.$axios.$post(`/api/project/${projectId}/correlate/log`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+  }
 }
