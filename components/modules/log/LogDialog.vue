@@ -124,13 +124,13 @@ export default {
       const MEGABYTES_5 = 1024 * 1024 * 5
       return this.logFiles.length > 5
         ? 'Solo puedes subir hasta 5 archivos'
-        : this.logFiles.some(file => file.size > MEGABYTES_5) ? 'Solo puedes subir archivos de hasta 50mb' : ''
+        : this.logFiles.some(file => file.file.size > MEGABYTES_5) ? 'Solo puedes subir archivos de hasta 50mb' : ''
     }
   },
   methods: {
     save () {
       if (this.error) {
-        return
+        return Promise.resolve(false)
       }
       if (this.logFiles.length === 0) {
         this.$noty.error('Debes agregar al menos un log')
