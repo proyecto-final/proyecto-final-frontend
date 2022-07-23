@@ -21,7 +21,6 @@
     <template #default>
       <div>
         <ShTextField
-          :key="index"
           v-model="log.title"
           label="Nombre *"
           :rules="[$rules.required('nombre')]"
@@ -30,7 +29,6 @@
       </div>
       <div>
         <ShTextArea
-          :key="index"
           v-model="log.description"
           label="Descripción"
           class="mr-4"
@@ -49,15 +47,15 @@ export default {
   props: {
     log2Edit: {
       type: Object,
-      default: null
+      required: true
     },
     projectId: {
-      type: Number,
-      default: null
+      type: String,
+      required: true
     },
     logId: {
-      type: Number,
-      default: null
+      type: String,
+      required: true
     }
   },
   data: () => ({
@@ -65,16 +63,17 @@ export default {
   }),
   methods: {
     save () {
-      console.log('Project ID: ', this.projectId)
-      console.log('Log ID: ', this.logId)
-      console.log('Log: ', this.log)
-      this.$logService.updateLog(this.projectId, this.logId, this.log)
-        .then(() => { this.$emit('updated') })
+      return this.$logService.updateLog(this.projectId, this.logId, this.log)
+        .then(() => {
+          this.$emit('updated')
+          return true
+        })
         .catch((error) => {
           const msg = error.response?.data?.msg
           if (msg) {
             this.$noty.warn(msg.join(', '))
           }
+          return false
         })
     },
     editLog () {
