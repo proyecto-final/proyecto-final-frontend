@@ -3,6 +3,10 @@ export default class Rules {
     return value => !!value || `El campo ${field} es obligatorio`
   }
 
+  maxLength (max) {
+    return value => value.length <= max || `El campo debe tener hasta ${max} caracteres`
+  }
+
   hasLengthBetween (min, max) {
     return value => (value.length >= min && value.length <= max) || `El campo debe tener entre ${min} y ${max} caracteres`
   }

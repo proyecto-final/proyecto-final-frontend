@@ -55,7 +55,7 @@
             <ShTextField
               v-model="logName"
               label="Nombre *"
-              :rules="[$rules.required('título')]"
+              :rules="[$rules.required('nombre'), $rules.maxLength(32)]"
               class="mt-6 mx-2"
             />
           </div>
@@ -64,6 +64,7 @@
               v-model="logDescription"
               label="Descripción"
               class="mx-2"
+              :rules="[$rules.maxLength(256)]"
             />
           </div>
         </v-tab-item>

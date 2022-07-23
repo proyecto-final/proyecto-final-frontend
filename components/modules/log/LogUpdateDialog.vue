@@ -24,13 +24,14 @@
           <ShTextField
             v-model="log.title"
             label="Nombre *"
-            :rules="[$rules.required('nombre')]"
+            :rules="[$rules.required('nombre'), $rules.maxLength(32)]"
           />
         </div>
         <div>
           <ShTextArea
             v-model="log.description"
             label="Descripción"
+            :rules="[$rules.maxLength(256)]"
           />
         </div>
       </div>
