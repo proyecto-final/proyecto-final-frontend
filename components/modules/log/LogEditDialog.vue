@@ -51,11 +51,11 @@ export default {
       type: Object,
       default: null
     },
-    organizationId: {
-      type: String,
-      required: true
-    },
     projectId: {
+      type: Number,
+      default: null
+    },
+    logId: {
       type: Number,
       default: null
     }
@@ -65,7 +65,14 @@ export default {
   }),
   methods: {
     save () {
-      // To-Do
+      this.$organizationService.updateLog(this.projectId, this.logId, this.log)
+        .then(() => { this.$emit('updated') })
+        .catch((error) => {
+          const msg = error.response?.data?.msg
+          if (msg) {
+            this.$noty.warn(msg.join(', '))
+          }
+        })
     },
     editLog () {
       this.log = cloneDeep(this.log2Edit)
