@@ -13,7 +13,7 @@
             Información organizacional
           </ShHeading2>
           <v-row justify="end" align="center" class="mt-2">
-            <v-col cols="12" sm="10" md="8" lg="7">
+            <v-col cols="12" sm="10" lg="8">
               <v-card elevation="1" class="mr-14">
                 <v-card-text>
                   <div class="d-flex justify-space-between ma-7">
@@ -60,7 +60,7 @@
                         Mirá los proyectos de tu organización
                       </ShBodySmall>
                     </div>
-                    <div class="d-flex">
+                    <div class="d-flex align-center">
                       <ShBodySmall v-if="projects.length === 0">
                         Sin proyectos vinculados
                       </ShBodySmall>
@@ -71,7 +71,7 @@
                             text: project.prefix,
                             color: project.color}))"
                         />
-                        <OrganizationSwitchProjectsDialog :projects="projects" />
+                        <ShProjectsDialog :projects="projects" />
                       </template>
                     </div>
                   </div>

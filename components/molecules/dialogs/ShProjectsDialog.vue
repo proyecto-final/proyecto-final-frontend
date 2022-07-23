@@ -1,20 +1,18 @@
 <template>
-  <ShAsyncDialog
+  <ShDialog
+    v-model="open"
     width="500"
     hide-primary-button
-    hide-secondary-button
+    cancel-text="Cerrar"
     title="Proyectos"
     v-on="$listeners"
-    @open="setProjects"
   >
     <template #activator="{on}">
-      <v-icon color="neutral base" v-on="on">
-        mdi-chevron-right
-      </v-icon>
+      <ShIconButton icon="mdi-chevron-right" title="Ver proyectos" v-on="on" />
     </template>
     <div>
       <ShSearchField
-        v-model="project"
+        v-model="projectName"
         hide-details
         clearable
         placeholder="Buscar proyectos"
@@ -22,7 +20,7 @@
       />
     </div>
     <div class="px-4">
-      <div v-for="(project, index) in projects" :key="index" class="d-flex justify-space-between align-center py-2">
+      <div v-for="(project, index) in projects2Show" :key="index" class="d-flex justify-space-between align-center py-2">
         <div class="d-flex justify-space-between">
           <div>
             <v-avatar size="58" :color="project.color">
@@ -37,15 +35,15 @@
             </ShBodySmall>
           </div>
         </div>
-        <div>
-          <ShIconButton v-if="!isActive" icon="mdi-swap-horizontal" title="Cambiar" />
-          <ShBodySmall v-else neutral>
+        <div v-if="canSwitch">
+          <ShBodySmall v-if="currentProject === project" neutral>
             Actual
           </ShBodySmall>
+          <ShIconButton v-else icon="mdi-swap-horizontal" title="Seleccionar proyecto" @click="selectProject(project)" />
         </div>
       </div>
     </div>
-  </ShAsyncDialog>
+  </ShDialog>
 </template>
 <script>
 export default {
@@ -53,21 +51,30 @@ export default {
     projects: {
       type: Array,
       required: true
+    },
+    canSwitch: {
+      type: Boolean,
+      default: false
+    },
+    currentProject: {
+      type: Object,
+      default: null
     }
   },
   data: () => ({
-    activeProject: '',
-    isActive: false
+    projectName: '',
+    open: false
   }),
+  computed: {
+    projects2Show () {
+      return this.projects.filter(project =>
+        project.name.toLowerCase().includes(this.projectName?.toLowerCase()) || !this.projectName)
+    }
+  },
   methods: {
-    save () {
-
-    },
-    setProjects () {
-
-    },
-    switch (index) {
-
+    selectProject (project) {
+      this.$emit('update:currentProject', project)
+      this.open = false
     }
   }
 }

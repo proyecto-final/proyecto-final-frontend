@@ -24,7 +24,7 @@
         </div>
       </v-app-bar>
       <v-navigation-drawer
-        :mini-variant="closed"
+        :mini-variant="showSidebarSafe"
         app
         floating
         mobile-breakpoint="-1"
@@ -32,10 +32,10 @@
         width="280"
       >
         <div class="sh-scrollbar h-100">
-          <v-list :class="{'mx-6': !closed }" class="px-0 menu-list" rounded>
+          <v-list :class="{'mx-6': !showSidebarSafe }" class="px-0 menu-list" rounded>
             <v-list-item>
               <v-list-item-icon>
-                <v-icon @click.stop="closed = !closed">
+                <v-icon @click.stop="showSidebarSafe = !showSidebarSafe">
                   mdi-menu
                 </v-icon>
               </v-list-item-icon>
@@ -53,17 +53,20 @@
             <template v-else>
               <v-list-item class="px-0">
                 <v-list-item-icon>
-                  <v-avatar color="blue darken-2">
+                  <v-avatar :color="selectedProjectSafe.color">
                     <ShSpecialLabel class="white-text">
-                      P1
+                      {{ selectedProjectSafe.prefix }}
                     </ShSpecialLabel>
                   </v-avatar>
                 </v-list-item-icon>
                 <v-list-item-title>
                   <ShBodySmall neutral>
-                    Proyecto 1
+                    {{ selectedProjectSafe.name }}
                   </ShBodySmall>
                 </v-list-item-title>
+                <v-list-item-action>
+                  <ShProjectsDialog can-switch :current-project.sync="selectedProjectSafe" :projects="projectMenus" />
+                </v-list-item-action>
               </v-list-item>
               <div class="mt-5" />
               <v-list-item-group color="primary">
@@ -98,33 +101,52 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 export default {
-  data: () => ({
-    closed: true
-  }),
   computed: {
+    selectedProjectSafe: {
+      get () {
+        return this.selectedProject || {}
+      },
+      set (value) {
+        this.$store.commit('user/SET_SELECTED_PROJECT_ID', value.id)
+      }
+    },
+    showSidebarSafe: {
+      get () {
+        return this.showSidebar
+      },
+      set (value) {
+        this.$store.commit('preferences/SET_SHOW_SIDEBAR', value)
+      }
+    },
     menus () {
-      return [
-        ...this.projectMenus[0].menus,
-        {
-          icon: 'mdi-domain',
-          text: 'Mi Organización',
-          to: `/organization/${this.user.organizationId}/mine`
-        },
-        {
+      const selectedProjectMenus = this.selectedProjectSafe.menus || []
+      const menus = [...selectedProjectMenus]
+      if (this.user?.isAdmin) {
+        menus.push({
           icon: 'mdi-web',
           text: 'Organizaciones',
           to: '/organizations'
-        },
-        {
-          icon: 'mdi-account',
-          text: 'Perfil',
-          to: '/profile'
-        }
-      ]
+        })
+      }
+      if (this.user?.role === 'Owner') {
+        menus.push({
+          icon: 'mdi-domain',
+          text: 'Mi Organización',
+          to: `/organization/${this.user.organizationId}/mine`
+        })
+      }
+      menus.push({
+        icon: 'mdi-account',
+        text: 'Perfil',
+        to: '/profile'
+      })
+      return menus
     },
+    ...mapGetters('user', ['selectedProject']),
     ...mapState('navigation', ['pageTitle', 'canGoBack']),
+    ...mapState('preferences', ['showSidebar']),
     ...mapState('user', ['user', 'isLoadingUser', 'projectMenus'])
   },
   created () {
