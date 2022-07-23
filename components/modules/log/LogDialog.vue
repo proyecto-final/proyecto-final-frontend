@@ -42,14 +42,20 @@
             prepend-icon=""
             type="file"
             accept=".evtx,.log,.csv"
-            :rules="[$rules.required('archivo'), $rules.maxUploadedFiles(5), $rules.maxUploadedFilesSize(50e6)]"
             @change="addLogFile"
           />
+          <v-expand-transition>
+            <div v-show="error">
+              <v-alert type="warning" icon="mdi-alert">
+                {{ error }}
+              </v-alert>
+            </div>
+          </v-expand-transition>
           <div v-for="(log,index) in logFiles" :key="index" class="px-4">
             <div class="d-flex justify-space-between align-center py-3">
               <div class="d-flex flex-column">
                 <ShBody>
-                  {{ truncateTo(log.title, 40) }}
+                  {{ truncateTo(log.title, 30) }}
                 </ShBody>
                 <ShBodySmall neutral>
                   {{ log.size }}
@@ -107,8 +113,19 @@ export default {
     logFiles: [],
     filesToAdd: []
   }),
+  computed: {
+    error () {
+      return this.logFiles.length > 5
+        ? 'Solo puedes subir hasta 5 archivos'
+        : this.logFiles.some(file => file.size > 50e6) ? 'Solo puedes subir archivos de hasta 50mb' : ''
+    }
+  },
   methods: {
     save () {
+      if (this.logFiles.length === 0) {
+        this.$noty.error('Debes agregar al menos un log')
+        return Promise.resolve(false)
+      }
       const fileMetadatas = this.logFiles.map(({ title, description }) => ({ title, description }))
       const files = this.logFiles.map(({ file }) => file)
       return this.$logService.save(this.projectId,
@@ -154,7 +171,7 @@ export default {
       return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`
     },
     truncateTo (str, maxLength) {
-      return str.length > maxLength ? str.substring(0, str.length - maxLength) + '...' : str
+      return str.length > maxLength ? str.substring(0, maxLength - 3) + '...' : str
     }
   }
 }
