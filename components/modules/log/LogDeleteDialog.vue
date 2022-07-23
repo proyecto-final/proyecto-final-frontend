@@ -23,7 +23,7 @@
           </ShBodySmall>
         </v-alert>
         <ShBodySmall neutral>
-          Para eliminar el log, escribí el nombre: <strong>{{ log.name }}</strong>
+          Para eliminar el log, escribí el nombre: <strong>{{ log.title }}</strong>
         </ShBodySmall>
         <ShTextField
           v-model="logToDeleteName"
@@ -50,14 +50,14 @@ export default {
   }),
   computed: {
     namesMatch () {
-      return this.log.name === this.logToDeleteName
+      return this.log.title === this.logToDeleteName
     }
   },
   methods: {
     deleteLog () {
       if (!this.namesMatch) { return }
       return this.$logService
-        .deleteLog(this.projectId, this.log.id)
+        .deleteLog(this.projectId, this.log._id)
         .then(() => {
           this.$emit('deleted')
           return true

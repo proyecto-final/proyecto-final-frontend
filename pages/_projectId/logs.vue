@@ -26,7 +26,7 @@
       <v-row justify="space-between">
         <v-col cols="12" md="4" lg="3">
           <ShSearchField
-            v-model="filter.name"
+            v-model="filter.title"
             hide-details
             clearable
             placeholder="Buscar por nombre"
@@ -48,10 +48,10 @@
       <v-row class="mb-6">
         <v-col cols="12" md="4" lg="3">
           <ShAutocomplete
-            v-model="filter.status"
+            v-model="filter.state"
             hide-details
             clearable
-            :items="[{ text: 'Cargado', value: 'loaded' }, { text: 'Procesando...', value: 'loading' }]"
+            :items="[{ text: 'Cargado', value: 'processed' }, { text: 'Procesando...', value: 'processing' }]"
             placeholder="Filtrar por estado"
             @input="$fetch"
           />
@@ -67,7 +67,7 @@
       >
         <template #[`item.name`]="{ item }">
           <div>
-            <ShBodySmall>{{ item.name }}</ShBodySmall>
+            <ShBodySmall>{{ item.title }}</ShBodySmall>
           </div>
           <div>
             <ShBodySmall neutral>
@@ -77,12 +77,12 @@
         </template>
         <template #[`item.date`]="{ item }">
           <div>
-            <ShBodySmall>{{ item.date | date }} </ShBodySmall>
+            <ShBodySmall>{{ item.updatedAt | dateTime }} </ShBodySmall>
           </div>
         </template>
         <template #[`item.status`]="{ item }">
-          <ShChip :color="item.status === 'processed' ? 'success' : 'warning'">
-            {{ item.status === 'processed' ? 'Cargado' : 'Procesando...' }}
+          <ShChip :color="item.state === 'processed' ? 'success' : 'warning'">
+            {{ item.state === 'processed' ? 'Cargado' : 'Procesando...' }}
           </ShChip>
         </template>
         <template #[`item.actions`]="{ item }">
@@ -90,7 +90,7 @@
             <ShButton :disabled="item.status === 'processing'" text @click="redirectToLogPage(item.id)">
               Ver log
             </ShButton>
-            <v-menu v-model="display[item.id]" offset-y close-on-content-click>
+            <v-menu v-model="display[item._id]" offset-y close-on-content-click>
               <template #activator="{ on, attrs }">
                 <v-btn
                   :disabled="item.status === 'processing'"
@@ -130,8 +130,8 @@ export default {
       itemsPerPage: 10
     },
     filter: {
-      name: '',
-      status: null
+      title: '',
+      state: null
     },
     headers: [
       {
