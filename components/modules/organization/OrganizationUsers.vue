@@ -115,12 +115,10 @@
         </template>
         <template #[`item.actions`]="{ item }">
           <OrganizationUserEnableDialog
-            v-model="display[item.id]"
             offset-y
             close-on-content-click
             :user="item"
             :organization-id="organizationId"
-            @close="display[item.id] = false"
             @updated="(updatedUser) => setUser(item, updatedUser)"
           />
         </template>
@@ -139,7 +137,6 @@ export default {
   },
   data: () => ({
     users: [],
-    display: {},
     options: {
       page: 1,
       itemsPerPage: 10

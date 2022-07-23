@@ -36,7 +36,10 @@
           Creá tus proyectos para trabajar con tu equipo.<br>
           Una vez que lo hagas, desde acá los visualizarás.
           <div class="mt-7">
-            <OrganizationProjectDialog :organization-id="organizationId" @created="$fetch" />
+            <OrganizationCreateProjectDialog
+              :organization-id="organizationId"
+              @created="$fetch"
+            />
           </div>
         </template>
       </ShTableEmptyState>
