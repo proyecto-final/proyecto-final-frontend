@@ -90,6 +90,14 @@
                   @deleted="$fetch"
                 />
               </v-list>
+              <v-list>
+                <LogEditDialog
+                  :project-id="projectId"
+                  :log-id="item._id"
+                  :log2-edit="item"
+                  @updated="$fetch"
+                />
+              </v-list>
             </v-menu>
           </div>
         </template>

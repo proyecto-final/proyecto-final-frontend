@@ -12,4 +12,8 @@ export default class Log {
   deleteLog (projectId, logId) {
     return this.$axios.$delete(`/api/project/${projectId}/correlate/log/${logId}`)
   }
+
+  updateLog (projectId, logId, log) {
+    return this.$axios.$patch(`/api/project/${projectId}/correlate/log/${logId}`, log)
+  }
 }

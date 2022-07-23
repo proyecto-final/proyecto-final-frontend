@@ -22,7 +22,7 @@
       <div>
         <ShTextField
           :key="index"
-          v-model="log.name"
+          v-model="log.title"
           label="Nombre *"
           :rules="[$rules.required('nombre')]"
           class="mr-4 mt-4"
@@ -65,7 +65,10 @@ export default {
   }),
   methods: {
     save () {
-      this.$organizationService.updateLog(this.projectId, this.logId, this.log)
+      console.log('Project ID: ', this.projectId)
+      console.log('Log ID: ', this.logId)
+      console.log('Log: ', this.log)
+      this.$logService.updateLog(this.projectId, this.logId, this.log)
         .then(() => { this.$emit('updated') })
         .catch((error) => {
           const msg = error.response?.data?.msg
