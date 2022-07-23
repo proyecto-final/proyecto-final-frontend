@@ -51,7 +51,7 @@
               </v-list-item-title>
             </v-list-item>
             <template v-else>
-              <v-list-item class="px-0">
+              <v-list-item v-if="selectedProject" class="px-0">
                 <v-list-item-icon>
                   <v-avatar :color="selectedProjectSafe.color">
                     <ShSpecialLabel class="white-text">

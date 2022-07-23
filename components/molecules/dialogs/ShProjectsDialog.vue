@@ -71,6 +71,13 @@ export default {
         project.name.toLowerCase().includes(this.projectName?.toLowerCase()) || !this.projectName)
     }
   },
+  watch: {
+    open (value) {
+      if (value) {
+        this.projectName = ''
+      }
+    }
+  },
   methods: {
     selectProject (project) {
       this.$emit('update:currentProject', project)
