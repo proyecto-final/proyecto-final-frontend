@@ -65,20 +65,10 @@
   </div>
 </template>
 <script>
+import { mapState } from 'vuex'
 export default {
-  data: () => ({
-    user: {
-      name: '',
-      username: '',
-      email: ''
-    }
-  }),
-  fetch () {
-    this.$userService.getProfile().then((user) => {
-      this.user = user
-    }).catch(() => {
-      this.$noty.warn('Hubo un error al cargar tu perfil de usuario')
-    })
+  computed: {
+    ...mapState('user', ['user'])
   },
   created () {
     this.$store.commit('navigation/SET_PAGE_TITLE', 'Perfil')

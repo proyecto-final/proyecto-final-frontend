@@ -19,7 +19,7 @@
     </template>
     <template #default>
       <div>
-        <v-alert type="warning" icon="mdi-alert" class="justify-space-between mb-4 mt-2">
+        <v-alert type="warning" icon="mdi-alert" class="justify-space-between mb-6 mt-2">
           <ShBodySmall class="white-text">
             Podrás subir hasta <strong>5</strong> logs juntos en formato <strong>.evtx o .log</strong>.<br>
             Recordá que el tamaño máximo por archivo es de <strong>50mb</strong>.
@@ -28,79 +28,63 @@
       </div>
       <div>
         <v-file-input
-          v-model="filesToAdd"
+          v-model="fileToAdd"
+          chips
           multiple
           rounded
-          clearable
           clear-icon
           background-color="bg-gray"
           show-size
           height="144"
-          placeholder="Arrastrá o agregá tus logs en un formato evtx o log."
+          placeholder="Arrastrá o agregá tus logs en formato evtx o log"
           prepend-inner-icon="mdi-plus-circle"
           prepend-icon=""
           type="file"
-          accept=".evtx,.log"
-          :rules="[$rules.required('archivo'), $rules.maxUploadedFiles(5), $rules.maxUploadedFilesSize(50e6)]"
-          @change="addLogFile"
+          accept=".evtx,.log,.csv"
         />
-        <div v-for="(log,index) in logFiles" :key="index" class="px-4">
-          <div class="d-flex justify-space-between align-center py-3">
-            <div class="d-flex flex-column">
-              <ShBody>
-                {{ log.name.length <= 40 ? log.name : log.name.substring(0,40) + "..." }}
-              </ShBody>
-              <ShBodySmall neutral>
-                {{ log.size }}
-              </ShBodySmall>
-            </div>
-            <div>
-              <ShIconButton icon="mdi-close" title="Quitar" @click="remove(index)" />
-            </div>
-          </div>
-          <v-divider v-if="index !== (logFiles.length - 1)" />
-        </div>
+        <ShChip v-for="(file,index) in logFiles" :key="index" class="px-4 mr-2" close>
+          {{ `${file.name} (${file.size})` }}
+        </ShChip>
       </div>
       <v-tabs background-color="transparent">
-        <v-tooltip v-for="(log,index) in logFiles" :key="index" bottom>
-          <template #activator="{on, attrs}">
-            <v-tab v-bind="attrs" v-on="on">
-              {{ log.name.length <= 8 ? log.name : log.name.substring(0,8) + "..." }}
-            </v-tab>
-          </template>
-          <span>{{ log.name }}</span>
-        </v-tooltip>
+        <v-tab v-for="(log,index) in logFiles" :key="index">
+          {{ `Log - ${index + 1}` }}
+        </v-tab>
         <v-tab-item v-for="(log,index) in logFiles" :key="index" class="pb-2">
           <div>
             <ShTextField
-              :key="index"
-              v-model="log.name"
+              v-model="logName"
               label="Nombre *"
-              :rules="[$rules.required('nombre')]"
+              :rules="[$rules.required('título')]"
               class="mt-6 mx-2"
             />
           </div>
           <div>
             <ShTextArea
-              :key="index"
-              v-model="log.description"
+              v-model="logDescription"
               label="Descripción"
               class="mx-2"
             />
           </div>
         </v-tab-item>
       </v-tabs>
-      </div>
     </template>
-  </shasyncdialog>
-</template>
   </ShAsyncDialog>
 </template>
 <script>
 export default {
+  props: {
+    organizationId: {
+      type: String,
+      required: true
+    }
+  },
   data: () => ({
-    logFiles: [],
-    filesToAdd: []
+    logFiles: [
+      { name: 'nombre', description: 'descripcion', size: '403kb' },
+      { name: 'nombre2', description: 'descripcion2', size: '20mb' }
+    ],
+    fileToAdd: null
   }),
   methods: {
     save () {
@@ -139,16 +123,3 @@ export default {
   }
 }
 </script>
-<style scoped>
-::v-deep .v-input__slot {
-  display: grid;
-}
-::v-deep .v-input__prepend-inner{
-  margin-right: 0px !important;
-  display: flex;
-  align-self: center;
-}
-.v-tab {
-text-transform: none !important;
-}
-</style>
