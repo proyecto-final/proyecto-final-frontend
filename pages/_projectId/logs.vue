@@ -87,21 +87,13 @@
         </template>
         <template #[`item.actions`]="{ item }">
           <div class="d-flex">
-<<<<<<< HEAD:pages/logs.vue
-            <ShButton :disabled="item.status === 'loading'" text @click="redirectToLogPage(item.id)">
-=======
             <ShButton :disabled="item.status === 'processing'" text @click="redirectToLogPage(item.id)">
->>>>>>> origin/feature/sc-124/crud-de-log-eliminacion-frontend:pages/_projectId/logs.vue
               Ver log
             </ShButton>
             <v-menu v-model="display[item.id]" offset-y close-on-content-click>
               <template #activator="{ on, attrs }">
                 <v-btn
-<<<<<<< HEAD:pages/logs.vue
-                  :disabled="item.status === 'loading'"
-=======
                   :disabled="item.status === 'processing'"
->>>>>>> origin/feature/sc-124/crud-de-log-eliminacion-frontend:pages/_projectId/logs.vue
                   icon
                   v-bind="attrs"
                   v-on="on"
@@ -165,14 +157,15 @@ export default {
   }),
   fetch () {
     this.loading = true
-    this.$logService.get({
+    this.$logService.get(this.projectId, {
       offset: (this.options.page - 1) * this.options.itemsPerPage,
       limit: this.options.itemsPerPage,
       ...this.filter
     }).then((result) => {
       this.logs = result.rows
       this.serverItemsLength = result.count
-    }).catch(() => { this.$noty.warn('Hubo un error al cargar los logs') }).finally(() => { this.loading = false })
+    }).catch(() => { this.$noty.warn('Hubo un error al cargar los logs') })
+      .finally(() => { this.loading = false })
   },
   computed: {
     isFiltering () {
