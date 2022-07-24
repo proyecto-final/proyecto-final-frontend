@@ -17,7 +17,7 @@
             <OrganizationProjectDialog
               v-if="projects.length !== 0 && !loading && !isFiltering"
               :organization-id="organizationId"
-              @created="$fetch"
+              @created="refreshProject"
             />
           </div>
         </v-col>
@@ -36,9 +36,9 @@
           Creá tus proyectos para trabajar con tu equipo.<br>
           Una vez que lo hagas, desde acá los visualizarás.
           <div class="mt-7">
-            <OrganizationCreateProjectDialog
+            <OrganizationProjectDialog
               :organization-id="organizationId"
-              @created="$fetch"
+              @created="refreshProject"
             />
           </div>
         </template>
@@ -84,7 +84,7 @@
               close-on-content-click
               :project="item"
               :organization-id="organizationId"
-              @deleted="$fetch"
+              @deleted="refreshProject"
             />
             <v-menu v-model="display[item.id]" offset-y close-on-content-click>
               <template #activator="{ on, attrs }">
@@ -105,14 +105,14 @@
                     :project-id="item.id"
                     is-editing
                     :project2-edit="item"
-                    @updated="$fetch"
+                    @updated="refreshProject"
                   />
                 </v-list-item>
                 <v-list-item>
                   <OrganizationLinkUsersDialog
                     :organization-id="organizationId"
                     :project-id="item.id"
-                    @updated="$fetch"
+                    @updated="refreshUsersProject"
                   />
                 </v-list-item>
               </v-list>
@@ -196,7 +196,17 @@ export default {
     },
     fetchDebounced: debounce(function () {
       this.$fetch()
-    }, 500)
+    }, 500),
+    refreshUsersProject () {
+      this.$fetch()
+      this.$store.dispatch('user/getUser')
+      this.$emit('projectUsersUpdated')
+    },
+    refreshProject () {
+      this.refreshUsersProject()
+      this.$emit('projectUpdated')
+      console.log('pepe')
+    }
   }
 }
 </script>

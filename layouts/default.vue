@@ -109,10 +109,11 @@ export default {
         return this.selectedProject || {}
       },
       set (value) {
-        const splittedUrl = window.location.href.split('/')
-        const UrlToPush = splittedUrl[splittedUrl.length - 1]
         this.$store.commit('user/SET_SELECTED_PROJECT_ID', value.id)
-        this.$router.push(`/${value.id}/${UrlToPush}`)
+        if (!window.location.pathname.includes('mine')) {
+          const newUrl = window.location.pathname.replace(/[1-9]+/, value.id)
+          this.$router.push(newUrl)
+        }
       }
     },
     showSidebarSafe: {
