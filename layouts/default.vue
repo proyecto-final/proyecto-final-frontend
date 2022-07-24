@@ -110,6 +110,10 @@ export default {
       },
       set (value) {
         this.$store.commit('user/SET_SELECTED_PROJECT_ID', value.id)
+        if (!window.location.pathname.includes('mine')) {
+          const newUrl = window.location.pathname.replace(/[1-9]+/, value.id)
+          this.$router.push(newUrl)
+        }
       }
     },
     showSidebarSafe: {

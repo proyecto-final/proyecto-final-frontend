@@ -97,10 +97,14 @@
           </ShSecondaryButton>
         </v-btn-toggle>
         <div v-show="tableToShow === 'users'" class="pb-2">
-          <OrganizationUsers :organization-id="organizationId" />
+          <OrganizationUsers ref="organizationUsers" :organization-id="organizationId" />
         </div>
         <div v-show="tableToShow === 'projects'">
-          <OrganizationProjects :organization-id="organizationId" />
+          <OrganizationProjects
+            :organization-id="organizationId"
+            @projectUsersUpdated="refreshUsers"
+            @projectUpdated="$fetch"
+          />
         </div>
       </v-tab-item>
     </v-tabs>
@@ -136,6 +140,9 @@ export default {
   methods: {
     setOrganization (updatedOrganization) {
       this.organization = updatedOrganization
+    },
+    refreshUsers () {
+      this.$refs.organizationUsers.$fetch()
     }
   }
 }
