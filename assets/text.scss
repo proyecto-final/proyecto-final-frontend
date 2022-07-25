@@ -4,6 +4,10 @@
    url(~assets/fonts/Nunito-Regular.ttf) format("truetype");
 }
 
+.text-align-center {
+  text-align: center;
+}
+
 .text-transform-none{
   text-transform: none !important;
 }
@@ -12,12 +16,28 @@
   text-decoration: none !important;
 }
 
+.primary-text{
+  color: var(--v-primary-base) !important;
+}
+
+.error-text{
+  color: var(--v-error-base) !important;
+}
+
 .neutral-text{
   color: var(--v-neutral-base) !important;
 }
 
 .neutral-darken-text{
   color: var(--v-neutral-darken2);
+}
+
+.neutral-lighten-text{
+  color: var(--v-neutral-lighten2) !important;
+}
+
+.avatar1-text {
+  color: var(--v-avatar1-base) !important;
 }
 
 .inherit-text{

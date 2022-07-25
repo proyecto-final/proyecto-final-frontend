@@ -37,7 +37,9 @@ export default {
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
     '~/plugins/axios',
-    '~/plugins/services'
+    '~/plugins/services',
+    '~/plugins/filters',
+    '~/plugins/init'
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -100,7 +102,7 @@ export default {
           accent: colors.grey.darken3,
           secondary: colors.amber.darken3,
           info: colors.teal.lighten1,
-          warning: '#8C4E02',
+          warning: colors.orange.darken2,
           error: colors.deepOrange.accent4,
           success: '#086E08',
           background: {
@@ -108,10 +110,13 @@ export default {
             base: '#E0E2F5'
           },
           neutral: {
-            lighten2: '#DFE2F5',
+            lighten2: '#989DB8',
             base: '#585E76',
+            darken1: '#DFE2F5',
             darken2: '#242736'
           },
+          avatar1: '#9D3F7A',
+          avatar1Bg: '#F4E6F4',
           avatar6: '#77C07B'
         }
       }

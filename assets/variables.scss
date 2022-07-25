@@ -4,6 +4,8 @@
 // $font-size-root: 20px;
 
 $btn-border-radius: 12px;
+$btn-rounded-border-radius: 12px;
+$btn-toggle-border-radius: 12px;
 $btn-sizes:	(
   'small': 40,
   'default': 48,
@@ -18,4 +20,12 @@ $data-table-border-radius: 12px;
 
 .v-menu__content {
   border-radius: 12px !important;
+}
+
+.v-dialog {
+  border-radius: 24px !important;
+}
+
+.v-tabs-items {
+  background-color: transparent !important;
 }

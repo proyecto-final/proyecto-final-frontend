@@ -8,12 +8,9 @@ export default function ({ store, $axios, redirect, app, $nuxt, $route }) {
 
   $axios.onError((error) => {
     const code = parseInt(error.response?.status || 0)
-    const has2Logout = code === 403
+    const has2Logout = code === 401
     if (has2Logout) {
       return redirect('/logout')
-    }
-    if (code === 403) {
-      return redirect('/invalid-url')
     }
   })
   $axios.onRequest((request) => {
