@@ -205,7 +205,6 @@ export default {
     refreshProject () {
       this.refreshUsersProject()
       this.$emit('projectUpdated')
-      console.log('pepe')
     }
   }
 }
