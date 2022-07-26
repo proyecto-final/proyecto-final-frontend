@@ -34,15 +34,6 @@
             @input="$fetch"
           />
         </v-col>
-        <v-col cols="12" md="4" lg="3">
-          <ShAutocomplete
-            v-model="filter.project"
-            hide-details
-            clearable
-            :items="[{ text: 'Work in progress...', value: true }]"
-            placeholder="Filtrar por proyecto"
-          />
-        </v-col>
       </v-row>
     </div>
     <div class="mb-6">
