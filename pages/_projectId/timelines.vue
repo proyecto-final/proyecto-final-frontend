@@ -77,7 +77,13 @@
                 Editar
               </v-list>
               <v-list>
-                Eliminar
+                <TimelineDeleteDialog
+                  offset-y
+                  close-on-content-click
+                  :timeline="item"
+                  :project-id="projectId"
+                  @deleted="$fetch"
+                />
               </v-list>
             </v-menu>
           </div>
