@@ -8,4 +8,8 @@ export default class Timeline {
   get (projectId, params) {
     return Promise.resolve([{ _id: '1', title: 'Timeline 1', description: 'Un timeline', updatedAt: '2022-07-27T23:35:26.786Z', eventsCount: '123' }, { _id: '2', title: 'Timeline 2', description: 'Otro timeline', updatedAt: '2022-07-27T23:35:26.786Z', eventsCount: '567' }])
   }
+
+  saveTimeline (projectId, timelineId, timeline) {
+    return this.$axios.$post(`/api/project/${projectId}/timeline/${timelineId}`, timeline)
+  }
 }
