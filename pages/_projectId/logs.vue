@@ -15,7 +15,6 @@
         <v-col cols="12" md="4" lg="3">
           <div class="d-flex justify-end">
             <LogDialog :project-id="projectId" @created="$fetch" />
-            <TimelineDialog :project-id="projectId" @created="$fetch" />
           </div>
         </v-col>
       </v-row>
