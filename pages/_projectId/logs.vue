@@ -60,9 +60,11 @@
         </template>
         <template #[`item.actions`]="{ item }">
           <div class="d-flex">
+            <LogViewDialog />
+            <!--
             <ShButton :disabled="item.state === 'processing'" text @click="redirectToLogPage(item.id)">
               Ver log
-            </ShButton>
+            </ShButton>-->
             <v-menu v-model="display[item._id]" offset-y close-on-content-click>
               <template #activator="{ on, attrs }">
                 <v-btn
