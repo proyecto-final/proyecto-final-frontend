@@ -74,7 +74,12 @@
                 </v-btn>
               </template>
               <v-list>
-                Editar
+                <TimelineUpdateDialog
+                  :project-id="projectId"
+                  :timeline-id="item._id"
+                  :timeline2-edit="item"
+                  @updated="$fetch"
+                />
               </v-list>
               <v-list>
                 Eliminar
