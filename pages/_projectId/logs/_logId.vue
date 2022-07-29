@@ -39,14 +39,35 @@
           />
         </v-col>
       </v-row>
-      <v-row style="height:800px">
+      <div class="d-flex" style="height: 500px">
+        <div class="log-number-div">
+          1
+        </div>
         <div v-for="(line, index) in lines" :key="index" class="log-div">
-          {{ index + 1 }} - {{ line.raw }}
+          {{ line.raw }}
         </div>
         <div class="timeline-div">
-          HOLA
+          <div>
+            <ShHeading3 class="ma-5">
+              Timeline
+            </ShHeading3>
+          </div>
+          <v-timeline dense clipped-left class="mt-4">
+            <v-timeline-item
+              class="mb-4"
+              color="primary"
+              small
+            >
+              <ShBodySmall>
+                1: Soy un log con comple...
+              </ShBodySmall>
+              <ShSpecialLabelSmall>
+                14 de abril, 2022 03:24
+              </ShSpecialLabelSmall>
+            </v-timeline-item>
+          </v-timeline>
         </div>
-      </v-row>
+      </div>
     </div>
   </div>
 </template>
@@ -75,9 +96,15 @@ export default {
   border-top-style: solid !important;
   border-top-color: var(--v-background-base) !important;
   border-top: 1px;
-  width: 80%;
-  margin-left: -10px;
-  height: 100%;
+  width: 75%;
+}
+.log-number-div {
+  background-color: white;
+  border-top-style: solid !important;
+  border-top-color: var(--v-background-base) !important;
+  border-top: 1px;
+  width: 5%;
+  margin-left: -23px;
 }
 .timeline-div {
   background-color: white;
