@@ -5,6 +5,7 @@
     title="Eliminar proyecto"
     :async-confirm-function="deleteProject"
     :can-confirm="namesMatch"
+    :submit-on-enter="namesMatch"
     v-on="$listeners"
     @open="resetDialog"
   >
