@@ -40,11 +40,17 @@
         </v-col>
       </v-row>
       <div class="d-flex" style="height: 500px">
-        <div class="log-number-div">
-          1
-        </div>
-        <div v-for="(line, index) in lines" :key="index" class="log-div">
-          {{ line.raw }}
+        <div v-for="(line, index) in lines" :key="index" class="d-flex log-div">
+          <div>
+            <div class="ma-5">
+              {{ index + 1 }}
+            </div>
+          </div>
+          <div>
+            <div class="ma-5">
+              {{ line.raw }}
+            </div>
+          </div>
         </div>
         <div class="timeline-div">
           <div>
@@ -96,15 +102,8 @@ export default {
   border-top-style: solid !important;
   border-top-color: var(--v-background-base) !important;
   border-top: 1px;
-  width: 75%;
-}
-.log-number-div {
-  background-color: white;
-  border-top-style: solid !important;
-  border-top-color: var(--v-background-base) !important;
-  border-top: 1px;
-  width: 5%;
-  margin-left: -23px;
+  width: 80%;
+  margin-left: -24px
 }
 .timeline-div {
   background-color: white;
