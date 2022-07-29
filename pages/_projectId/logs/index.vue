@@ -60,11 +60,9 @@
         </template>
         <template #[`item.actions`]="{ item }">
           <div class="d-flex">
-            <LogViewDialog />
-            <!--
-            <ShButton :disabled="item.state === 'processing'" text @click="redirectToLogPage(item.id)">
+            <ShButton :disabled="item.state === 'processing'" text @click="redirectToLogPage(item._id)">
               Ver log
-            </ShButton>-->
+            </ShButton>
             <v-menu v-model="display[item._id]" offset-y close-on-content-click>
               <template #activator="{ on, attrs }">
                 <v-btn
@@ -168,7 +166,7 @@ export default {
       this.fetchDebounced()
     },
     redirectToLogPage (itemId) {
-      this.$router.push(`/logs/${itemId}`)
+      this.$router.push(`/${this.projectId}/logs/${itemId}`)
     },
     fetchDebounced: debounce(function () {
       this.$fetch()
