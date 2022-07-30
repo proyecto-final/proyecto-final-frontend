@@ -48,14 +48,22 @@
             class="d-flex log-line mt-5"
           >
             <v-col cols="1">
-              <div class="mr-5 mt-2 mb-2 ml-2 text-align-center">
+              <div class="mr-5 my-3 ml-2 text-align-center">
                 {{ index + 1 }}
               </div>
             </v-col>
             <v-col>
-              <div class="d-flex">
-                <div class="mr-5 mt-2 mb-2">
+              <div class="d-flex align-center">
+                <div class="mr-5 my-3">
                   {{ line.raw }}
+                </div>
+                <div>
+                  <ShChip>
+                    <v-icon>
+                      mdi-link
+                    </v-icon>
+                    Evento - 4
+                  </ShChip>
                 </div>
                 <v-menu
                   offset-y
@@ -63,8 +71,10 @@
                 >
                   <template #activator="{ on, attrs }">
                     <v-btn
-                      icon
+                      class="action-button"
                       v-bind="attrs"
+                      small
+                      icon
                       v-on="on"
                     >
                       <v-icon>
@@ -74,15 +84,27 @@
                   </template>
                   <v-list nav>
                     <v-list-item>
+                      <v-icon>
+                        mdi-circle-medium
+                      </v-icon>
                       Marcar línea
                     </v-list-item>
                     <v-list-item>
+                      <v-icon>
+                        mdi-note-text
+                      </v-icon>
                       Agregar una nota
                     </v-list-item>
                     <v-list-item>
+                      <v-icon>
+                        mdi-link
+                      </v-icon>
                       Vincular evento
                     </v-list-item>
                     <v-list-item>
+                      <v-icon>
+                        mdi-shield-search
+                      </v-icon>
                       Analizar IP
                     </v-list-item>
                   </v-list>
@@ -128,7 +150,8 @@ export default {
     lines: [{ raw: 'Soy un log con complejo de logcito y tengo una IP 127.0.0.1' },
       { raw: 'Soy un log con complejo de logcito y tengo una IP 127.0.0.1' },
       { raw: 'Soy un log con complejo de logcito y tengo una IP 127.0.0.1' },
-      { raw: 'Soy un log con complejo de logcito y tengo una IP 127.0.0.1' }]
+      { raw: 'Soy un log con complejo de logcito y tengo una IP 127.0.0.1' }],
+    isHovered: false
   }),
   computed: {
     projectId () {
@@ -144,7 +167,7 @@ export default {
   }
 }
 </script>
-<style scoped>
+<style scoped lang="scss">
 .border-top{
   border-top-style: solid !important;
   border-top-color: var(--v-background-base) !important;
@@ -158,8 +181,14 @@ export default {
 .bg-white {
   background-color: white;
 }
+.action-button{
+  display: none;
+}
 .log-line:hover {
-  background-color: var(--v-background-base) !important;
+  background-color: var(--v-background-lighten2) !important;
+  & .action-button {
+    display: block !important;
+  }
 }
 .max-height-viewport {
   max-height: calc(100vh - 252px);
