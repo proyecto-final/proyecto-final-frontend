@@ -41,14 +41,14 @@
       </v-row>
       <v-row no-gutters class="border-top bg-white h-100">
         <v-col cols="7" md="8" lg="9" class="border-right">
-          <v-row v-for="(line, index) in lines" :key="index" no-gutters class="d-flex">
+          <v-row v-for="(line, index) in lines" :key="index" no-gutters class="d-flex log-line mt-5">
             <v-col cols="auto">
-              <div class="ma-5">
+              <div class="mr-5 mt-2 mb-2 ml-5">
                 {{ index + 8 }}
               </div>
             </v-col>
             <v-col>
-              <div class="ma-5">
+              <div class="mr-5 mt-2 mb-2 ml-5">
                 {{ line.raw }}
               </div>
             </v-col>
@@ -120,5 +120,8 @@ export default {
 }
 .bg-white {
   background-color: white;
+}
+.log-line:hover {
+  background-color: red;
 }
 </style>
