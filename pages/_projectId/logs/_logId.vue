@@ -45,24 +45,28 @@
             v-for="(line, index) in lines"
             :key="index"
             no-gutters
-            class="d-flex log-line mt-5"
+            class="d-flex log-line"
           >
-            <v-col cols="1">
-              <div class="mr-5 my-3 ml-2 text-align-center">
-                {{ index + 1 }}
+            <v-col cols="auto">
+              <div class="mx-6 my-3 text-align-center">
+                <ShCode>
+                  {{ index + 1 }}
+                </ShCode>
               </div>
             </v-col>
             <v-col>
               <div class="d-flex align-center">
                 <div class="mr-5 my-3">
-                  {{ line.raw }}
+                  <ShCode>
+                    {{ line.raw }}
+                  </ShCode>
                 </div>
                 <div>
-                  <ShChip>
+                  <ShChip v-for="detection in line.detections" :key="index + detection" class="mr-2">
                     <v-icon>
                       mdi-link
                     </v-icon>
-                    Evento - 4
+                    {{ detection }}
                   </ShChip>
                 </div>
                 <v-menu
@@ -87,25 +91,33 @@
                       <v-icon>
                         mdi-circle-medium
                       </v-icon>
-                      Marcar línea
+                      <div class="ml-4">
+                        Marcar línea
+                      </div>
                     </v-list-item>
                     <v-list-item>
                       <v-icon>
                         mdi-note-text
                       </v-icon>
-                      Agregar una nota
+                      <div class="ml-4">
+                        Agregar una nota
+                      </div>
                     </v-list-item>
                     <v-list-item>
                       <v-icon>
                         mdi-link
                       </v-icon>
-                      Vincular evento
+                      <div class="ml-4">
+                        Vincular evento
+                      </div>
                     </v-list-item>
                     <v-list-item>
                       <v-icon>
                         mdi-shield-search
                       </v-icon>
-                      Analizar IP
+                      <v-div class="ml-4">
+                        Analizar IP
+                      </v-div>
                     </v-list-item>
                   </v-list>
                 </v-menu>
@@ -134,8 +146,16 @@
               </div>
               <div>
                 <ShSpecialLabelSmall neutral>
-                  14 de abril, 2022 03:24
+                  {{ line.timestamp }}
                 </ShSpecialLabelSmall>
+              </div>
+              <div>
+                <ShChip v-for="detection in line.detections" :key="index + detection" class="mt-3 mr-2" small>
+                  <v-icon>
+                    mdi-link
+                  </v-icon>
+                  {{ detection }}
+                </ShChip>
               </div>
             </v-timeline-item>
           </v-timeline>
@@ -147,11 +167,24 @@
 <script>
 export default {
   data: () => ({
-    lines: [{ raw: 'Soy un log con complejo de logcito y tengo una IP 127.0.0.1' },
-      { raw: 'Soy un log con complejo de logcito y tengo una IP 127.0.0.1' },
-      { raw: 'Soy un log con complejo de logcito y tengo una IP 127.0.0.1' },
-      { raw: 'Soy un log con complejo de logcito y tengo una IP 127.0.0.1' }],
-    isHovered: false
+    lines: [{
+      raw: 'Soy un log con complejo de logcito y tengo una IP 127.0.0.1',
+      detections: [],
+      timestamp: '13 de noviembre, 2022 12:10',
+      note: true
+    },
+    {
+      raw: 'Soy un log con complejo de logcito y tengo una IP 127.0.0.1',
+      detections: ['Evento - 1', 'Evento - 2'],
+      timestamp: '14 de abril, 2022 03:24',
+      note: true
+    },
+    {
+      raw: 'Soy un log con complejo de logcito y tengo una IP 127.0.0.1',
+      detections: ['Evento - 1'],
+      timestamp: '18 de enero, 2022 05:40',
+      note: false
+    }]
   }),
   computed: {
     projectId () {

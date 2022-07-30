@@ -3,6 +3,16 @@
   src: local("Nunito-Regular"),
    url(~assets/fonts/Nunito-Regular.ttf) format("truetype");
 }
+@font-face {
+  font-family: "Code-Regular";
+  src: local("Code-Regular"),
+   url(~assets/fonts/SourceCodePro-Regular.ttf) format("truetype");
+}
+@font-face {
+  font-family: "Code-Bold";
+  src: local("Code-Bold"),
+   url(~assets/fonts/SourceCodePro-Bold.ttf) format("truetype");
+}
 
 .text-align-center {
   text-align: center;
