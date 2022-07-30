@@ -41,18 +41,18 @@
       </v-row>
       <v-row no-gutters class="border-top bg-white h-100">
         <v-col cols="7" md="8" lg="9" class="border-right">
-          <div v-for="(line, index) in lines" :key="index" class="d-flex">
-            <div>
+          <v-row v-for="(line, index) in lines" :key="index" no-gutters class="d-flex">
+            <v-col cols="auto">
               <div class="ma-5">
                 {{ index + 8 }}
               </div>
-            </div>
-            <div>
+            </v-col>
+            <v-col>
               <div class="ma-5">
                 {{ line.raw }}
               </div>
-            </div>
-          </div>
+            </v-col>
+          </v-row>
         </v-col>
         <v-col>
           <div>
