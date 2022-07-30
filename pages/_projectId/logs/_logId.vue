@@ -39,20 +39,22 @@
           />
         </v-col>
       </v-row>
-      <div class="d-flex" style="height: 500px">
-        <div v-for="(line, index) in lines" :key="index" class="d-flex log-div">
-          <div>
-            <div class="ma-5">
-              {{ index + 1 }}
+      <v-row no-gutters class="border-top bg-white h-100">
+        <v-col cols="7" md="8" lg="9" class="border-right">
+          <div v-for="(line, index) in lines" :key="index" class="d-flex">
+            <div>
+              <div class="ma-5">
+                {{ index + 8 }}
+              </div>
+            </div>
+            <div>
+              <div class="ma-5">
+                {{ line.raw }}
+              </div>
             </div>
           </div>
-          <div>
-            <div class="ma-5">
-              {{ line.raw }}
-            </div>
-          </div>
-        </div>
-        <div class="timeline-div">
+        </v-col>
+        <v-col>
           <div>
             <ShHeading3 class="ma-5">
               Timeline
@@ -60,27 +62,36 @@
           </div>
           <v-timeline dense clipped-left class="mt-4">
             <v-timeline-item
+              v-for="(line, index) in lines"
+              :key="index"
               class="mb-4"
               color="primary"
               small
             >
-              <ShBodySmall>
-                1: Soy un log con comple...
-              </ShBodySmall>
-              <ShSpecialLabelSmall>
-                14 de abril, 2022 03:24
-              </ShSpecialLabelSmall>
+              <div>
+                <ShBodySmall>
+                  {{ index + 1 }}: {{ line.raw }}
+                </ShBodySmall>
+              </div>
+              <div>
+                <ShSpecialLabelSmall neutral>
+                  14 de abril, 2022 03:24
+                </ShSpecialLabelSmall>
+              </div>
             </v-timeline-item>
           </v-timeline>
-        </div>
-      </div>
+        </v-col>
+      </v-row>
     </div>
   </div>
 </template>
 <script>
 export default {
   data: () => ({
-    lines: [{ raw: 'Soy un log con complejo de logcito y tengo una IP 127.0.0.1' }]
+    lines: [{ raw: 'Soy un log con complejo de logcito y tengo una IP 127.0.0.1' },
+      { raw: 'Soy un log con complejo de logcito y tengo una IP 127.0.0.1' },
+      { raw: 'Soy un log con complejo de logcito y tengo una IP 127.0.0.1' },
+      { raw: 'Soy un log con complejo de logcito y tengo una IP 127.0.0.1' }]
   }),
   computed: {
     projectId () {
@@ -97,23 +108,17 @@ export default {
 }
 </script>
 <style scoped>
-.log-div {
-  background-color: white;
+.border-top{
   border-top-style: solid !important;
   border-top-color: var(--v-background-base) !important;
   border-top: 1px;
-  width: 80%;
-  margin-left: -24px
 }
-.timeline-div {
+.border-right{
+  border-right-style: solid !important;
+  border-right-color: var(--v-background-base) !important;
+  border-right: 1px;
+}
+.bg-white {
   background-color: white;
-  border-top-style: solid !important;
-  border-top-color: var(--v-background-base) !important;
-  border-left-style: solid !important;
-  border-left-color: var(--v-background-base) !important;
-  border-top: 1px;
-  border-left: 1px;
-  width: 20%;
-  height: 100%;
 }
 </style>
