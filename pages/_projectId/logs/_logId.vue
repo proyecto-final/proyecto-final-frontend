@@ -39,22 +39,59 @@
           />
         </v-col>
       </v-row>
-      <v-row no-gutters class="border-top bg-white h-100">
-        <v-col cols="7" md="8" lg="9" class="border-right">
-          <v-row v-for="(line, index) in lines" :key="index" no-gutters class="d-flex log-line mt-5">
-            <v-col cols="auto">
-              <div class="mr-5 mt-2 mb-2 ml-5">
-                {{ index + 8 }}
+      <v-row no-gutters class="border-top bg-white h-100 max-height-viewport">
+        <v-col cols="7" md="8" lg="9" class="border-right max-height-inherit sh-scrollbar">
+          <v-row
+            v-for="(line, index) in lines"
+            :key="index"
+            no-gutters
+            class="d-flex log-line mt-5"
+          >
+            <v-col cols="1">
+              <div class="mr-5 mt-2 mb-2 ml-2 text-align-center">
+                {{ index + 1 }}
               </div>
             </v-col>
             <v-col>
-              <div class="mr-5 mt-2 mb-2 ml-5">
-                {{ line.raw }}
+              <div class="d-flex">
+                <div class="mr-5 mt-2 mb-2">
+                  {{ line.raw }}
+                </div>
+                <v-menu
+                  offset-y
+                  close-on-content-click
+                >
+                  <template #activator="{ on, attrs }">
+                    <v-btn
+                      icon
+                      v-bind="attrs"
+                      v-on="on"
+                    >
+                      <v-icon>
+                        mdi-plus
+                      </v-icon>
+                    </v-btn>
+                  </template>
+                  <v-list nav>
+                    <v-list-item>
+                      Marcar línea
+                    </v-list-item>
+                    <v-list-item>
+                      Agregar una nota
+                    </v-list-item>
+                    <v-list-item>
+                      Vincular evento
+                    </v-list-item>
+                    <v-list-item>
+                      Analizar IP
+                    </v-list-item>
+                  </v-list>
+                </v-menu>
               </div>
             </v-col>
           </v-row>
         </v-col>
-        <v-col>
+        <v-col class="sh-scrollbar max-height-inherit">
           <div>
             <ShHeading3 class="ma-5">
               Timeline
@@ -122,6 +159,12 @@ export default {
   background-color: white;
 }
 .log-line:hover {
-  background-color: red;
+  background-color: var(--v-background-base) !important;
+}
+.max-height-viewport {
+  max-height: calc(100vh - 252px);
+}
+.max-height-inherit {
+  max-height: inherit;
 }
 </style>
