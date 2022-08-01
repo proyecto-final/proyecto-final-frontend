@@ -1,8 +1,8 @@
 <template>
   <ShAsyncDialog
     width="500"
-    confirm-text="Crear"
-    title="Crear timeline"
+    confirm-text="Generar"
+    title="Generar timeline"
     :async-confirm-function="save"
     v-on="$listeners"
     @open="setTimeline"
@@ -10,10 +10,7 @@
     <template #activator="{on}">
       <slot name="activator" :on="on">
         <ShButton :block="$vuetify.breakpoint.smAndDown" v-on="on">
-          <v-icon color="white">
-            mdi-plus
-          </v-icon>
-          Crear timeline
+          Generar timeline
         </ShButton>
       </slot>
     </template>

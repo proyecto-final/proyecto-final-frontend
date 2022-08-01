@@ -28,6 +28,9 @@
           />
         </v-col>
       </v-row>
+      <TimelinePreviewDialog
+        :log-lines="[{title: 'Linea loca 1', tags: ['Tag 1'], detections: ['Evento 1', 'Evento 2'], updatedAt: '2022-07-27T23:35:26.786Z'}, {title: 'Linea loca 2', tags: ['Tag 1', 'Tag 2'], detections: ['Evento 1'], updatedAt: '2022-07-27T23:35:26.786Z'}]"
+      />
       <ShTable
         :items="timelines"
         :headers="headers"
