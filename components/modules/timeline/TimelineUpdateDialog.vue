@@ -31,7 +31,7 @@
           <ShTextArea
             v-model="timeline.description"
             label="Descripción"
-            :rules="[$rules.maxLength(256)]"
+            :rules="[$rules.maxLength(250)]"
           />
         </div>
       </div>
