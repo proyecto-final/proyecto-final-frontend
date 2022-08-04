@@ -5,6 +5,7 @@
     title="Eliminar timeline"
     :async-confirm-function="deleteTimeline"
     :can-confirm="namesMatch"
+    :submit-on-enter="namesMatch"
     v-on="$listeners"
     @open="resetDialog"
   >
