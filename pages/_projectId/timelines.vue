@@ -53,7 +53,7 @@
         </template>
         <template #[`item.eventsCount`]="{ item }">
           <ShNumberAvatar>
-            {{ item.eventsCount }}
+            {{ item.lines.length }}
           </ShNumberAvatar>
         </template>
         <template #[`item.actions`]="{ item }">
@@ -82,7 +82,13 @@
                 />
               </v-list>
               <v-list>
-                Eliminar
+                <TimelineDeleteDialog
+                  offset-y
+                  close-on-content-click
+                  :timeline="item"
+                  :project-id="projectId"
+                  @deleted="$fetch"
+                />
               </v-list>
             </v-menu>
           </div>
@@ -134,8 +140,8 @@ export default {
       limit: this.options.itemsPerPage,
       ...this.filter
     }).then((result) => {
-      this.timelines = result // TO-DO: hacer result.rows
-      this.serverItemsLength = result.length // TO-DO: hacer result.count
+      this.timelines = result.rows
+      this.serverItemsLength = result.count
     }).catch(() => { this.$noty.warn('Hubo un error al cargar los timelines') })
       .finally(() => { this.loading = false })
   },
