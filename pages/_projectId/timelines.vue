@@ -53,7 +53,7 @@
         </template>
         <template #[`item.eventsCount`]="{ item }">
           <ShNumberAvatar>
-            {{ item.eventsCount }}
+            {{ item.lines.length }}
           </ShNumberAvatar>
         </template>
         <template #[`item.actions`]="{ item }">
