@@ -65,8 +65,8 @@ export default {
   methods: {
     save () {
       return this.$timelineService.update(this.projectId, this.timelineId, this.timeline)
-        .then(() => {
-          this.$emit('updated')
+        .then((timeline) => {
+          this.$emit('updated', timeline)
           return true
         })
         .catch((error) => {
