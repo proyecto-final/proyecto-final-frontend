@@ -14,6 +14,6 @@ export default class Timeline {
   }
 
   update (projectId, timelineId, timeline) {
-    return this.$axios.$patch(`/api/project/${projectId}/timeline/${timelineId}`, timeline) // TO-DO: Chequear cuando este listo el back
+    return this.$axios.$patch(`/api/project/${projectId}/timeline/${timelineId}`, timeline)
   }
 }
