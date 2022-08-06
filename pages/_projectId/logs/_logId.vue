@@ -167,25 +167,32 @@
 <script>
 export default {
   data: () => ({
-    lines: [{
-      raw: 'Soy un log con complejo de logcito y tengo una IP 127.0.0.1',
-      detections: [],
-      timestamp: '13 de noviembre, 2022 12:10',
-      note: true
+    options: {
+      page: 1,
+      itemsPerPage: 10
     },
-    {
-      raw: 'Soy un log con complejo de logcito y tengo una IP 127.0.0.1',
-      detections: ['Evento - 1', 'Evento - 2'],
-      timestamp: '14 de abril, 2022 03:24',
-      note: true
+    filter: {
+      raw: ''
     },
-    {
-      raw: 'Soy un log con complejo de logcito y tengo una IP 127.0.0.1',
-      detections: ['Evento - 1'],
-      timestamp: '18 de enero, 2022 05:40',
-      note: false
-    }]
+    lines: [],
+    serverItemsLength: 0,
+    loading: false
   }),
+  fetch () {
+    this.loading = true
+    this.$logService.getLines(this.projectId, this.logId, {
+      offset: (this.options.page - 1) * this.options.itemsPerPage,
+      limit: this.options.itemsPerPage,
+      ...this.filter
+    }).then((result) => {
+      this.lines = result.rows
+      this.serverItemsLength = result.count
+    }).catch(() => {
+      this.$noty.warn('Hubo un error al cargar los eventos')
+    }).finally(() => {
+      this.loading = false
+    })
+  },
   computed: {
     projectId () {
       return this.$route.params.projectId
