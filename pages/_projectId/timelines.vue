@@ -74,10 +74,21 @@
                 </v-btn>
               </template>
               <v-list>
-                Editar
+                <TimelineUpdateDialog
+                  :project-id="projectId"
+                  :timeline-id="item._id"
+                  :timeline2-edit="item"
+                  @updated="(updatedTimeline) => setTimeline(item, updatedTimeline)"
+                />
               </v-list>
               <v-list>
-                Eliminar
+                <TimelineDeleteDialog
+                  offset-y
+                  close-on-content-click
+                  :timeline="item"
+                  :project-id="projectId"
+                  @deleted="$fetch"
+                />
               </v-list>
             </v-menu>
           </div>
@@ -156,6 +167,9 @@ export default {
     },
     redirectToTimelinePage (itemId) {
       this.$router.push(`/timelines/${itemId}`)
+    },
+    setTimeline (timeline, updatedTimeline) {
+      Object.assign(timeline, updatedTimeline)
     },
     fetchDebounced: debounce(function () {
       this.$fetch()
