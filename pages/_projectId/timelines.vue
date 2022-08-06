@@ -74,12 +74,16 @@
                 </v-btn>
               </template>
               <v-list>
+                <<<<<<< HEAD
+                Editar
+                =======
                 <TimelineUpdateDialog
                   :project-id="projectId"
                   :timeline-id="item._id"
                   :timeline2-edit="item"
                   @updated="(updatedTimeline) => setTimeline(item, updatedTimeline)"
                 />
+                >>>>>>> develop
               </v-list>
               <v-list>
                 <TimelineDeleteDialog
