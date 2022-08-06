@@ -113,7 +113,7 @@ export default {
   data: () => ({
     options: {
       page: 1,
-      itemsPerPage: 5
+      itemsPerPage: 20
     },
     filter: {
       raw: '',
