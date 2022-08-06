@@ -19,7 +19,9 @@
             <ShIconButton color="neutral" icon="mdi-close" title="Cerrar" @click="close()" />
           </slot>
         </div>
-        <slot />
+        <div :class="bodyClass">
+          <slot />
+        </div>
         <div>
           <div class="d-flex justify-end">
             <div>
@@ -72,6 +74,10 @@ export default {
     hidePrimaryButton: {
       type: Boolean,
       default: false
+    },
+    bodyClass: {
+      type: String,
+      default: ''
     }
   },
   methods: {

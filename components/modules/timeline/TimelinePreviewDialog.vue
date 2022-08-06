@@ -5,6 +5,7 @@
     title="Previsualización del timeline"
     fullscreen
     hide-secondary-button
+    body-class="bg-default"
     v-on="$listeners"
   >
     <template #activator="{on}">
@@ -16,7 +17,7 @@
       <ShIconButton color="neutral" icon="mdi-close" title="Cerrar" @click="close" />
     </template>
     <template #close>
-      <TimelineGenerateDialog />
+      <TimelineGenerateDialog :project-id="'1'" :timeline-id="'1'" />
     </template>
     <template #default>
       <v-row justify="center">
@@ -37,15 +38,21 @@
               Estadísticas
             </v-tab>
             <v-tab-item class="pb-2">
-              <div>
-                <ShChip @click="selectAll">
+              <div class="mb-4 mt-4">
+                <ShChip class="mx-1" @click="selectAll">
+                  <v-icon v-if="isSelectedAll">
+                    mdi-check
+                  </v-icon>
                   Todos
                 </ShChip>
-                <ShChip v-for="(tag, index) in differentTags" :key="index" @click="selectTag(tag)">
+                <ShChip v-for="(tag, index) in distinctTags" :key="index" class="mx-1" @click="selectTag(tag)">
+                  <v-icon v-if="tag.isSelected">
+                    mdi-check
+                  </v-icon>
                   {{ tag.tag }}
                 </ShChip>
               </div>
-              <v-timeline v-for="(logLine, index) in logLines" :key="index" dense clipped-left>
+              <v-timeline v-for="(logLine, index) in showableLogLines" :key="index" dense clipped-left>
                 <v-timeline-item small>
                   <v-row>
                     <v-col>
@@ -53,19 +60,40 @@
                         {{ logLine.title }}
                       </ShBody>
                       <div>
-                        <ShChip v-for="(detection, detectionIndex) in logLine.detections" :key="`${index}-${detectionIndex}`" class="mb-2" color="red">
+                        <ShChip v-for="(detection, detectionIndex) in logLine.detections" :key="`${index}-${detectionIndex}`" class="mb-2 mx-1" color="red">
                           <v-icon>
                             mdi-link
                           </v-icon>
                           {{ detection }}
                         </ShChip>
                       </div>
-                      <ShChip v-for="(tag, tagIndex) in logLine.tags" :key="`${index}-${tagIndex}`" class="mb-2">
+                      <ShChip v-for="(tag, tagIndex) in logLine.tags" :key="`${index}-${tagIndex}`" class="mb-2 mx-1">
                         {{ tag }}
                       </ShChip>
-                      <ShChip class="mb-2">
-                        <ShIconButton color="neutral" icon="mdi-tag-plus" title="Agregar tag" @click="$emit('addTag', tagIndex)" />
-                      </ShChip>
+                      <v-menu offset-y :close-on-content-click="false" @input="resetTag">
+                        <template #activator="{ on, attrs }">
+                          <span
+                            v-bind="attrs"
+                            v-on="on"
+                          >
+                            <ShIconButton
+                              class="mb-2"
+                              color="neutral"
+                              icon="mdi-tag-plus"
+                              title="Agregar tag"
+                            />
+                          </span>
+                        </template>
+                        <template #default>
+                          <v-form @submit.prevent="addTag(logLine)">
+                            <ShTextField
+                              v-model="newTag"
+                              hide-details
+                              label="Tag *"
+                            />
+                          </v-form>
+                        </template>
+                      </v-menu>
                       <div>
                         <ShBody neutral>
                           {{ logLine.updatedAt | date }}
@@ -73,7 +101,7 @@
                       </div>
                     </v-col>
                     <v-col>
-                      <ShIconButton class="d-flex align-center" color="red" icon="mdi-delete" title="Borrar" @click="$emit('removeLine', index)" />
+                      <ShIconButton class="d-flex align-center" color="red" icon="mdi-delete" title="Borrar" @click="removeLine(logLine)" />
                     </v-col>
                   </v-row>
                 </v-timeline-item>
@@ -82,46 +110,54 @@
             <v-tab-item>
               <v-row>
                 <v-col>
-                  <v-card>
+                  <v-card color="red" elevation="0" class="w-100">
                     <div>
-                      <v-icon :small="small" :color="color">
+                      <v-icon class="mt-3 mb-4 mx-4" :small="small" :color="color">
                         mdi-code-tags
                       </v-icon>
                     </div>
                     <div>
-                      <ShHeading1>
+                      <ShHeading1 class="mb-4 mx-4">
                         {{ logLinesCount }}
                       </ShHeading1>
                     </div>
                     <div>
-                      <ShBodySmall>Líneas de log analizadas</ShBodySmall>
+                      <ShBodySmall neutral class="mb-4 mx-4">
+                        Líneas de log analizadas
+                      </ShBodySmall>
                     </div>
                   </v-card>
                 </v-col>
                 <v-col>
-                  <v-card>
+                  <v-card color="purple" elevation="0" class="w-100">
                     <div>
-                      <v-icon :small="small" :color="color">
+                      <v-icon class="mt-3 mb-4 mx-4" :small="small" :color="color">
                         mdi-bug
                       </v-icon>
                     </div>
                     <div>
-                      <ShHeading1>22</ShHeading1>
+                      <ShHeading1 class="mb-4 mx-4">
+                        {{ detectedEvents }}
+                      </ShHeading1>
                     </div>
                     <div>
-                      <ShBodySmall>Eventos analizados</ShBodySmall>
-                    </div>
-                    <div>
-                      {{ detectedEvents }}
+                      <ShBodySmall neutral class="mb-4 mx-4">
+                        Eventos analizados
+                      </ShBodySmall>
                     </div>
                   </v-card>
                 </v-col>
               </v-row>
               <v-row>
                 <v-col>
-                  <v-card>
+                  <v-card elevation="0" class="w-100">
                     <div>
-                      <ShHeading2>Líneas analizadas</ShHeading2>
+                      <ShHeading2 class="mt-3 mb-4">
+                        Líneas analizadas
+                      </ShHeading2>
+                    </div>
+                    <div>
+                      <v-progress-linear class="mb-4 mx-4" value="15" />
                     </div>
                   </v-card>
                 </v-col>
@@ -143,11 +179,12 @@ export default {
   },
   data: () => ({
     distinctTags: [],
-    isSelectedAll: true
+    isSelectedAll: true,
+    newTag: ''
   }),
   computed: {
     showableLogLines () {
-      const tags2Show = this.distinctTags.map(tag => tag.tag)
+      const tags2Show = this.distinctTags.filter(tag => tag.isSelected).map(tag => tag.tag)
       return this.isSelectedAll
         ? this.logLines
         : this.logLines.filter(line => line.tags.some(tag => tags2Show.includes(tag)))
@@ -161,7 +198,7 @@ export default {
   },
   mounted () {
     const differentTags = new Set(this.logLines.map(line => line.tags).flat())
-    this.distinctTags = differentTags.map(tag => ({ tag, isSelected: false }))
+    this.distinctTags = Array.from(differentTags).map(tag => ({ tag, isSelected: false }))
   },
   methods: {
     selectTag (tag) {
@@ -177,6 +214,27 @@ export default {
       this.distinctTags.forEach((tag) => {
         tag.isSelected = false
       })
+    },
+    removeLine (logLine) {
+      const remainingLines = this.logLines.filter(line => line !== logLine)
+      this.$emit('update:logLines', remainingLines)
+      const remainingTags = Array.from(new Set(remainingLines.map(line => line.tags).flat()))
+      this.distinctTags = this.distinctTags.filter(tag => remainingTags.includes(tag.tag))
+    },
+    addTag (logLine, newTag) {
+      if (!logLine.tags.includes(newTag)) {
+        this.$emit('update:logLine', {
+          ...logLine,
+          tags: [...logLine.tags, newTag]
+        })
+        if (!this.distinctTags.map(tag => tag.tag).includes(this.newTag)) {
+          this.distinctTags.push({ tag: this.newTag, isSelected: false })
+        }
+      }
+      this.resetTag()
+    },
+    resetTag () {
+      this.newTag = ''
     }
   }
 }
