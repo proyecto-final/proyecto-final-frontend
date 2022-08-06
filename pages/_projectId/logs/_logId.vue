@@ -4,11 +4,12 @@
       <v-row justify="space-between">
         <v-col cols="12" md="4" lg="3">
           <ShSearchField
-            v-model="keyword"
+            v-model="filter.raw"
             hide-details
             clearable
             placeholder="Buscar por palabra clave"
             maxlength="32"
+            @input="fetchDebounced"
           />
         </v-col>
         <v-col cols="12" md="4" lg="3">
@@ -22,7 +23,7 @@
       <v-row class="mb-6">
         <v-col cols="12" md="4" lg="3">
           <ShAutocomplete
-            v-model="state"
+            v-model="filter.date"
             hide-details
             clearable
             :items="[{ text: '24/02/2022', value: 'processed' }, { text: '05/11/2021', value: 'processing' }]"
@@ -31,7 +32,7 @@
         </v-col>
         <v-col cols="12" md="4" lg="3">
           <ShAutocomplete
-            v-model="eventId"
+            v-model="filter.eventId"
             hide-details
             clearable
             :items="[{ text: '4624', value: '4624' }, { text: '24', value: '24' }]"
@@ -39,19 +40,29 @@
           />
         </v-col>
       </v-row>
-      <v-row no-gutters class="border-top bg-white h-100 max-height-viewport">
-        <v-col cols="7" md="8" lg="9" class="border-right max-height-inherit sh-scrollbar">
+      <v-row no-gutters class="border-top bg-white h-100 user-viewport-height">
+        <v-col cols="7" md="8" lg="9" class="max-height-inherit sh-scrollbar">
           <v-row
             v-for="(line, index) in lines"
             :key="index"
             no-gutters
             class="d-flex log-line"
           >
-            <v-col cols="auto">
-              <div class="mx-6 my-3 text-align-center">
-                <ShCode>
-                  {{ index + 1 }}
-                </ShCode>
+            <v-col cols="auto" class="clickable" @click="toggleLine(line)">
+              <div class="mx-6 my-3 d-flex">
+                <v-expand-x-transition>
+                  <div v-if="line.isSelected" class="px-1">
+                    <v-icon small color="primary">
+                      mdi-circle
+                    </v-icon>
+                  </div>
+                </v-expand-x-transition>
+                <div v-if="!line.isSelected" class="px-3" />
+                <div class="text-align-center">
+                  <ShCode>
+                    {{ index + 1 }}
+                  </ShCode>
+                </div>
               </div>
             </v-col>
             <v-col>
@@ -125,46 +136,56 @@
             </v-col>
           </v-row>
         </v-col>
-        <v-col class="sh-scrollbar max-height-inherit">
+        <v-col class="sh-scrollbar max-height-inherit border-left py-4">
           <div>
-            <ShHeading3 class="ma-5">
+            <ShHeading3 class="mx-4">
               Timeline
             </ShHeading3>
           </div>
-          <v-timeline dense clipped-left class="mt-4">
-            <v-timeline-item
-              v-for="(line, index) in lines"
-              :key="index"
-              class="mb-4"
-              color="primary"
-              small
-            >
-              <div>
-                <ShBodySmall>
-                  {{ index + 1 }}: {{ line.raw }}
-                </ShBodySmall>
-              </div>
-              <div>
-                <ShSpecialLabelSmall neutral>
-                  {{ line.timestamp }}
-                </ShSpecialLabelSmall>
-              </div>
-              <div>
-                <ShChip v-for="detection in line.detections" :key="index + detection" class="mt-3 mr-2" small>
-                  <v-icon>
-                    mdi-link
-                  </v-icon>
-                  {{ detection }}
-                </ShChip>
-              </div>
-            </v-timeline-item>
-          </v-timeline>
+          <div v-if="timelineLines.length === 0" class="mx-4">
+            <ShBody>
+              Seleccione alguna línea de log para generar un reporte.
+            </ShBody>
+          </div>
+          <v-expand-transition>
+            <div v-if="timelineLines.length !== 0">
+              <v-timeline dense clipped-left class="mt-4">
+                <v-timeline-item
+                  v-for="(line, index) in timelineLines"
+                  :key="index"
+                  class="mb-4"
+                  color="primary"
+                  small
+                >
+                  <div>
+                    <ShBodySmall>
+                      {{ index + 1 }}: {{ line.raw }}
+                    </ShBodySmall>
+                  </div>
+                  <div>
+                    <ShSpecialLabelSmall neutral>
+                      {{ line.timestamp }}
+                    </ShSpecialLabelSmall>
+                  </div>
+                  <div>
+                    <ShChip v-for="detection in line.detections" :key="index + detection" class="mt-3 mr-2" small>
+                      <v-icon>
+                        mdi-link
+                      </v-icon>
+                      {{ detection }}
+                    </ShChip>
+                  </div>
+                </v-timeline-item>
+              </v-timeline>
+            </div>
+          </v-expand-transition>
         </v-col>
       </v-row>
     </div>
   </div>
 </template>
 <script>
+import { debounce } from 'lodash'
 export default {
   data: () => ({
     options: {
@@ -172,9 +193,12 @@ export default {
       itemsPerPage: 10
     },
     filter: {
-      raw: ''
+      raw: '',
+      date: null,
+      eventId: null
     },
     lines: [],
+    timelineLines: [],
     serverItemsLength: 0,
     loading: false
   }),
@@ -185,7 +209,7 @@ export default {
       limit: this.options.itemsPerPage,
       ...this.filter
     }).then((result) => {
-      this.lines = result.rows
+      this.lines = result.rows.map(row => ({ ...row, isSelected: false }))
       this.serverItemsLength = result.count
     }).catch(() => {
       this.$noty.warn('Hubo un error al cargar los eventos')
@@ -204,19 +228,24 @@ export default {
   created () {
     this.$store.commit('navigation/SET_PAGE_TITLE', `Log - ${this.logId}`)
     this.$store.commit('navigation/CAN_GO_BACK', true)
+  },
+  methods: {
+    fetchDebounced: debounce(function () {
+      this.$fetch()
+    }, 500),
+    toggleLine (line) {
+      line.isSelected = !line.isSelected
+      this.timelineLines = this.lines.filter(l => l.isSelected)
+    }
   }
 }
 </script>
 <style scoped lang="scss">
 .border-top{
-  border-top-style: solid !important;
-  border-top-color: var(--v-background-base) !important;
-  border-top: 1px;
+  border-top: 1px solid var(--v-background-base) !important;
 }
-.border-right{
-  border-right-style: solid !important;
-  border-right-color: var(--v-background-base) !important;
-  border-right: 1px;
+.border-left{
+  border-left: 1px solid var(--v-background-base) !important;
 }
 .bg-white {
   background-color: white;
@@ -230,8 +259,9 @@ export default {
     display: block !important;
   }
 }
-.max-height-viewport {
+.user-viewport-height {
   max-height: calc(100vh - 252px);
+  min-height: calc(100vh - 252px);
 }
 .max-height-inherit {
   max-height: inherit;
