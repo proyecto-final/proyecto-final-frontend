@@ -1,188 +1,111 @@
 <template>
-  <div>
-    <div>
-      <v-row justify="space-between">
-        <v-col cols="12" md="4" lg="3">
-          <ShSearchField
-            v-model="filter.raw"
-            hide-details
-            clearable
-            placeholder="Buscar por palabra clave"
-            maxlength="32"
-            @input="fetchDebounced"
-          />
-        </v-col>
-        <v-col cols="12" md="4" lg="3">
-          <div class="d-flex justify-end">
-            <ShButton>
-              Previsualizar timeline
-            </ShButton>
+  <v-row no-gutters class="border-left">
+    <v-col cols="12" md="8" lg="9" class="pt-3">
+      <div class="pl-3">
+        <v-row>
+          <v-col cols="12" lg="8">
+            <ShSearchField
+              v-model="filter.raw"
+              hide-details
+              clearable
+              placeholder="Buscar por palabra clave"
+              maxlength="32"
+              @input="fetchDebounced"
+            />
+          </v-col>
+        </v-row>
+        <v-row class="mb-6 pr-2">
+          <v-col cols="12" md="6" lg="4">
+            <ShAutocomplete
+              v-model="filter.date"
+              hide-details
+              clearable
+              :items="[{ text: '24/02/2022', value: 'processed' }, { text: '05/11/2021', value: 'processing' }]"
+              placeholder="Filtrar por fecha"
+            />
+          </v-col>
+          <v-col cols="12" md="6" lg="4">
+            <ShAutocomplete
+              v-model="filter.eventId"
+              hide-details
+              clearable
+              :items="[{ text: '4624', value: '4624' }, { text: '24', value: '24' }]"
+              placeholder="Filtrar por evento"
+            />
+          </v-col>
+        </v-row>
+      </div>
+      <div class="border-top bg-white h-100 user-viewport-height-lines sh-scrollbar">
+        <v-progress-linear v-if="$fetchState.pending" indeterminate color="primary" />
+        <LogLine
+          v-for="(line, index) in lines"
+          :key="index"
+          :line="line"
+          :index="index"
+          :is-selected="isSelected(line)"
+          @select:line="toggleLine(line)"
+        />
+        <div v-if="hasMoreLines" v-intersect="getNextLines" class="mt-3 d-flex justify-center">
+          <div class="d-flex align-center">
+            <v-progress-circular color="primary" indeterminate />
+            <div class="mx-2">
+              <ShBody>Obteniendo líneas...</ShBody>
+            </div>
           </div>
-        </v-col>
-      </v-row>
-      <v-row class="mb-6">
-        <v-col cols="12" md="4" lg="3">
-          <ShAutocomplete
-            v-model="filter.date"
-            hide-details
-            clearable
-            :items="[{ text: '24/02/2022', value: 'processed' }, { text: '05/11/2021', value: 'processing' }]"
-            placeholder="Filtrar por fecha"
-          />
-        </v-col>
-        <v-col cols="12" md="4" lg="3">
-          <ShAutocomplete
-            v-model="filter.eventId"
-            hide-details
-            clearable
-            :items="[{ text: '4624', value: '4624' }, { text: '24', value: '24' }]"
-            placeholder="Filtrar por evento"
-          />
-        </v-col>
-      </v-row>
-      <v-row no-gutters class="border-top bg-white h-100 user-viewport-height">
-        <v-col cols="7" md="8" lg="9" class="max-height-inherit sh-scrollbar">
-          <v-row
-            v-for="(line, index) in lines"
-            :key="index"
-            no-gutters
-            class="d-flex log-line"
-          >
-            <v-col cols="auto" class="clickable" @click="toggleLine(line)">
-              <div class="mx-6 my-3 d-flex">
-                <v-expand-x-transition>
-                  <div v-if="line.isSelected" class="px-1">
-                    <v-icon small color="primary">
-                      mdi-circle
-                    </v-icon>
-                  </div>
-                </v-expand-x-transition>
-                <div v-if="!line.isSelected" class="px-3" />
-                <div class="text-align-center">
-                  <ShCode>
-                    {{ index + 1 }}
-                  </ShCode>
-                </div>
-              </div>
-            </v-col>
-            <v-col>
-              <div class="d-flex align-center">
-                <div class="mr-5 my-3">
-                  <ShCode>
-                    {{ line.raw }}
-                  </ShCode>
+        </div>
+      </div>
+    </v-col>
+    <v-col cols="12" md="4" lg="3" class="border-left bg-white pt-3">
+      <div class="d-flex justify-center">
+        <ShButton>
+          Previsualizar timeline
+        </ShButton>
+      </div>
+      <div class="sh-scrollbar user-viewport-height-timeline py-4">
+        <div>
+          <ShHeading3 class="mx-4">
+            Timeline
+          </ShHeading3>
+        </div>
+        <div v-if="timelineLines.length === 0" class="mx-4">
+          <ShBody>
+            Seleccione alguna línea de log para generar un reporte.
+          </ShBody>
+        </div>
+        <v-expand-transition>
+          <div v-if="timelineLines.length !== 0">
+            <v-timeline dense clipped-left class="mt-4">
+              <v-timeline-item
+                v-for="(line, index) in timelineLines"
+                :key="index"
+                color="primary"
+                small
+              >
+                <div>
+                  <ShBodySmall>
+                    {{ line.index }}: {{ line.raw }}
+                  </ShBodySmall>
                 </div>
                 <div>
-                  <ShChip v-for="detection in line.detections" :key="index + detection" class="mr-2">
+                  <ShSpecialLabelSmall neutral>
+                    {{ line.timestamp | date }}
+                  </ShSpecialLabelSmall>
+                </div>
+                <div>
+                  <ShChip v-for="detection in line.detections" :key="index + detection" class="mt-3 mr-2" small>
                     <v-icon>
                       mdi-link
                     </v-icon>
                     {{ detection }}
                   </ShChip>
                 </div>
-                <v-menu
-                  offset-y
-                  close-on-content-click
-                >
-                  <template #activator="{ on, attrs }">
-                    <v-btn
-                      class="action-button"
-                      v-bind="attrs"
-                      small
-                      icon
-                      v-on="on"
-                    >
-                      <v-icon>
-                        mdi-plus
-                      </v-icon>
-                    </v-btn>
-                  </template>
-                  <v-list nav>
-                    <v-list-item>
-                      <v-icon>
-                        mdi-circle-medium
-                      </v-icon>
-                      <div class="ml-4">
-                        Marcar línea
-                      </div>
-                    </v-list-item>
-                    <v-list-item>
-                      <v-icon>
-                        mdi-note-text
-                      </v-icon>
-                      <div class="ml-4">
-                        Agregar una nota
-                      </div>
-                    </v-list-item>
-                    <v-list-item>
-                      <v-icon>
-                        mdi-link
-                      </v-icon>
-                      <div class="ml-4">
-                        Vincular evento
-                      </div>
-                    </v-list-item>
-                    <v-list-item>
-                      <v-icon>
-                        mdi-shield-search
-                      </v-icon>
-                      <v-div class="ml-4">
-                        Analizar IP
-                      </v-div>
-                    </v-list-item>
-                  </v-list>
-                </v-menu>
-              </div>
-            </v-col>
-          </v-row>
-        </v-col>
-        <v-col class="sh-scrollbar max-height-inherit border-left py-4">
-          <div>
-            <ShHeading3 class="mx-4">
-              Timeline
-            </ShHeading3>
+              </v-timeline-item>
+            </v-timeline>
           </div>
-          <div v-if="timelineLines.length === 0" class="mx-4">
-            <ShBody>
-              Seleccione alguna línea de log para generar un reporte.
-            </ShBody>
-          </div>
-          <v-expand-transition>
-            <div v-if="timelineLines.length !== 0">
-              <v-timeline dense clipped-left class="mt-4">
-                <v-timeline-item
-                  v-for="(line, index) in timelineLines"
-                  :key="index"
-                  class="mb-4"
-                  color="primary"
-                  small
-                >
-                  <div>
-                    <ShBodySmall>
-                      {{ index + 1 }}: {{ line.raw }}
-                    </ShBodySmall>
-                  </div>
-                  <div>
-                    <ShSpecialLabelSmall neutral>
-                      {{ line.timestamp }}
-                    </ShSpecialLabelSmall>
-                  </div>
-                  <div>
-                    <ShChip v-for="detection in line.detections" :key="index + detection" class="mt-3 mr-2" small>
-                      <v-icon>
-                        mdi-link
-                      </v-icon>
-                      {{ detection }}
-                    </ShChip>
-                  </div>
-                </v-timeline-item>
-              </v-timeline>
-            </div>
-          </v-expand-transition>
-        </v-col>
-      </v-row>
-    </div>
-  </div>
+        </v-expand-transition>
+      </div>
+    </v-col>
+  </v-row>
 </template>
 <script>
 import { debounce } from 'lodash'
@@ -190,7 +113,7 @@ export default {
   data: () => ({
     options: {
       page: 1,
-      itemsPerPage: 10
+      itemsPerPage: 5
     },
     filter: {
       raw: '',
@@ -209,7 +132,10 @@ export default {
       limit: this.options.itemsPerPage,
       ...this.filter
     }).then((result) => {
-      this.lines = result.rows.map(row => ({ ...row, isSelected: false }))
+      this.lines.push(...result.rows.map((row, index) => ({
+        ...row,
+        index: index + 1
+      })))
       this.serverItemsLength = result.count
     }).catch(() => {
       this.$noty.warn('Hubo un error al cargar los eventos')
@@ -223,6 +149,9 @@ export default {
     },
     logId () {
       return this.$route.params.logId
+    },
+    hasMoreLines () {
+      return this.lines.length < this.serverItemsLength
     }
   },
   created () {
@@ -231,11 +160,25 @@ export default {
   },
   methods: {
     fetchDebounced: debounce(function () {
+      this.lines = []
+      this.options.page = 1
       this.$fetch()
     }, 500),
     toggleLine (line) {
-      line.isSelected = !line.isSelected
-      this.timelineLines = this.lines.filter(l => l.isSelected)
+      if (this.isSelected(line)) {
+        this.timelineLines = this.timelineLines.filter(timelineLine => timelineLine._id !== line._id)
+      } else {
+        this.timelineLines.push(line)
+      }
+    },
+    getNextLines (entries) {
+      if (entries[0].isIntersecting && !this.loading) {
+        this.options.page++
+        this.$fetch()
+      }
+    },
+    isSelected (line) {
+      return !!this.timelineLines.find(timelineLine => timelineLine._id === line._id)
     }
   }
 }
@@ -247,23 +190,17 @@ export default {
 .border-left{
   border-left: 1px solid var(--v-background-base) !important;
 }
-.bg-white {
-  background-color: white;
-}
 .action-button{
   display: none;
 }
-.log-line:hover {
-  background-color: var(--v-background-lighten2) !important;
-  & .action-button {
-    display: block !important;
-  }
+.user-viewport-height-lines {
+  max-height: calc(100vh - 220px);
+  min-height: calc(100vh - 220px);
 }
-.user-viewport-height {
-  max-height: calc(100vh - 252px);
-  min-height: calc(100vh - 252px);
+.user-viewport-height-timeline {
+  max-height: calc(100vh - 116px);
 }
-.max-height-inherit {
-  max-height: inherit;
+::v-deep .v-timeline-item__dot.v-timeline-item__dot--small {
+  box-shadow: none !important;
 }
 </style>
