@@ -37,30 +37,43 @@
               Estadísticas
             </v-tab>
             <v-tab-item class="pb-2">
+              <div>
+                <ShChip @click="selectAll">
+                  Todos
+                </ShChip>
+                <ShChip v-for="(tag, index) in differentTags" :key="index" @click="selectTag(tag)">
+                  {{ tag.tag }}
+                </ShChip>
+              </div>
               <v-timeline v-for="(logLine, index) in logLines" :key="index" dense clipped-left>
                 <v-timeline-item small>
                   <v-row>
                     <v-col>
-                      <div>
+                      <ShBody strong class="mb-4">
                         {{ logLine.title }}
-                      </div>
+                      </ShBody>
                       <div>
-                        <ShChip v-for="(event) in logLine.events" :key="logLine + event" color="red">
+                        <ShChip v-for="(detection, detectionIndex) in logLine.detections" :key="`${index}-${detectionIndex}`" class="mb-2" color="red">
                           <v-icon>
                             mdi-link
                           </v-icon>
-                          {{ event }}
+                          {{ detection }}
                         </ShChip>
                       </div>
-                      <ShChip v-for="(tag, tagIndex) in logLine.tags" :key="logLine + tagIndex">
+                      <ShChip v-for="(tag, tagIndex) in logLine.tags" :key="`${index}-${tagIndex}`" class="mb-2">
                         {{ tag }}
                       </ShChip>
-                      <ShChip>
+                      <ShChip class="mb-2">
                         <ShIconButton color="neutral" icon="mdi-tag-plus" title="Agregar tag" @click="$emit('addTag', tagIndex)" />
                       </ShChip>
+                      <div>
+                        <ShBody neutral>
+                          {{ logLine.updatedAt | date }}
+                        </ShBody>
+                      </div>
                     </v-col>
                     <v-col>
-                      <ShIconButton color="red" icon="mdi-delete" title="Borrar" @click="$emit('removeLine', index)" />
+                      <ShIconButton class="d-flex align-center" color="red" icon="mdi-delete" title="Borrar" @click="$emit('removeLine', index)" />
                     </v-col>
                   </v-row>
                 </v-timeline-item>
@@ -128,15 +141,44 @@ export default {
       required: true
     }
   },
+  data: () => ({
+    distinctTags: [],
+    isSelectedAll: true
+  }),
   computed: {
+    showableLogLines () {
+      const tags2Show = this.distinctTags.map(tag => tag.tag)
+      return this.isSelectedAll
+        ? this.logLines
+        : this.logLines.filter(line => line.tags.some(tag => tags2Show.includes(tag)))
+    },
     logLinesCount () {
       return this.logLines.length
     },
     detectedEvents () {
       return this.logLines.reduce((prev, curr) => prev + curr.detections.length, 0)
     }
+  },
+  mounted () {
+    const differentTags = new Set(this.logLines.map(line => line.tags).flat())
+    this.distinctTags = differentTags.map(tag => ({ tag, isSelected: false }))
+  },
+  methods: {
+    selectTag (tag) {
+      tag.isSelected = !tag.isSelected
+      if (tag.isSelected) {
+        this.isSelectedAll = false
+      } else if (this.distinctTags.every(tag => !tag.isSelected)) {
+        this.isSelectedAll = true
+      }
+    },
+    selectAll () {
+      this.isSelectedAll = true
+      this.distinctTags.forEach((tag) => {
+        tag.isSelected = false
+      })
+    }
   }
-
 }
 </script>
 <style scoped>
