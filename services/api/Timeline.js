@@ -12,4 +12,8 @@ export default class Timeline {
   deleteTimeline (projectId, timelineId) {
     return this.$axios.$delete(`/api/project/${projectId}/timeline/${timelineId}`)
   }
+
+  update (projectId, timelineId, timeline) {
+    return this.$axios.$patch(`/api/project/${projectId}/timeline/${timelineId}`, timeline)
+  }
 }
