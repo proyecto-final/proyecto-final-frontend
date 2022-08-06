@@ -42,7 +42,7 @@
           :key="index"
           :line="line"
           :index="index"
-          :is-selected="isSelected(line)"
+          :is-selected="line.isSelected"
           @select:line="toggleLine(line)"
         />
         <div v-if="hasMoreLines" v-intersect="getNextLines" class="mt-3 d-flex justify-center">
@@ -76,7 +76,7 @@
           <div v-if="timelineLines.length !== 0">
             <v-timeline dense clipped-left class="mt-4">
               <v-timeline-item
-                v-for="(line, index) in timelineLines"
+                v-for="(line, index) in sortedTimelineLines"
                 :key="index"
                 color="primary"
                 small
@@ -134,7 +134,8 @@ export default {
     }).then((result) => {
       this.lines.push(...result.rows.map((row, index) => ({
         ...row,
-        index: index + 1
+        index: index + 1,
+        isSelected: !!this.timelineLines.find(line => line._id === row._id)
       })))
       this.serverItemsLength = result.count
     }).catch(() => {
@@ -152,6 +153,9 @@ export default {
     },
     hasMoreLines () {
       return this.lines.length < this.serverItemsLength
+    },
+    sortedTimelineLines () {
+      return [...this.timelineLines].sort((a, b) => a.timestamp > b.timestamp ? 1 : -1)
     }
   },
   created () {
@@ -165,7 +169,8 @@ export default {
       this.$fetch()
     }, 500),
     toggleLine (line) {
-      if (this.isSelected(line)) {
+      line.isSelected = !line.isSelected
+      if (!line.isSelected) {
         this.timelineLines = this.timelineLines.filter(timelineLine => timelineLine._id !== line._id)
       } else {
         this.timelineLines.push(line)
@@ -176,9 +181,6 @@ export default {
         this.options.page++
         this.$fetch()
       }
-    },
-    isSelected (line) {
-      return !!this.timelineLines.find(timelineLine => timelineLine._id === line._id)
     }
   }
 }

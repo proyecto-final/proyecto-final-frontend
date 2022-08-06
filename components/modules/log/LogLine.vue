@@ -5,7 +5,7 @@
   >
     <v-col cols="auto" class="clickable" @click="$emit('select:line', line)">
       <div class="mr-6 my-3 d-flex">
-        <div v-if="isSelected" class="px-1">
+        <div v-if="line.isSelected" class="px-1">
           <v-icon x-small color="primary">
             mdi-circle
           </v-icon>
@@ -59,7 +59,7 @@
               </v-list-item-icon>
               <v-list-item-subtitle>
                 <ShBody>
-                  {{ isSelected ? 'Desmarcar línea' : 'Marcar línea' }}
+                  {{ line.isSelected ? 'Desmarcar línea' : 'Marcar línea' }}
                 </ShBody>
               </v-list-item-subtitle>
             </v-list-item>
@@ -114,10 +114,6 @@ export default {
     },
     index: {
       type: Number,
-      required: true
-    },
-    isSelected: {
-      type: Boolean,
       required: true
     }
   }
