@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex justify-end">
+  <div class="d-flex justify-end pa-6">
     <ShHeading2 neutral class="mt-3 ml-2">
       Información personal
     </ShHeading2>

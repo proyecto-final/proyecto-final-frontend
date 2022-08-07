@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="mx-6">
     <v-tabs background-color="transparent">
       <v-tab>
         Información
