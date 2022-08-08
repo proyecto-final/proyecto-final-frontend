@@ -28,9 +28,6 @@
           />
         </v-col>
       </v-row>
-      <TimelinePreviewDialog
-        :log-lines="[{title: 'Linea loca 1', tags: ['Tag 1'], detections: ['Evento 1', 'Evento 2'], updatedAt: '2022-07-27T23:35:26.786Z'}, {title: 'Linea loca 2', tags: ['Tag 1', 'Tag 2'], detections: ['Evento 1'], updatedAt: '2022-07-27T23:35:26.786Z'}]"
-      />
       <ShTable
         :items="timelines"
         :headers="headers"
@@ -56,7 +53,7 @@
         </template>
         <template #[`item.eventsCount`]="{ item }">
           <ShNumberAvatar>
-            {{ item.eventsCount }}
+            {{ item.lines.length }}
           </ShNumberAvatar>
         </template>
         <template #[`item.actions`]="{ item }">
@@ -77,10 +74,21 @@
                 </v-btn>
               </template>
               <v-list>
-                Editar
+                <TimelineUpdateDialog
+                  :project-id="projectId"
+                  :timeline-id="item._id"
+                  :timeline2-edit="item"
+                  @updated="(updatedTimeline) => setTimeline(item, updatedTimeline)"
+                />
               </v-list>
               <v-list>
-                Eliminar
+                <TimelineDeleteDialog
+                  offset-y
+                  close-on-content-click
+                  :timeline="item"
+                  :project-id="projectId"
+                  @deleted="$fetch"
+                />
               </v-list>
             </v-menu>
           </div>
@@ -132,8 +140,8 @@ export default {
       limit: this.options.itemsPerPage,
       ...this.filter
     }).then((result) => {
-      this.timelines = result // TO-DO: hacer result.rows
-      this.serverItemsLength = result.length // TO-DO: hacer result.count
+      this.timelines = result.rows
+      this.serverItemsLength = result.count
     }).catch(() => { this.$noty.warn('Hubo un error al cargar los timelines') })
       .finally(() => { this.loading = false })
   },
@@ -159,6 +167,9 @@ export default {
     },
     redirectToTimelinePage (itemId) {
       this.$router.push(`/timelines/${itemId}`)
+    },
+    setTimeline (timeline, updatedTimeline) {
+      Object.assign(timeline, updatedTimeline)
     },
     fetchDebounced: debounce(function () {
       this.$fetch()

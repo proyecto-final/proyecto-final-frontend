@@ -5,6 +5,7 @@
     title="Eliminar log"
     :async-confirm-function="deleteLog"
     :can-confirm="namesMatch"
+    :submit-on-enter="namesMatch"
     v-on="$listeners"
     @open="resetDialog"
   >

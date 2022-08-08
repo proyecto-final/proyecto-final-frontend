@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="pa-6">
     <div class="mb-6">
       <v-row justify="space-between">
         <v-col cols="12" md="4" lg="3">

@@ -29,4 +29,8 @@ export default class Log {
   update (projectId, logId, log) {
     return this.$axios.$patch(`/api/project/${projectId}/correlate/log/${logId}`, log)
   }
+
+  getLines (projectId, logId, params) {
+    return this.$axios.$get(`/api/project/${projectId}/correlate/log/${logId}/line`, { params })
+  }
 }

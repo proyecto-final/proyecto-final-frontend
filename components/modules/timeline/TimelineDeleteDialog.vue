@@ -2,8 +2,8 @@
   <ShAsyncDialog
     width="500"
     confirm-text="Eliminar"
-    title="Eliminar proyecto"
-    :async-confirm-function="deleteProject"
+    title="Eliminar timeline"
+    :async-confirm-function="deleteTimeline"
     :can-confirm="namesMatch"
     :submit-on-enter="namesMatch"
     v-on="$listeners"
@@ -12,11 +12,7 @@
     <template #activator="{on}">
       <v-list-item v-on="on">
         <v-list-item-title>
-          <ShButton text color="error">
-            <ShSpecialButtonText class="error-text">
-              Eliminar
-            </ShSpecialButtonText>
-          </ShButton>
+          Eliminar
         </v-list-item-title>
       </v-list-item>
     </template>
@@ -24,15 +20,15 @@
       <div>
         <v-alert type="warning" icon="mdi-alert" class="justify-space-between mb-6 mt-2">
           <ShBodySmall class="white-text">
-            Una vez que elimines el proyecto, no se recuperará la información de los logs, timelines y usuarios.
+            Una vez que elimines el timeline, no se recuperará la información del mismo.
           </ShBodySmall>
         </v-alert>
         <ShBodySmall neutral>
-          Para eliminar el proyecto, escribí el nombre: <strong>{{ project.name }}</strong>
+          Para eliminar el timeline, escribí el nombre: <strong>{{ timeline.title }}</strong>
         </ShBodySmall>
         <ShTextField
-          v-model="projectToDeleteName"
-          label="Proyecto *"
+          v-model="timelineToDeleteName"
+          label="Timeline *"
         />
       </div>
     </template>
@@ -41,30 +37,29 @@
 <script>
 export default {
   props: {
-    project: {
+    timeline: {
       type: Object,
       required: true
     },
-    organizationId: {
+    projectId: {
       type: String,
       required: true
     }
   },
   data: () => ({
-    projectToDeleteName: ''
+    timelineToDeleteName: ''
   }),
   computed: {
     namesMatch () {
-      return this.project.name === this.projectToDeleteName
+      return this.timeline.title === this.timelineToDeleteName
     }
   },
   methods: {
-    deleteProject () {
+    deleteTimeline () {
       if (!this.namesMatch) { return }
-
-      return this.$organizationService
-        .deleteProject(this.organizationId, this.project.id)
-        .then((res) => {
+      return this.$timelineService
+        .deleteTimeline(this.projectId, this.timeline._id)
+        .then(() => {
           this.$emit('deleted')
           return true
         }).catch((error) => {
@@ -76,7 +71,7 @@ export default {
         })
     },
     resetDialog () {
-      this.projectToDeleteName = ''
+      this.timelineToDeleteName = ''
     }
   }
 }
