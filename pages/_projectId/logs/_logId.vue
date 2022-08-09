@@ -81,7 +81,7 @@
                 color="primary"
                 small
               >
-                <div>
+                <div class="max-lines-2">
                   <ShBodySmall>
                     {{ line.index }}: {{ line.raw }}
                   </ShBodySmall>

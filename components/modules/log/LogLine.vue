@@ -20,7 +20,7 @@
     </v-col>
     <v-col>
       <div class="d-flex align-center">
-        <div class="mr-5 my-3">
+        <div class="mr-5 my-3 max-lines-3">
           <ShCode>
             {{ line.raw }}
           </ShCode>
