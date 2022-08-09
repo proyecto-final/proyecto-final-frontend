@@ -1,6 +1,6 @@
 <template>
   <v-row no-gutters class="border-left">
-    <v-col cols="12" md="8" lg="9" class="pt-3">
+    <v-col cols="12" md="7" lg="8" class="pt-3">
       <div class="pl-3">
         <v-row>
           <v-col cols="12" lg="8">
@@ -55,11 +55,13 @@
         </div>
       </div>
     </v-col>
-    <v-col cols="12" md="4" lg="3" class="border-left bg-white pt-3">
+    <v-col cols="12" md="5" lg="4" class="border-left bg-white pt-3">
       <div class="d-flex justify-center">
-        <ShButton>
-          Previsualizar timeline
-        </ShButton>
+        <TimelinePreviewDialog
+          :log-lines="timelineLines"
+          @update:logLine="setLogLineTags"
+          @update:logLines="setTimelineLines"
+        />
       </div>
       <div class="sh-scrollbar user-viewport-height-timeline py-4">
         <div>
@@ -78,7 +80,6 @@
               <v-timeline-item
                 v-for="(line, index) in sortedTimelineLines"
                 :key="index"
-                color="primary"
                 small
               >
                 <div>
@@ -135,7 +136,8 @@ export default {
       this.lines.push(...result.rows.map((row, index) => ({
         ...row,
         index: index + 1,
-        isSelected: !!this.timelineLines.find(line => line._id === row._id)
+        isSelected: !!this.timelineLines.find(line => line._id === row._id),
+        tags: []
       })))
       this.serverItemsLength = result.count
     }).catch(() => {
@@ -163,6 +165,16 @@ export default {
     this.$store.commit('navigation/CAN_GO_BACK', true)
   },
   methods: {
+    setLogLineTags ({ logLine, tags }) {
+      logLine.tags = tags
+    },
+    setTimelineLines (timelineLines) {
+      this.timelineLines = timelineLines
+      this.lines.forEach((line) => {
+        line.isSelected = !!this.timelineLines.find(timelineLine => timelineLine._id === line._id)
+        line.tags = line.isSelected ? line.tags : []
+      })
+    },
     fetchDebounced: debounce(function () {
       this.lines = []
       this.options.page = 1

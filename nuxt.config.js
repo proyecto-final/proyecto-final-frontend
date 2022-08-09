@@ -115,6 +115,9 @@ export default {
             darken1: '#DFE2F5',
             darken2: '#242736'
           },
+          vulnerability: {
+            base: '#9D3F7A'
+          },
           avatar1: '#9D3F7A',
           avatar1Bg: '#F4E6F4',
           avatar6: '#77C07B'

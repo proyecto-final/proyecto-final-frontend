@@ -1,5 +1,6 @@
 <template>
   <ShDialog
+    v-model="open"
     width="500"
     confirm-text="Previsualizar"
     title="Previsualización del timeline"
@@ -9,12 +10,12 @@
     v-on="$listeners"
   >
     <template #activator="{on}">
-      <ShButton :block="$vuetify.breakpoint.smAndDown" v-on="on">
+      <ShButton :disabled="logLines.length == 0" :block="$vuetify.breakpoint.smAndDown" v-on="on">
         Previsualizar timeline
       </ShButton>
     </template>
     <template #prepend-title="{close}">
-      <ShIconButton color="neutral" icon="mdi-close" title="Cerrar" @click="close" />
+      <ShIconButton color="neutral" icon="mdi-close" title="Cerrar" @click="close()" />
     </template>
     <template #close>
       <TimelineGenerateDialog :project-id="'1'" :timeline-id="'1'" />
@@ -53,18 +54,23 @@
                 </ShChip>
               </div>
               <v-timeline v-for="(logLine, index) in showableLogLines" :key="index" dense clipped-left>
-                <v-timeline-item small>
+                <v-timeline-item small color="primary">
                   <v-row>
                     <v-col>
                       <ShBody strong class="mb-4">
-                        {{ logLine.title }}
+                        {{ logLine.raw }}
                       </ShBody>
                       <div>
-                        <ShChip v-for="(detection, detectionIndex) in logLine.detections" :key="`${index}-${detectionIndex}`" class="mb-2 mx-1" color="red">
+                        <ShChip
+                          v-for="(vulnerability, vulnerabilityIndex) in logLine.vulnerabilites"
+                          :key="`${index}-${vulnerabilityIndex}`"
+                          class="mb-2 mx-1"
+                          color="vulnerability"
+                        >
                           <v-icon>
                             mdi-link
                           </v-icon>
-                          {{ detection }}
+                          {{ vulnerability }}
                         </ShChip>
                       </div>
                       <ShChip v-for="(tag, tagIndex) in logLine.tags" :key="`${index}-${tagIndex}`" class="mb-2 mx-1">
@@ -96,7 +102,7 @@
                       </v-menu>
                       <div>
                         <ShBody neutral>
-                          {{ logLine.updatedAt | date }}
+                          {{ logLine.timestamp | date }}
                         </ShBody>
                       </div>
                     </v-col>
@@ -110,9 +116,9 @@
             <v-tab-item>
               <v-row>
                 <v-col>
-                  <v-card color="red" elevation="0" class="w-100">
+                  <v-card color="#FBE6E5" elevation="0" class="w-100">
                     <div>
-                      <v-icon class="mt-3 mb-4 mx-4" :small="small" :color="color">
+                      <v-icon color="#B2453E" class="mt-3 mb-4 mx-4">
                         mdi-code-tags
                       </v-icon>
                     </div>
@@ -129,9 +135,9 @@
                   </v-card>
                 </v-col>
                 <v-col>
-                  <v-card color="purple" elevation="0" class="w-100">
+                  <v-card color="#F4E6F4" elevation="0" class="w-100">
                     <div>
-                      <v-icon class="mt-3 mb-4 mx-4" :small="small" :color="color">
+                      <v-icon color="#9D3F7A" class="mt-3 mb-4 mx-4">
                         mdi-bug
                       </v-icon>
                     </div>
@@ -150,15 +156,78 @@
               </v-row>
               <v-row>
                 <v-col>
-                  <v-card elevation="0" class="w-100">
-                    <div>
-                      <ShHeading2 class="mt-3 mb-4">
-                        Líneas analizadas
-                      </ShHeading2>
-                    </div>
-                    <div>
-                      <v-progress-linear class="mb-4 mx-4" value="15" />
-                    </div>
+                  <v-card v-if="detectedEvents > 0" elevation="0" class="w-100">
+                    <v-row>
+                      <v-col>
+                        <ShHeading2 class="mt-3 mb-4">
+                          Eventos analizados
+                        </ShHeading2>
+                      </v-col>
+                      <v-col>
+                        <ShBodySmall neutral>
+                          User VS Sherlock
+                        </ShBodySmall>
+                      </v-col>
+                    </v-row>
+                    <v-row>
+                      <v-col>
+                        <div>
+                          <ShBodySmall strong>
+                            {{ detectedEvents }}
+                          </ShBodySmall>
+                        </div>
+                        <div>
+                          <ShBodySmall neutral>
+                            Total
+                          </ShBodySmall>
+                        </div>
+                      </v-col>
+                      <v-col>
+                        <div>
+                          <ShBodySmall strong>
+                            {{ userDetectedEvents }}
+                          </ShBodySmall>
+                        </div>
+                        <div>
+                          <ShBodySmall neutral>
+                            Usuario
+                          </ShBodySmall>
+                        </div>
+                      </v-col>
+                      <v-col>
+                        <div>
+                          <ShBodySmall strong>
+                            {{ systemDetectedEvents }}
+                          </ShBodySmall>
+                        </div>
+                        <div>
+                          <ShBodySmall neutral>
+                            Sherlock
+                          </ShBodySmall>
+                        </div>
+                      </v-col>
+                    </v-row>
+                    <v-row>
+                      <v-col>
+                        <v-progress-linear height="17" background-color="#0470B8" color="#50A8FF" class="mb-4 mx-4" :value="`${userDetectedEventsPercentage}`" />
+                      </v-col>
+                    </v-row>
+                    <v-row>
+                      <v-col>
+                        <v-icon color="#50A8FF">
+                          mdi-circle
+                        </v-icon>
+                        <ShBodySmall neutral>
+                          Usuario
+                        </ShBodySmall>
+                        <v-icon color="#0470B8">
+                          mdi-circle
+                        </v-icon>
+                        <ShBodySmall neutral>
+                          Sherlock
+                        </ShBodySmall>
+                      </v-col>
+                    </v-row>
                   </v-card>
                 </v-col>
               </v-row>
@@ -178,6 +247,7 @@ export default {
     }
   },
   data: () => ({
+    open: false,
     distinctTags: [],
     isSelectedAll: true,
     newTag: ''
@@ -193,7 +263,19 @@ export default {
       return this.logLines.length
     },
     detectedEvents () {
-      return this.logLines.reduce((prev, curr) => prev + curr.detections.length, 0)
+      return this.vulnerabilites.length
+    },
+    vulnerabilites () {
+      return this.logLines.map(line => line.vulnerabilites).flat()
+    },
+    userDetectedEvents () {
+      return this.vulnerabilites.filter(vulnerability => vulnerability.isCustom).length
+    },
+    systemDetectedEvents () {
+      return this.vulnerabilites.filter(vulnerability => !vulnerability.isCustom).length
+    },
+    userDetectedEventsPercentage () {
+      return this.detectedEvents === 0 ? 0 : (this.userDetectedEvents / this.detectedEvents) * 100
     }
   },
   mounted () {
@@ -220,12 +302,17 @@ export default {
       this.$emit('update:logLines', remainingLines)
       const remainingTags = Array.from(new Set(remainingLines.map(line => line.tags).flat()))
       this.distinctTags = this.distinctTags.filter(tag => remainingTags.includes(tag.tag))
+      this.$nextTick(() => {
+        if (this.logLines.length === 0) {
+          this.open = false
+        }
+      })
     },
-    addTag (logLine, newTag) {
-      if (!logLine.tags.includes(newTag)) {
+    addTag (logLine) {
+      if (!logLine.tags.includes(this.newTag)) {
         this.$emit('update:logLine', {
-          ...logLine,
-          tags: [...logLine.tags, newTag]
+          logLine,
+          tags: [...logLine.tags, this.newTag]
         })
         if (!this.distinctTags.map(tag => tag.tag).includes(this.newTag)) {
           this.distinctTags.push({ tag: this.newTag, isSelected: false })
