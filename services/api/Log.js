@@ -34,7 +34,7 @@ export default class Log {
     return this.$axios.$get(`/api/project/${projectId}/correlate/log/${logId}/line`, { params })
   }
 
-  updateLines (projectId, logId, lineId, selection) {
+  updateLine (projectId, logId, lineId, selection) {
     return this.$axios.$get(`/api/project/${projectId}/correlate/log/${logId}/line/${lineId}`, selection)
   }
 

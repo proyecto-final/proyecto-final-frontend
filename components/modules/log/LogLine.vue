@@ -76,7 +76,7 @@
               </v-list-item-subtitle>
             </v-list-item>
             <v-list-item>
-              <LogLinkVulnerabilitiesDialog :project-id="projectId" :log-id="logId" />
+              <LogLinkVulnerabilitiesDialog :project-id="projectId" :log-id="logId" :line-id="line._id" />
             </v-list-item>
             <v-list-item>
               <v-list-item-icon>
