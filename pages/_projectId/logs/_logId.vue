@@ -41,7 +41,6 @@
           v-for="(line, index) in lines"
           :key="index"
           :line="line"
-          :index="index"
           :is-selected="line.isSelected"
           @select:line="toggleLine(line)"
         />
@@ -132,9 +131,8 @@ export default {
       limit: this.options.itemsPerPage,
       ...this.filter
     }).then((result) => {
-      this.lines.push(...result.rows.map((row, index) => ({
+      this.lines.push(...result.rows.map(row => ({
         ...row,
-        index: index + 1,
         isSelected: !!this.timelineLines.find(line => line._id === row._id)
       })))
       this.serverItemsLength = result.count
