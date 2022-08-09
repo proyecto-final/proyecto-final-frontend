@@ -76,16 +76,7 @@
               </v-list-item-subtitle>
             </v-list-item>
             <v-list-item>
-              <v-list-item-icon>
-                <v-icon>
-                  mdi-link
-                </v-icon>
-              </v-list-item-icon>
-              <v-list-item-subtitle>
-                <ShBody>
-                  Vincular evento
-                </ShBody>
-              </v-list-item-subtitle>
+              <LogLinkVulnerabilitiesDialog :project-id="projectId" />
             </v-list-item>
             <v-list-item>
               <v-list-item-icon>
@@ -115,6 +106,11 @@ export default {
     index: {
       type: Number,
       required: true
+    }
+  },
+  computed: {
+    projectId () {
+      return this.$route.params.projectId
     }
   }
 }
