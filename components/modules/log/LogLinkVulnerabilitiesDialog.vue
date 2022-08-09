@@ -115,8 +115,8 @@ export default {
   },
   methods: {
     save () {
-      const linkedVulnerabilities = this.selectedVulnerabilities.map(vuln => ({ id: vuln._id }))
-      return this.$logService.updateLine(this.projectId, this.logId, this.lineId, linkedVulnerabilities)
+      const vulnerabilites = this.selectedVulnerabilities.map(vuln => ({ _id: vuln._id }))
+      return this.$logService.updateLine(this.projectId, this.logId, this.lineId, { vulnerabilites })
         .then(() => {
           this.$emit('updated')
           return true
