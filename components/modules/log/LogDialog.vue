@@ -91,6 +91,7 @@
                 label="Nombre *"
                 :rules="[$rules.required('nombre')]"
                 class="mt-6 mx-2"
+                maxlength="32"
               />
             </div>
             <div>
@@ -99,6 +100,7 @@
                 v-model="log.description"
                 label="Descripción"
                 class="mx-2"
+                maxlength="250"
               />
             </div>
           </v-tab-item>
