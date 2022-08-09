@@ -76,7 +76,7 @@
               </v-list-item-subtitle>
             </v-list-item>
             <v-list-item>
-              <LogLinkVulnerabilitiesDialog :project-id="projectId" />
+              <LogLinkVulnerabilitiesDialog :project-id="projectId" :log-id="logId" />
             </v-list-item>
             <v-list-item>
               <v-list-item-icon>
@@ -111,6 +111,9 @@ export default {
   computed: {
     projectId () {
       return this.$route.params.projectId
+    },
+    logId () {
+      return this.$route.params.logId
     }
   }
 }

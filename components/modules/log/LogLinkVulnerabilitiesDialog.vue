@@ -66,6 +66,10 @@ export default {
     projectId: {
       type: Number,
       default: null
+    },
+    logId: {
+      type: Number,
+      default: null
     }
   },
   data: () => ({
@@ -107,7 +111,7 @@ export default {
   methods: {
     save () {
       const linkedVulnerabilities = this.selectedVulnerabilities.map(vuln => ({ id: vuln._id }))
-      return this.$logService.updateLineVulnerabilities(this.projectId, linkedVulnerabilities)
+      return this.$logService.updateLineVulnerabilities(this.projectId, this.logId, this.lineId, linkedVulnerabilities)
         .then(() => {
           this.$emit('updated')
           return true
