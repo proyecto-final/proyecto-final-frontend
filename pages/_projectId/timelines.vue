@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="shouldShowEmtpyState" class="mb-6">
+    <div v-if="shouldShowEmtpyState" class="mb-6 screen-min-height d-flex align-center justify-center">
       <ShTableEmptyState
         class="my-10"
         img-src="/empty-state/timelines.svg"
@@ -177,3 +177,8 @@ export default {
   }
 }
 </script>
+<style scoped>
+.screen-min-height{
+  min-height: calc(100vh - 150px);
+}
+</style>
