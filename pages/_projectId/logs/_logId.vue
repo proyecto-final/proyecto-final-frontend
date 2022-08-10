@@ -129,8 +129,10 @@ export default {
     this.loading = true
     const filter = {}
     if (this.filter.dates?.length === 2) {
-      filter.dateFrom = this.filter.dates[0]
-      filter.dateTo = this.filter.dates[1]
+      const smallerDate = this.filter.dates[0] < this.filter.dates[1] ? this.filter.dates[0] : this.filter.dates[1]
+      const biggerDate = this.filter.dates[0] > this.filter.dates[1] ? this.filter.dates[0] : this.filter.dates[1]
+      filter.dateFrom = smallerDate
+      filter.dateTo = biggerDate
     }
     this.$logService.getLines(this.projectId, this.logId, {
       offset: (this.options.page - 1) * this.options.itemsPerPage,
