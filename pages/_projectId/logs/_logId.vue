@@ -16,11 +16,11 @@
         </v-row>
         <v-row class="mb-6 pr-2">
           <v-col cols="12" md="6" lg="4">
-            <ShAutocomplete
-              v-model="filter.date"
+            <ShDatePicker
+              v-model="filter.dates"
               hide-details
               clearable
-              :items="[{ text: '24/02/2022', value: 'processed' }, { text: '05/11/2021', value: 'processing' }]"
+              range
               placeholder="Filtrar por fecha"
             />
           </v-col>
@@ -117,7 +117,7 @@ export default {
     },
     filter: {
       raw: '',
-      date: null,
+      dates: [],
       eventId: null
     },
     lines: [],
@@ -127,10 +127,18 @@ export default {
   }),
   fetch () {
     this.loading = true
+    const filter = {}
+    if (this.filter.dates?.length === 2) {
+      const smallerDate = this.filter.dates[0] < this.filter.dates[1] ? this.filter.dates[0] : this.filter.dates[1]
+      const biggerDate = this.filter.dates[0] > this.filter.dates[1] ? this.filter.dates[0] : this.filter.dates[1]
+      filter.dateFrom = smallerDate
+      filter.dateTo = biggerDate
+    }
     this.$logService.getLines(this.projectId, this.logId, {
       offset: (this.options.page - 1) * this.options.itemsPerPage,
       limit: this.options.itemsPerPage,
-      ...this.filter
+      raw: this.filter.raw,
+      ...filter
     }).then((result) => {
       this.lines.push(...result.rows.map((row, index) => ({
         ...row,
@@ -156,6 +164,16 @@ export default {
     },
     sortedTimelineLines () {
       return [...this.timelineLines].sort((a, b) => a.timestamp > b.timestamp ? 1 : -1)
+    }
+  },
+  watch: {
+    'filter.dates': {
+      handler (dates) {
+        if ([0, 2].includes(dates?.length)) {
+          this.fetchDebounced()
+        }
+      },
+      deep: true
     }
   },
   created () {
