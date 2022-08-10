@@ -89,9 +89,8 @@
                 :key="index"
                 v-model="log.title"
                 label="Nombre *"
-                :rules="[$rules.required('nombre')]"
+                :rules="[$rules.required('nombre'), $rules.maxLength(32)]"
                 class="mt-6 mx-2"
-                maxlength="32"
               />
             </div>
             <div>
@@ -100,7 +99,7 @@
                 v-model="log.description"
                 label="Descripción"
                 class="mx-2"
-                maxlength="250"
+                :rules="[$rules.maxLength(250)]"
               />
             </div>
           </v-tab-item>
@@ -169,7 +168,7 @@ export default {
     },
     addLogFile () {
       this.logFiles.push(...this.filesToAdd.map(file => ({
-        title: file.name,
+        title: file.name.substring(0, 32),
         description: '',
         size: this.formatFileSize(file.size, 1),
         file
