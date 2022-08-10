@@ -13,7 +13,7 @@
         <div v-else class="pl-3 pr-2" />
         <div class="text-align-center">
           <ShCode>
-            {{ index + 1 }}
+            {{ line.index }}
           </ShCode>
         </div>
       </div>
@@ -110,10 +110,6 @@ export default {
   props: {
     line: {
       type: Object,
-      required: true
-    },
-    index: {
-      type: Number,
       required: true
     }
   }
