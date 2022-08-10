@@ -18,7 +18,7 @@
       <ShIconButton color="neutral" icon="mdi-close" title="Cerrar" @click="close()" />
     </template>
     <template #close>
-      <TimelineGenerateDialog :project-id="'1'" :timeline-id="'1'" />
+      <TimelineGenerateDialog :project-id="projectId" :timeline-id="'1'" />
     </template>
     <template #default>
       <v-row justify="center">
@@ -219,13 +219,13 @@
                           <v-icon color="#50A8FF">
                             mdi-circle
                           </v-icon>
-                          <ShBodySmall neutral>
+                          <ShBodySmall neutral class="mx-3">
                             Usuario
                           </ShBodySmall>
                           <v-icon color="#0470B8">
                             mdi-circle
                           </v-icon>
-                          <ShBodySmall neutral>
+                          <ShBodySmall neutral class="mx-3">
                             Sherlock
                           </ShBodySmall>
                         </v-col>
@@ -279,6 +279,9 @@ export default {
     },
     userDetectedEventsPercentage () {
       return this.detectedEvents === 0 ? 0 : (this.userDetectedEvents / this.detectedEvents) * 100
+    },
+    projectId () {
+      return this.$route.params.projectId
     }
   },
   mounted () {
