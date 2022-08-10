@@ -68,6 +68,7 @@
   display: -webkit-box;
   -webkit-line-clamp: 1; /* number of lines to show */
   -webkit-box-orient: vertical;
+  word-break: break-all;
 }
 
 .max-lines-2 {
@@ -76,6 +77,7 @@
   display: -webkit-box;
   -webkit-line-clamp: 2; /* number of lines to show */
   -webkit-box-orient: vertical;
+  word-break: break-all;
 }
 
 .max-lines-3 {
@@ -84,4 +86,5 @@
   display: -webkit-box;
   -webkit-line-clamp: 3; /* number of lines to show */
   -webkit-box-orient: vertical;
+  word-break: break-all;
 }
