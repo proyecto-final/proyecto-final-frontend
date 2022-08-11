@@ -162,60 +162,65 @@
                 <v-col>
                   <v-card v-if="detectedEvents > 0" elevation="0" class="w-100">
                     <v-card-text>
-                      <v-row>
-                        <v-col>
-                          <ShHeading2 class="mt-3 mb-4">
-                            Eventos analizados
-                          </ShHeading2>
-                        </v-col>
-                        <v-col>
-                          <ShBodySmall neutral>
-                            User VS Sherlock
-                          </ShBodySmall>
-                        </v-col>
-                      </v-row>
+                      <div class="d-flex justify-space-between align-center my-4">
+                        <ShHeading2 class="mt-3 mb-4">
+                          Eventos analizados
+                        </ShHeading2>
+                        <ShBodySmall neutral>
+                          Usuario VS Sherlock
+                        </ShBodySmall>
+                      </div>
                       <v-row>
                         <v-col class="d-flex justify-content-start">
-                          <div class="mx-3">
-                            <ShBodySmall strong>
-                              {{ detectedEvents }}
-                            </ShBodySmall>
-                            <ShBodySmall neutral>
-                              Total
-                            </ShBodySmall>
+                          <div class="mr-10">
+                            <div>
+                              <ShBodySmall strong>
+                                {{ detectedEvents }}
+                              </ShBodySmall>
+                            </div>
+                            <div>
+                              <ShBodySmall neutral>
+                                Total
+                              </ShBodySmall>
+                            </div>
                           </div>
-                          <div class="mx-3">
-                            <ShBodySmall strong>
-                              {{ userDetectedEvents }}
-                            </ShBodySmall>
-                            <ShBodySmall neutral>
-                              Usuario
-                            </ShBodySmall>
+                          <div class="mx-10">
+                            <div>
+                              <ShBodySmall strong>
+                                {{ userDetectedEvents }}
+                              </ShBodySmall>
+                            </div>
+                            <div>
+                              <ShBodySmall neutral>
+                                Usuario
+                              </ShBodySmall>
+                            </div>
                           </div>
-                          <div class="mx-3">
-                            <ShBodySmall strong>
-                              {{ systemDetectedEvents }}
-                            </ShBodySmall>
-                            <ShBodySmall neutral>
-                              Sherlock
-                            </ShBodySmall>
+                          <div class="mx-10">
+                            <div>
+                              <ShBodySmall strong>
+                                {{ systemDetectedEvents }}
+                              </ShBodySmall>
+                            </div>
+                            <div>
+                              <ShBodySmall neutral>
+                                Sherlock
+                              </ShBodySmall>
+                            </div>
                           </div>
                         </v-col>
                       </v-row>
-                      <v-row class="d-flex justify-content-center">
-                        <v-col cols="6">
-                          <v-progress-linear
-                            rounded
-                            height="17"
-                            background-color="#0470B8"
-                            color="#50A8FF"
-                            class="mb-4 mx-4"
-                            :value="`${userDetectedEventsPercentage}`"
-                          />
-                        </v-col>
-                      </v-row>
-                      <v-row>
-                        <v-col class="d-flex justify-content-center">
+                      <div class="my-4">
+                        <v-progress-linear
+                          rounded
+                          height="17"
+                          background-color="#0470B8"
+                          color="#50A8FF"
+                          :value="userDetectedEventsPercentage"
+                        />
+                      </div>
+                      <div class="d-flex justify-center">
+                        <div>
                           <v-icon color="#50A8FF">
                             mdi-circle
                           </v-icon>
@@ -228,8 +233,8 @@
                           <ShBodySmall neutral class="mx-3">
                             Sherlock
                           </ShBodySmall>
-                        </v-col>
-                      </v-row>
+                        </div>
+                      </div>
                     </v-card-text>
                   </v-card>
                 </v-col>
