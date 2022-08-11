@@ -100,6 +100,7 @@
                 label="Descripción"
                 class="mx-2"
                 :rules="[$rules.maxLength(250)]"
+                rows="4"
               />
             </div>
           </v-tab-item>
