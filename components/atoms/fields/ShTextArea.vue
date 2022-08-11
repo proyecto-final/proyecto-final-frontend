@@ -1,6 +1,6 @@
 <template>
   <v-textarea
-    class="neutral-background"
+    :class="isNote ? 'yellow-background' : 'neutral-background'"
     filled
     dense
     rounded
@@ -17,8 +17,22 @@
     </template>
   </v-textarea>
 </template>
+<script>
+export default {
+  props: {
+    isNote: {
+      type: Boolean,
+      default: false
+    }
+  }
+}
+</script>
+
 <style scoped>
 .neutral-background > ::v-deep.v-input__control > .v-input__slot {
-  background: var(--v-neutral-darken1) !important  ;
+  background: var(--v-neutral-darken1) !important;
+}
+.yellow-background > ::v-deep.v-input__control > .v-input__slot {
+  background: var(--v-note1Bg-base) !important;
 }
 </style>

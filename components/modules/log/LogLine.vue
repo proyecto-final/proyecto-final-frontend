@@ -63,16 +63,11 @@
               </v-list-item-subtitle>
             </v-list-item>
             <v-list-item>
-              <v-list-item-icon>
-                <v-icon>
-                  mdi-note-text
-                </v-icon>
-              </v-list-item-icon>
-              <v-list-item-subtitle>
-                <ShBody>
-                  Agregar una nota
-                </ShBody>
-              </v-list-item-subtitle>
+              <LogDialogNote
+                :project-id="projectId"
+                :log-id="logId"
+                :line="line"
+              />
             </v-list-item>
             <LogLinkVulnerabilitiesDialog
               :project-id="projectId"
