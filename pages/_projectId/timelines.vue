@@ -114,7 +114,8 @@ export default {
     headers: [
       {
         text: 'Nombre',
-        value: 'name'
+        value: 'name',
+        width: '25%'
       },
       {
         text: 'Fecha',
