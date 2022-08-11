@@ -49,7 +49,7 @@
               </v-icon>
             </v-btn>
           </template>
-          <v-list nav>
+          <v-list color="neutral darken-1" nav>
             <v-list-item @click="$emit('select:line', line)">
               <v-list-item-icon>
                 <v-icon>
@@ -74,14 +74,12 @@
                 </ShBody>
               </v-list-item-subtitle>
             </v-list-item>
-            <v-list-item>
-              <LogLinkVulnerabilitiesDialog
-                :project-id="projectId"
-                :log-id="logId"
-                :line="line"
-                @updated="line => $emit('update:line', line)"
-              />
-            </v-list-item>
+            <LogLinkVulnerabilitiesDialog
+              :project-id="projectId"
+              :log-id="logId"
+              :line="line"
+              @updated="line => $emit('update:line', line)"
+            />
             <v-list-item>
               <v-list-item-icon>
                 <v-icon>

@@ -19,9 +19,9 @@
             </v-icon>
           </v-list-item-icon>
           <v-list-item-subtitle>
-            <ShBodySmall class="neutral-darken-text">
+            <ShBody class="neutral-darken-text">
               Vincular evento
-            </ShBodySmall>
+            </ShBody>
           </v-list-item-subtitle>
         </v-list-item>
       </slot>
@@ -128,7 +128,6 @@ export default {
         this.$emit('updated', updatedLine)
         return true
       } catch (error) {
-        console.log(error)
         const msg = error.response?.data?.msg
         if (msg) {
           this.$noty.warn(msg.join(', '))
