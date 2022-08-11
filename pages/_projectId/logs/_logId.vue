@@ -42,6 +42,7 @@
           :key="index"
           :line="line"
           :is-selected="line.isSelected"
+          @update:line="updatedLine => setLine(line, updatedLine)"
           @select:line="toggleLine(line)"
         />
         <div v-if="hasMoreLines" v-intersect="getNextLines" class="mt-3 d-flex justify-center">
@@ -191,6 +192,9 @@ export default {
       } else {
         this.timelineLines.push(line)
       }
+    },
+    setLine (line, updatedLine) {
+      Object.assign(line, updatedLine)
     },
     getNextLines (entries) {
       if (entries[0].isIntersecting && !this.loading) {
