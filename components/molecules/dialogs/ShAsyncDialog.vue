@@ -12,10 +12,10 @@
       <v-progress-linear v-if="loadingFunction" indeterminate color="primary" />
       <v-card class="pa-6">
         <div class="d-flex justify-space-between align-center">
-          <ShHeading3 neutral>
+          <ShHeading3 v-if="!hideTitle" neutral>
             {{ title }}
           </ShHeading3>
-          <ShIconButton color="neutral" icon="mdi-close" title="Cerrar" @click="close" />
+          <ShIconButton v-if="!hideCloseButton" color="neutral" icon="mdi-close" title="Cerrar" @click="close" />
         </div>
         <v-form
           ref="form"
@@ -99,6 +99,14 @@ export default {
       default: false
     },
     hidePrimaryButton: {
+      type: Boolean,
+      default: false
+    },
+    hideCloseButton: {
+      type: Boolean,
+      default: false
+    },
+    hideTitle: {
       type: Boolean,
       default: false
     },

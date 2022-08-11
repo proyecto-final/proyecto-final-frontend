@@ -18,7 +18,7 @@
       <ShIconButton color="neutral" icon="mdi-close" title="Cerrar" @click="close()" />
     </template>
     <template #close>
-      <TimelineGenerateDialog :project-id="projectId" :timeline-id="'1'" />
+      <TimelineGenerateDialog :project-id="projectId" :log-lines="logLines" />
     </template>
     <template #default>
       <v-row justify="center">
@@ -70,7 +70,7 @@
                           <v-icon>
                             mdi-link
                           </v-icon>
-                          {{ vulnerability }}
+                          {{ vulnerability.name }}
                         </ShChip>
                       </div>
                       <ShChip v-for="(tag, tagIndex) in logLine.tags" :key="`${index}-${tagIndex}`" class="mb-2 mx-1">
