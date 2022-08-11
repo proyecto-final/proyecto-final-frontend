@@ -26,12 +26,11 @@
           </ShCode>
         </div>
         <div>
-          <ShChip v-for="detection in line.detections" :key="index + detection" class="mr-2">
-            <v-icon>
-              mdi-link
-            </v-icon>
-            {{ detection }}
-          </ShChip>
+          <LogLineVulnerabilityDialog
+            v-for="(vulnerability, index) in line.vulnerabilites"
+            :key="`${line._id}-${index}`"
+            :vulnerability="vulnerability"
+          />
         </div>
         <v-menu
           offset-y

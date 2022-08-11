@@ -26,7 +26,9 @@ export default {
         primary: '#E6F1F8',
         warning: '#F8F0DC',
         success: '#E5F5E5',
-        error: '#FFF0EC'
+        error: '#FFF0EC',
+        user: '#FFF0EC',
+        sherlock: '#FFF0EC'
       }
       return backgroundPerColor[this.color] || 'gray'
     }
