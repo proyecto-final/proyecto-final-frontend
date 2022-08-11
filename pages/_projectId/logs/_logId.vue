@@ -37,14 +37,21 @@
       </div>
       <div class="border-top bg-white h-100 user-viewport-height-lines sh-scrollbar">
         <v-progress-linear v-if="$fetchState.pending" indeterminate color="primary" />
-        <LogLine
-          v-for="(line, index) in lines"
-          :key="index"
-          :line="line"
-          :is-selected="line.isSelected"
-          @update:line="updatedLine => setLine(line, updatedLine)"
-          @select:line="toggleLine(line)"
-        />
+        <v-div v-if="lines.length > 0">
+          <LogLine
+            v-for="(line, index) in lines"
+            :key="index"
+            :line="line"
+            :is-selected="line.isSelected"
+            @update:line="updatedLine => setLine(line, updatedLine)"
+            @select:line="toggleLine(line)"
+          />
+        </v-div>
+        <div v-else class="ml-5 my-3">
+          <ShCode>
+            No se hallaron líneas de logs que cumplan con los filtros seleccionados.
+          </ShCode>
+        </div>
         <div v-if="hasMoreLines" v-intersect="getNextLines" class="mt-3 d-flex justify-center">
           <div class="d-flex align-center">
             <v-progress-circular color="primary" indeterminate />
