@@ -62,13 +62,11 @@
                 </ShBody>
               </v-list-item-subtitle>
             </v-list-item>
-            <v-list-item>
-              <LogDialogNote
-                :project-id="projectId"
-                :log-id="logId"
-                :line="line"
-              />
-            </v-list-item>
+            <LogDialogNote
+              :project-id="projectId"
+              :log-id="logId"
+              :line="line"
+            />
             <LogLinkVulnerabilitiesDialog
               :project-id="projectId"
               :log-id="logId"

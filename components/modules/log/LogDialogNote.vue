@@ -1,6 +1,6 @@
 <template>
   <ShAsyncDialog
-    width="500"
+    width="400"
     confirm-text="Guardar"
     cancel-text="Descartar"
     title="Nota"
@@ -28,14 +28,25 @@
       </slot>
     </template>
     <template #default>
-      <div class="mb-4">
-        <ShTextArea is-note flat />
+      <div>
+        <ShTextArea
+          v-model="note"
+          placeholder="Escriba su nota..."
+          is-note
+          flat
+          :rules="[$rules.maxLength(70)]"
+        />
+      </div>
+      <div>
+        <ShBody neutral>
+          {{ user.name }}
+        </ShBody>
       </div>
     </template>
   </ShAsyncDialog>
 </template>
 <script>
-import { debounce, cloneDeep } from 'lodash'
+import { mapState } from 'vuex'
 export default {
   props: {
     projectId: {
@@ -52,87 +63,17 @@ export default {
     }
   },
   data: () => ({
-    lineVulnerabilities: [],
-    vulnerabilityToAdd: null,
-    vulnerabilities: [],
-    loading: false,
-    filter: {
-      name: null,
-      level: null,
-      references: []
-    },
-    options: {
-      page: 1,
-      itemsPerPage: 20
-    }
+    note: ''
   }),
-  fetch () {
-    this.loading = true
-    this.$logService.getVulnerabilities(this.projectId, {
-      offset: 0,
-      limit: 10,
-      ...this.filter
-    }).then((result) => {
-      this.vulnerabilities = result.rows.map(vuln => ({ ...vuln, description: vuln.name }))
-    }).finally(() => { this.loading = false })
-  },
   computed: {
-    availableVulnerabilities () {
-      return this.vulnerabilities.filter(vuln => !this.lineVulnerabilities.some(selectedVuln => selectedVuln._id === vuln._id))
-    }
-  },
-  watch: {
-    'filter.name' (val) {
-      if (val) {
-        this.loading = true
-        this.fetchDebounced()
-      }
-    },
-    vulnerabilityToAdd (val) {
-      this.addVulnerability(val)
-    }
+    ...mapState('user', ['user'])
   },
   methods: {
-    async save () {
-      try {
-        const newVulnerabilities = this.lineVulnerabilities.filter(vulnerability => vulnerability.isNew)
-        const savedVulnerabilities = await Promise.all(newVulnerabilities.map(newVulnerability => this.$logService.saveVulnerability(this.projectId, newVulnerability)))
-        const existingVulnerabilities = this.lineVulnerabilities.filter(vulnerability => !vulnerability.isNew)
-        const vulnerabilites = [...existingVulnerabilities, ...savedVulnerabilities].map(vuln => ({ _id: vuln._id }))
-        const updatedLine = await this.$logService.updateLine(this.projectId, this.logId, this.line._id, { vulnerabilites })
-        this.$emit('updated', updatedLine)
-        return true
-      } catch (error) {
-        const msg = error.response?.data?.msg
-        if (msg) {
-          this.$noty.warn(msg.join(', '))
-        }
-        return false
-      }
-    },
-    addVulnerability (vulnerabilityToAdd) {
-      if (vulnerabilityToAdd) {
-        this.$nextTick(() => {
-          const vulnerability = typeof vulnerabilityToAdd === 'string' || vulnerabilityToAdd instanceof String
-            ? { name: vulnerabilityToAdd, isCustom: true, isNew: true, level: 'none' }
-            : vulnerabilityToAdd
-          this.lineVulnerabilities.push(cloneDeep(vulnerability))
-          this.vulnerabilityToAdd = null
-        })
-        this.filter.name = ''
-      }
+    save () {
+      this.$logService.updateLine(this.projectId, this.logId, this.line._id, this.note)
     },
     setInitialData () {
-      this.$fetch()
-      this.lineVulnerabilities = cloneDeep(this.line.vulnerabilites)
-    },
-    fetchDebounced: debounce(function () {
-      this.$fetch()
-    }, 500),
-    removeVulnerability (vulnerabilityIndex) {
-      this.lineVulnerabilities.splice(vulnerabilityIndex, 1)
-      this.vulnerabilityToAdd = null
-      this.filter.name = ''
+      this.note = ''
     }
   }
 }
