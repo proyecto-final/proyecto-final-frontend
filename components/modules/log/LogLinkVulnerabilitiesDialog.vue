@@ -28,7 +28,7 @@
     </template>
     <template #default>
       <div class="mb-4">
-        <ShAutocomplete
+        <ShCombobox
           v-model="vulnerabilityToAdd"
           :search-input.sync="filter.name"
           hide-details
@@ -43,7 +43,7 @@
           :loading="loading"
         />
       </div>
-      <div v-for="(vulnerability,index) in selectedVulnerabilities" :key="index" class="px-4">
+      <div v-for="(vulnerability,index) in lineVulnerabilities" :key="index" class="px-4">
         <div class="d-flex justify-space-between align-center py-3">
           <div class="d-flex flex-column">
             <ShBody>
@@ -54,7 +54,7 @@
             <ShIconButton icon="mdi-close" title="Quitar" @click="removeVulnerability(index)" />
           </div>
         </div>
-        <v-divider v-if="index !== (selectedVulnerabilities.length - 1)" />
+        <v-divider v-if="index !== (lineVulnerabilities.length - 1)" />
       </div>
     </template>
   </ShAsyncDialog>
@@ -65,19 +65,19 @@ export default {
   props: {
     projectId: {
       type: String,
-      default: null
+      required: true
     },
     logId: {
       type: String,
-      default: null
+      required: true
     },
-    lineId: {
-      type: String,
-      default: null
+    line: {
+      type: Object,
+      required: true
     }
   },
   data: () => ({
-    selectedVulnerabilities: [],
+    lineVulnerabilities: [],
     vulnerabilityToAdd: null,
     vulnerabilities: [],
     loading: false,
@@ -85,6 +85,10 @@ export default {
       name: null,
       level: null,
       references: []
+    },
+    options: {
+      page: 1,
+      itemsPerPage: 20
     }
   }),
   fetch () {
@@ -99,7 +103,7 @@ export default {
   },
   computed: {
     availableVulnerabilities () {
-      return this.vulnerabilities.filter(vuln => !this.selectedVulnerabilities.some(selectedVuln => selectedVuln._id === vuln._id))
+      return this.vulnerabilities.filter(vuln => !this.lineVulnerabilities.some(selectedVuln => selectedVuln._id === vuln._id))
     }
   },
   watch: {
@@ -114,38 +118,45 @@ export default {
     }
   },
   methods: {
-    save () {
-      const vulnerabilites = this.selectedVulnerabilities.map(vuln => ({ _id: vuln._id }))
-      return this.$logService.updateLine(this.projectId, this.logId, this.lineId, { vulnerabilites })
-        .then(() => {
-          this.$emit('updated')
-          return true
-        })
-        .catch((error) => {
-          const msg = error.response?.data?.msg
-          if (msg) {
-            this.$noty.warn(msg.join(', '))
-          }
-          return false
-        })
+    async save () {
+      try {
+        const newVulnerabilities = this.lineVulnerabilities.filter(vulnerability => vulnerability.isNew)
+        const savedVulnerabilities = await Promise.all(newVulnerabilities.map(newVulnerability => this.$logService.saveVulnerability(this.projectId, newVulnerability)))
+        const existingVulnerabilities = this.lineVulnerabilities.filter(vulnerability => !vulnerability.isNew)
+        const vulnerabilites = [...existingVulnerabilities, ...savedVulnerabilities].map(vuln => ({ _id: vuln._id }))
+        const updatedLine = await this.$logService.updateLine(this.projectId, this.logId, this.line._id, { vulnerabilites })
+        this.$emit('updated', updatedLine)
+        return true
+      } catch (error) {
+        console.log(error)
+        const msg = error.response?.data?.msg
+        if (msg) {
+          this.$noty.warn(msg.join(', '))
+        }
+        return false
+      }
     },
     addVulnerability (vulnerabilityToAdd) {
       if (vulnerabilityToAdd) {
         this.$nextTick(() => {
-          this.selectedVulnerabilities.push(cloneDeep(vulnerabilityToAdd))
+          const vulnerability = typeof vulnerabilityToAdd === 'string' || vulnerabilityToAdd instanceof String
+            ? { name: vulnerabilityToAdd, isCustom: true, isNew: true, level: 'none' }
+            : vulnerabilityToAdd
+          this.lineVulnerabilities.push(cloneDeep(vulnerability))
           this.vulnerabilityToAdd = null
         })
         this.filter.name = ''
       }
     },
-    async setInitialData () {
-
+    setInitialData () {
+      this.$fetch()
+      this.lineVulnerabilities = cloneDeep(this.line.vulnerabilites)
     },
     fetchDebounced: debounce(function () {
       this.$fetch()
     }, 500),
     removeVulnerability (vulnerabilityIndex) {
-      this.selectedVulnerabilities.splice(vulnerabilityIndex, 1)
+      this.lineVulnerabilities.splice(vulnerabilityIndex, 1)
       this.vulnerabilityToAdd = null
       this.filter.name = ''
     }

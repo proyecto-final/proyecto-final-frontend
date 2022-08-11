@@ -41,4 +41,8 @@ export default class Log {
   getVulnerabilities (projectId, params) {
     return this.$axios.$get(`/api/project/${projectId}/correlate/vulnerability`, { params })
   }
+
+  saveVulnerability (projectId, vulnerability) {
+    return this.$axios.$post(`/api/project/${projectId}/correlate/vulnerability`, vulnerability)
+  }
 }
