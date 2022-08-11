@@ -24,7 +24,7 @@
             clearable
             placeholder="Buscar por nombre"
             maxlength="32"
-            @input="fetchDebounced"
+            @input="search"
           />
         </v-col>
       </v-row>
