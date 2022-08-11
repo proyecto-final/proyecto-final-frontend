@@ -1,6 +1,6 @@
 <template>
   <ShAsyncDialog
-    width="500"
+    width="600"
     confirm-text="Generar"
     title="Generar timeline"
     :async-confirm-function="save"
@@ -8,8 +8,9 @@
     :hide-primary-button="showSuccess"
     :hide-close-button="showSuccess"
     :hide-title="showSuccess"
+    persistent
     v-on="$listeners"
-    @open="showSuccess = false"
+    @open="resetDialog"
   >
     <template #activator="{on}">
       <slot name="activator" :on="on">
@@ -21,7 +22,7 @@
     <template #default>
       <template v-if="showSuccess">
         <div class="d-flex align-center justify-center my-4">
-          <v-icon color="success" size="98px">
+          <v-icon color="success" size="500%">
             mdi-check-circle
           </v-icon>
         </div>
@@ -114,6 +115,11 @@ export default {
         }
         return false
       })
+    },
+    resetDialog () {
+      this.showSuccess = false
+      this.title = ''
+      this.description = ''
     }
   }
 }
