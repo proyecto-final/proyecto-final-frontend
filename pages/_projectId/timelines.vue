@@ -37,10 +37,10 @@
         @update:options="$fetch"
       >
         <template #[`item.name`]="{ item }">
-          <div>
+          <div class="max-lines-1">
             <ShBodySmall>{{ item.title }}</ShBodySmall>
           </div>
-          <div>
+          <div class="max-lines-1">
             <ShBodySmall neutral>
               {{ item.description }}
             </ShBodySmall>
@@ -114,7 +114,8 @@ export default {
     headers: [
       {
         text: 'Nombre',
-        value: 'name'
+        value: 'name',
+        width: '25%'
       },
       {
         text: 'Fecha',
