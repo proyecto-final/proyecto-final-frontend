@@ -33,7 +33,6 @@
           :search-input.sync="filter.name"
           hide-details
           clearable
-          hide-no-data
           filled
           background-color="neutral darken-1"
           :items="availableVulnerabilities"
@@ -41,7 +40,18 @@
           return-object
           placeholder="Nombre del evento"
           :loading="loading"
-        />
+          no-data-text=""
+        >
+          <template #no-data>
+            <v-list-item>
+              <v-list-item-content>
+                <ShSpecialLabel>
+                  El evento buscado no existe, para crearlo presione la tecla <strong>Enter</strong>
+                </ShSpecialLabel>
+              </v-list-item-content>
+            </v-list-item>
+          </template>
+        </ShCombobox>
       </div>
       <div v-for="(vulnerability,index) in lineVulnerabilities" :key="index" class="px-4">
         <div class="d-flex justify-space-between align-center py-3">
@@ -137,9 +147,14 @@ export default {
     },
     addVulnerability (vulnerabilityToAdd) {
       if (vulnerabilityToAdd) {
+        const isCustom = typeof vulnerabilityToAdd === 'string' || vulnerabilityToAdd instanceof String
+        if (isCustom && (vulnerabilityToAdd.trim().length === 0 || vulnerabilityToAdd.length > 32 || vulnerabilityToAdd.length < 4)) {
+          this.$noty.warn('El nombre del evento a crear debe tener de 4 a 32 caracteres')
+          return
+        }
         this.$nextTick(() => {
-          const vulnerability = typeof vulnerabilityToAdd === 'string' || vulnerabilityToAdd instanceof String
-            ? { name: vulnerabilityToAdd, isCustom: true, isNew: true, level: 'none' }
+          const vulnerability = isCustom
+            ? { name: vulnerabilityToAdd, isCustom, isNew: true, level: 'none' }
             : vulnerabilityToAdd
           this.lineVulnerabilities.push(cloneDeep(vulnerability))
           this.vulnerabilityToAdd = null
