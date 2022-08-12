@@ -31,27 +31,37 @@
       <v-row>
         <v-col>
           <v-card flat outlined>
-            <div class="my-3 ml-3">
-              <v-div class="d-flex">
-                <ShHeading3>
-                  Dummy Title
-                </ShHeading3>
-              </v-div>
-              <v-div class="d-flex">
-                <ShBody>
+            <div class="my-3 ml-3 d-flex justify-space-between">
+              <v-div>
+                <ShBody neutral>
                   Esta es una dummy note...
                 </ShBody>
               </v-div>
+              <v-div class="mr-3">
+                <v-tooltip bottom>
+                  <template #activator="{on}">
+                    <v-icon v-on="on">
+                      mdi-trash-can-outline
+                    </v-icon>
+                  </template>
+                  <span>Eliminar</span>
+                </v-tooltip>
+                <v-tooltip bottom>
+                  <template #activator="{on}">
+                    <v-icon v-on="on">
+                      mdi-square-edit-outline
+                    </v-icon>
+                  </template>
+                  <span>Editar</span>
+                </v-tooltip>
+              </v-div>
             </div>
-            <v-div class="d-flex justify-right mr-4">
-              <v-icon>
-                mdi-trash-can-outline
-              </v-icon>
-              <v-icon>
-                mdi-square-edit-outline
-              </v-icon>
-            </v-div>
           </v-card>
+          <v-div class="d-flex justify-center">
+            <v-icon class="mt-5">
+              mdi-dots-vertical
+            </v-icon>
+          </v-div>
         </v-col>
         <v-divider vertical />
         <v-col>
@@ -110,5 +120,12 @@ export default {
 <style scoped>
 .justify-right {
   justify-content: end;
+}
+.justify-center {
+  justify-content: center;
+}
+.v-card.v-sheet.theme--light {
+  border-radius: 12px !important;
+  background: var(--v-note1Bg-base) !important;
 }
 </style>
