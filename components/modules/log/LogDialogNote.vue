@@ -29,7 +29,7 @@
     </template>
     <template #default>
       <v-row>
-        <v-col>
+        <v-col class="h-100 user-viewport-height-note sh-scrollbar">
           <v-card v-for="(note,index) in notes" :key="index" class="mb-3" flat outlined>
             <div class="my-3 ml-3 d-flex justify-space-between">
               <div>
@@ -135,5 +135,8 @@ export default {
 }
 .v-tooltip__content {
   font-size: 12px !important;
+}
+.user-viewport-height-note {
+  max-height: calc(362px - 144px);
 }
 </style>
