@@ -31,26 +31,32 @@
       <v-row>
         <v-col class="h-100 user-viewport-height-note sh-scrollbar">
           <v-card v-for="(note,index) in notes" :key="index" class="mb-3" flat outlined>
-            <div class="my-3 ml-3 d-flex justify-space-between">
+            <div class="ml-2 d-flex justify-space-between">
               <div>
                 <ShBody neutral>
-                  {{ note }}
+                  {{ cutTo(note, 23) }}
                 </ShBody>
               </div>
-              <div class="mr-3">
+              <div>
                 <v-tooltip bottom>
                   <template #activator="{on}">
-                    <v-icon v-on="on">
-                      mdi-trash-can-outline
-                    </v-icon>
+                    <ShIconButton
+                      icon="mdi-trash-can-outline"
+                      title="Eliminar"
+                      v-on="on"
+                      @click="removeNote(index)"
+                    />
                   </template>
                   <span>Eliminar</span>
                 </v-tooltip>
                 <v-tooltip bottom>
                   <template #activator="{on}">
-                    <v-icon v-on="on">
-                      mdi-square-edit-outline
-                    </v-icon>
+                    <ShIconButton
+                      icon="mdi-square-edit-outline"
+                      title="Editar"
+                      v-on="on"
+                      @click="IsEditing == true"
+                    />
                   </template>
                   <span>Editar</span>
                 </v-tooltip>
@@ -74,10 +80,17 @@
               :rules="[$rules.maxLength(70)]"
             />
           </div>
-          <div class="d-flex justify-right mb-7" @click="addNote">
-            <ShBodySmall neutral>
+          <div class="d-flex justify-right mb-7">
+            <v-btn
+              text
+              color="neutral"
+              small
+              :ripple="false"
+              class="btn-no-bg no-uppercase"
+              @click="addNote"
+            >
               + Agregar nota
-            </ShBodySmall>
+            </v-btn>
           </div>
         </v-col>
       </v-row>
@@ -118,6 +131,12 @@ export default {
     addNote () {
       this.notes.push(this.note)
       this.note = ''
+    },
+    removeNote (noteIndex) {
+      this.notes.splice(noteIndex, 1)
+    },
+    cutTo (str, length) {
+      return str.length > length ? `${str.substr(0, length - 3)}...` : str
     }
   }
 }
@@ -138,5 +157,11 @@ export default {
 }
 .user-viewport-height-note {
   max-height: calc(362px - 144px);
+}
+.btn-no-bg::before {
+  background-color: transparent !important;
+}
+.no-uppercase {
+  text-transform: unset !important;
 }
 </style>
