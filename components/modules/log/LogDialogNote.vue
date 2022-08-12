@@ -30,14 +30,14 @@
     <template #default>
       <v-row>
         <v-col>
-          <v-card flat outlined>
+          <v-card v-for="(note,index) in notes" :key="index" class="mb-3" flat outlined>
             <div class="my-3 ml-3 d-flex justify-space-between">
-              <v-div>
+              <div>
                 <ShBody neutral>
-                  Esta es una dummy note...
+                  {{ note }}
                 </ShBody>
-              </v-div>
-              <v-div class="mr-3">
+              </div>
+              <div class="mr-3">
                 <v-tooltip bottom>
                   <template #activator="{on}">
                     <v-icon v-on="on">
@@ -54,14 +54,14 @@
                   </template>
                   <span>Editar</span>
                 </v-tooltip>
-              </v-div>
+              </div>
             </div>
           </v-card>
-          <v-div class="d-flex justify-center">
+          <div class="d-flex justify-center">
             <v-icon class="mt-5">
               mdi-dots-vertical
             </v-icon>
-          </v-div>
+          </div>
         </v-col>
         <v-divider vertical />
         <v-col>
@@ -74,10 +74,10 @@
               :rules="[$rules.maxLength(70)]"
             />
           </div>
-          <div>
-            <ShBody neutral>
-              {{ user.name }}
-            </ShBody>
+          <div class="d-flex justify-right mb-7" @click="addNote">
+            <ShBodySmall neutral>
+              + Agregar nota
+            </ShBodySmall>
           </div>
         </v-col>
       </v-row>
@@ -102,7 +102,8 @@ export default {
     }
   },
   data: () => ({
-    note: ''
+    note: '',
+    notes: ['Esta es una dummy note...', 'Esta es otra dummy note...']
   }),
   computed: {
     ...mapState('user', ['user'])
@@ -112,6 +113,10 @@ export default {
       this.$logService.updateLine(this.projectId, this.logId, this.line._id, this.note)
     },
     setInitialData () {
+      this.note = ''
+    },
+    addNote () {
+      this.notes.push(this.note)
       this.note = ''
     }
   }
@@ -127,5 +132,8 @@ export default {
 .v-card.v-sheet.theme--light {
   border-radius: 12px !important;
   background: var(--v-note1Bg-base) !important;
+}
+.v-tooltip__content {
+  font-size: 12px !important;
 }
 </style>
