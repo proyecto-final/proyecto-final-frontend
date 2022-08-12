@@ -1,9 +1,9 @@
 <template>
   <ShAsyncDialog
-    width="400"
+    width="700"
     confirm-text="Guardar"
     cancel-text="Descartar"
-    title="Nota"
+    title="Notas"
     :async-confirm-function="save"
     :submit-on-enter="false"
     v-on="$listeners"
@@ -28,20 +28,49 @@
       </slot>
     </template>
     <template #default>
-      <div>
-        <ShTextArea
-          v-model="note"
-          placeholder="Escriba su nota..."
-          is-note
-          flat
-          :rules="[$rules.maxLength(70)]"
-        />
-      </div>
-      <div>
-        <ShBody neutral>
-          {{ user.name }}
-        </ShBody>
-      </div>
+      <v-row>
+        <v-col>
+          <v-card flat outlined>
+            <div class="my-3 ml-3">
+              <v-div class="d-flex">
+                <ShHeading3>
+                  Dummy Title
+                </ShHeading3>
+              </v-div>
+              <v-div class="d-flex">
+                <ShBody>
+                  Esta es una dummy note...
+                </ShBody>
+              </v-div>
+            </div>
+            <v-div class="d-flex justify-right mr-4">
+              <v-icon>
+                mdi-trash-can-outline
+              </v-icon>
+              <v-icon>
+                mdi-square-edit-outline
+              </v-icon>
+            </v-div>
+          </v-card>
+        </v-col>
+        <v-divider vertical />
+        <v-col>
+          <div>
+            <ShTextArea
+              v-model="note"
+              placeholder="Escriba su nota..."
+              is-note
+              flat
+              :rules="[$rules.maxLength(70)]"
+            />
+          </div>
+          <div>
+            <ShBody neutral>
+              {{ user.name }}
+            </ShBody>
+          </div>
+        </v-col>
+      </v-row>
     </template>
   </ShAsyncDialog>
 </template>
@@ -78,3 +107,8 @@ export default {
   }
 }
 </script>
+<style scoped>
+.justify-right {
+  justify-content: end;
+}
+</style>
