@@ -36,15 +36,22 @@
         </v-row>
       </div>
       <div class="border-top bg-white h-100 user-viewport-height-lines sh-scrollbar">
-        <v-progress-linear v-if="$fetchState.pending" indeterminate color="primary" />
-        <LogLine
-          v-for="(line, index) in lines"
-          :key="index"
-          :line="line"
-          :is-selected="line.isSelected"
-          @update:line="updatedLine => setLine(line, updatedLine)"
-          @select:line="toggleLine(line)"
-        />
+        <v-progress-linear v-if="loading" indeterminate color="primary" />
+        <div v-if="lines.length === 0 && !loading" class="ml-5 my-3">
+          <ShCode>
+            No se hallaron líneas de logs que cumplan con los filtros seleccionados.
+          </ShCode>
+        </div>
+        <div v-else>
+          <LogLine
+            v-for="(line, index) in lines"
+            :key="index"
+            :line="line"
+            :is-selected="line.isSelected"
+            @update:line="updatedLine => setLine(line, updatedLine)"
+            @select:line="toggleLine(line)"
+          />
+        </div>
         <div v-if="hasMoreLines" v-intersect="getNextLines" class="mt-3 d-flex justify-center">
           <div class="d-flex align-center">
             <v-progress-circular color="primary" indeterminate />
@@ -63,7 +70,7 @@
           @update:logLines="setTimelineLines"
         />
       </div>
-      <div class="sh-scrollbar user-viewport-height-timeline py-4">
+      <div class="sh-scrollbar user-viewport-height-timeline py-4 pr-2">
         <div>
           <ShHeading3 class="mx-4">
             Timeline
@@ -178,9 +185,12 @@ export default {
       deep: true
     }
   },
-  created () {
+  async created () {
     this.$store.commit('navigation/SET_PAGE_TITLE', `Log - ${this.logId}`)
     this.$store.commit('navigation/CAN_GO_BACK', true)
+    this.loading = true
+    await this.getSelectedLines()
+    await this.getLines()
   },
   methods: {
     setLogLineTags ({ logLine, tags }) {
@@ -196,10 +206,43 @@ export default {
     fetchDebounced: debounce(function () {
       this.lines = []
       this.options.page = 1
-      this.$fetch()
+      this.getLines()
     }, 500),
+    getSelectedLines () {
+      return this.$logService.getLines(this.projectId, this.logId, {
+        offset: 0,
+        limit: 100,
+        isSelected: true
+      }).then((result) => {
+        this.timelineLines = result.rows
+      })
+    },
+    getLines () {
+      const filter = {}
+      this.loading = true
+      if (this.filter.dates?.length === 2) {
+        const smallerDate = this.filter.dates[0] < this.filter.dates[1] ? this.filter.dates[0] : this.filter.dates[1]
+        const biggerDate = this.filter.dates[0] > this.filter.dates[1] ? this.filter.dates[0] : this.filter.dates[1]
+        filter.dateFrom = smallerDate
+        filter.dateTo = biggerDate
+      }
+      return this.$logService.getLines(this.projectId, this.logId, {
+        offset: (this.options.page - 1) * this.options.itemsPerPage,
+        limit: this.options.itemsPerPage,
+        raw: this.filter.raw,
+        ...filter
+      }).then((result) => {
+        this.lines.push(...result.rows)
+        this.serverItemsLength = result.count
+      }).catch(() => {
+        this.$noty.warn('Hubo un error al cargar los eventos')
+      }).finally(() => {
+        this.loading = false
+      })
+    },
     toggleLine (line) {
       line.isSelected = !line.isSelected
+      this.$logService.updateLine(this.projectId, this.logId, line._id, { isSelected: line.isSelected })
       if (!line.isSelected) {
         this.timelineLines = this.timelineLines.filter(timelineLine => timelineLine._id !== line._id)
       } else {
@@ -212,7 +255,7 @@ export default {
     getNextLines (entries) {
       if (entries[0].isIntersecting && !this.loading) {
         this.options.page++
-        this.$fetch()
+        this.getLines()
       }
     }
   }
@@ -224,9 +267,6 @@ export default {
 }
 .border-left{
   border-left: 1px solid var(--v-background-base) !important;
-}
-.action-button{
-  display: none;
 }
 .user-viewport-height-lines {
   max-height: calc(100vh - 220px);
