@@ -29,8 +29,14 @@
     </template>
     <template #default>
       <v-row>
-        <v-col class="h-100 user-viewport-height-note sh-scrollbar">
-          <v-card v-for="(note,index) in notes" :key="index" class="mb-3" flat outlined>
+        <v-col v-if="notes.length > 0" class="h-100 user-viewport-height-note sh-scrollbar">
+          <v-card
+            v-for="(note,index) in notes"
+            :key="index"
+            :class="`mb-3 ${isEditing ? 'selected' : 'default'}`"
+            flat
+            outlined
+          >
             <div class="ml-2 d-flex justify-space-between">
               <div>
                 <ShBody neutral>
@@ -38,36 +44,26 @@
                 </ShBody>
               </div>
               <div>
-                <v-tooltip bottom>
-                  <template #activator="{on}">
-                    <ShIconButton
-                      icon="mdi-trash-can-outline"
-                      title="Eliminar"
-                      v-on="on"
-                      @click="removeNote(index)"
-                    />
-                  </template>
-                  <span>Eliminar</span>
-                </v-tooltip>
-                <v-tooltip bottom>
-                  <template #activator="{on}">
-                    <ShIconButton
-                      icon="mdi-square-edit-outline"
-                      title="Editar"
-                      v-on="on"
-                      @click="IsEditing == true"
-                    />
-                  </template>
-                  <span>Editar</span>
-                </v-tooltip>
+                <ShIconButton
+                  icon="mdi-trash-can-outline"
+                  title="Eliminar"
+                  v-on="on"
+                  @click="removeNote(index)"
+                />
+                <ShIconButton
+                  icon="mdi-square-edit-outline"
+                  title="Editar"
+                  v-on="on"
+                  @click="editNote(index)"
+                />
               </div>
             </div>
           </v-card>
-          <div class="d-flex justify-center">
-            <v-icon class="mt-5">
-              mdi-dots-vertical
-            </v-icon>
-          </div>
+        </v-col>
+        <v-col v-else>
+          <ShHeading3 neutral class="d-flex justify-center align-center">
+            No existen notas...
+          </ShHeading3>
         </v-col>
         <v-divider vertical />
         <v-col>
@@ -82,6 +78,35 @@
           </div>
           <div class="d-flex justify-right mb-7">
             <v-btn
+              v-if="isEditing"
+              text
+              color="neutral"
+              small
+              :ripple="false"
+              class="btn-no-bg no-uppercase"
+              @click="cancelEdit"
+            >
+              <v-icon x-small>
+                mdi-trash-can
+              </v-icon>
+              Descartar cambios
+            </v-btn>
+            <v-btn
+              v-if="isEditing"
+              text
+              color="neutral"
+              small
+              :ripple="false"
+              class="btn-no-bg no-uppercase"
+              @click="saveEdit"
+            >
+              <v-icon x-small>
+                mdi-plus-circle
+              </v-icon>
+              Guardar cambios
+            </v-btn>
+            <v-btn
+              v-else
               text
               color="neutral"
               small
@@ -89,7 +114,10 @@
               class="btn-no-bg no-uppercase"
               @click="addNote"
             >
-              + Agregar nota
+              <v-icon x-small>
+                mdi-plus-circle
+              </v-icon>
+              Agregar nota
             </v-btn>
           </div>
         </v-col>
@@ -116,7 +144,9 @@ export default {
   },
   data: () => ({
     note: '',
-    notes: ['Esta es una dummy note...', 'Esta es otra dummy note...']
+    notes: ['Esta es una dummy note...', 'Esta es otra dummy note...'],
+    isEditing: false,
+    editingIndex: null
   }),
   computed: {
     ...mapState('user', ['user'])
@@ -132,8 +162,23 @@ export default {
       this.notes.push(this.note)
       this.note = ''
     },
+    saveEdit () {
+      this.notes[this.editingIndex] = this.note
+      this.editingIndex = null
+      this.isEditing = false
+    },
+    cancelEdit () {
+      this.editingIndex = null
+      this.isEditing = false
+      this.note = ''
+    },
     removeNote (noteIndex) {
       this.notes.splice(noteIndex, 1)
+    },
+    editNote (noteIndex) {
+      this.note = this.notes[noteIndex]
+      this.editingIndex = noteIndex
+      this.isEditing = true
     },
     cutTo (str, length) {
       return str.length > length ? `${str.substr(0, length - 3)}...` : str
@@ -148,12 +193,17 @@ export default {
 .justify-center {
   justify-content: center;
 }
+.align-center {
+  align-items: center;
+}
+.selected {
+  background-color: var(--v-note1Bg-base);
+}
+.default {
+  background-color: #DFE2F5;
+}
 .v-card.v-sheet.theme--light {
   border-radius: 12px !important;
-  background: var(--v-note1Bg-base) !important;
-}
-.v-tooltip__content {
-  font-size: 12px !important;
 }
 .user-viewport-height-note {
   max-height: calc(362px - 144px);
