@@ -110,7 +110,7 @@ export default {
     save () {
       const notes = this.notes.map(note => note.text)
       this.$emit('update:line', { ...this.line, notes })
-      return this.$logService.updateLine(this.projectId, this.logId, this.line._id, notes).then(() => {
+      return this.$logService.updateLine(this.projectId, this.logId, this.line._id, { notes }).then(() => {
         this.$emit('updated')
         return true
       })
