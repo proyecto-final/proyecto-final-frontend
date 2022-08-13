@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="shouldShowEmtpyState" class="mb-6">
+    <div v-if="shouldShowEmtpyState" class="mb-6 screen-min-height d-flex align-center justify-center">
       <ShTableEmptyState
         class="my-10"
         img-src="/empty-state/timelines.svg"
@@ -24,7 +24,7 @@
             clearable
             placeholder="Buscar por nombre"
             maxlength="32"
-            @input="fetchDebounced"
+            @input="search"
           />
         </v-col>
       </v-row>
@@ -37,10 +37,10 @@
         @update:options="$fetch"
       >
         <template #[`item.name`]="{ item }">
-          <div>
+          <div class="max-lines-1">
             <ShBodySmall>{{ item.title }}</ShBodySmall>
           </div>
-          <div>
+          <div class="max-lines-1">
             <ShBodySmall neutral>
               {{ item.description }}
             </ShBodySmall>
@@ -114,7 +114,8 @@ export default {
     headers: [
       {
         text: 'Nombre',
-        value: 'name'
+        value: 'name',
+        width: '25%'
       },
       {
         text: 'Fecha',
@@ -177,3 +178,8 @@ export default {
   }
 }
 </script>
+<style scoped>
+.screen-min-height{
+  min-height: calc(100vh - 150px);
+}
+</style>

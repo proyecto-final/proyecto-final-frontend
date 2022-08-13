@@ -13,7 +13,7 @@
         <div v-else class="pl-3 pr-2" />
         <div class="text-align-center">
           <ShCode>
-            {{ index + 1 }}
+            {{ line.index }}
           </ShCode>
         </div>
       </div>
@@ -26,12 +26,11 @@
           </ShCode>
         </div>
         <div>
-          <ShChip v-for="detection in line.detections" :key="index + detection" class="mr-2">
-            <v-icon>
-              mdi-link
-            </v-icon>
-            {{ detection }}
-          </ShChip>
+          <LogLineVulnerabilityDialog
+            v-for="(vulnerability, index) in line.vulnerabilites"
+            :key="`${line._id}-${index}`"
+            :vulnerability="vulnerability"
+          />
         </div>
         <v-menu
           offset-y
@@ -50,7 +49,7 @@
               </v-icon>
             </v-btn>
           </template>
-          <v-list nav>
+          <v-list color="neutral darken-1" nav>
             <v-list-item @click="$emit('select:line', line)">
               <v-list-item-icon>
                 <v-icon>
@@ -75,18 +74,12 @@
                 </ShBody>
               </v-list-item-subtitle>
             </v-list-item>
-            <v-list-item>
-              <v-list-item-icon>
-                <v-icon>
-                  mdi-link
-                </v-icon>
-              </v-list-item-icon>
-              <v-list-item-subtitle>
-                <ShBody>
-                  Vincular evento
-                </ShBody>
-              </v-list-item-subtitle>
-            </v-list-item>
+            <LogLinkVulnerabilitiesDialog
+              :project-id="projectId"
+              :log-id="logId"
+              :line="line"
+              @updated="line => $emit('update:line', line)"
+            />
             <v-list-item>
               <v-list-item-icon>
                 <v-icon>
@@ -111,10 +104,14 @@ export default {
     line: {
       type: Object,
       required: true
+    }
+  },
+  computed: {
+    projectId () {
+      return this.$route.params.projectId
     },
-    index: {
-      type: Number,
-      required: true
+    logId () {
+      return this.$route.params.logId
     }
   }
 }
