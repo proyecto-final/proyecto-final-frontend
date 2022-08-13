@@ -17,9 +17,7 @@ export default class Timeline {
     return this.$axios.$patch(`/api/project/${projectId}/timeline/${timelineId}`, timeline)
   }
 
-  create (projectId, title, description, logLines) {
-    const log = logLines[0].log
-    const lines = logLines.map(({ _id, tags }) => ({ id: _id, tags }))
-    return this.$axios.$post(`/api/project/${projectId}/timeline`, { title, description, log, lines })
+  create (projectId, timeline) {
+    return this.$axios.$post(`/api/project/${projectId}/timeline`, timeline)
   }
 }

@@ -26,15 +26,15 @@
             mdi-check-circle
           </v-icon>
         </div>
-        <div>
-          <ShHeading2 class="d-flex justify-center my-4">
+        <div class="d-flex flex-column align-center justify-center">
+          <ShHeading2>
             Tu timeline se generó con correctamente.
           </ShHeading2>
-          <ShBody class="d-flex justify-center my-4">
+          <ShBody class="my-4">
             Para compartirlo, lo descargarás en PDF o bien copiarás el <br>
             link. En caso que quieras editarlo, lo harás desde Timelines.
           </ShBody>
-          <div class="d-flex justify-center my-4">
+          <div>
             <ShSecondaryButton class="mx-2" @click="$router.push(`/${projectId}/timelines`)">
               Ir a timelines
             </ShSecondaryButton>
@@ -51,7 +51,7 @@
       </template>
       <template v-else>
         <div>
-          <v-alert type="warning" icon="mdi-alert" class="justify-space-between mb-6 mt-2">
+          <v-alert type="warning" icon="mdi-alert" class="mb-6 mt-2">
             <ShBodySmall class="white-text">
               Una vez que se genere, lo podrás descargar o copiar su link para que lo vean desde cualquier dispositivo.
             </ShBodySmall>
@@ -60,7 +60,7 @@
         <div>
           <v-row>
             <ShTextField
-              v-model="title"
+              v-model="timelineMetadata.title"
               class="mt-4 mx-4"
               label="Título *"
               :rules="[$rules.required('title'), $rules.fieldLength('title', 2, 32)]"
@@ -68,7 +68,7 @@
           </v-row>
           <v-row>
             <ShTextArea
-              v-model="description"
+              v-model="timelineMetadata.description"
               class="mx-4 mb-4"
               height="144"
               label="Descripción"
@@ -81,6 +81,10 @@
   </ShAsyncDialog>
 </template>
 <script>
+const getEmptyTimelineMetadata = () => ({
+  title: '',
+  description: ''
+})
 export default {
   props: {
     projectId: {
@@ -94,38 +98,32 @@ export default {
   },
   data: () => ({
     showSuccess: false,
-    title: '',
-    description: ''
+    timelineMetadata: getEmptyTimelineMetadata()
   }),
   methods: {
     save () {
-      if (this.showSuccess) {
-        return Promise.resolve(true)
+      const timeline = {
+        title: this.timelineMetadata.title,
+        description: this.timelineMetadata.description,
+        log: this.logLines[0].log,
+        lines: this.logLines.map(({ _id, tags }) => ({ id: _id, tags }))
       }
-      const savePromise = this.$timelineService.create(this.projectId, this.title, this.description, this.logLines)
-      return savePromise.catch((error) => {
+      const savePromise = this.$timelineService.create(this.projectId, timeline)
+      return savePromise.then((result) => {
+        if (result) {
+          this.showSuccess = true
+        }
+      }).catch((error) => {
         const msg = error.response?.data?.msg
         if (msg) {
           this.$noty.warn(msg.join(', '))
         }
-        return false
-      }).then((result) => {
-        if (result) {
-          this.showSuccess = true
-        }
-        return false
-      })
+      }).finally(() => { return false })
     },
     resetDialog () {
       this.showSuccess = false
-      this.title = ''
-      this.description = ''
+      this.timelineMetadata = getEmptyTimelineMetadata()
     }
   }
 }
 </script>
-<style scoped>
-.no-uppercase {
-     text-transform: unset !important;
-}
-</style>
