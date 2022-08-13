@@ -103,8 +103,7 @@ export default {
   methods: {
     save () {
       const timeline = {
-        title: this.timelineMetadata.title,
-        description: this.timelineMetadata.description,
+        ...this.timelineMetadata,
         log: this.logLines[0].log,
         lines: this.logLines.map(({ _id, tags }) => ({ id: _id, tags }))
       }
