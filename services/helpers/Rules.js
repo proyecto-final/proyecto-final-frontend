@@ -3,6 +3,10 @@ export default class Rules {
     return value => !!value || `El campo ${field} es obligatorio`
   }
 
+  moreThanSpaces (field) {
+    return value => (!!value && value.trim().length !== 0) || `El campo ${field} debe poseer un caracter que no sea espacio`
+  }
+
   maxLength (max) {
     return value => value.length <= max || `El campo debe tener hasta ${max} caracteres`
   }
