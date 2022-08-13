@@ -31,6 +31,16 @@
             :key="`${line._id}-${index}`"
             :vulnerability="vulnerability"
           />
+          <ShChip
+            v-if="line.notes.length > 0"
+            color="note2"
+            class="mx-1"
+          >
+            <v-icon>
+              mdi-note-text
+            </v-icon>
+            Nota agre...
+          </ShChip>
         </div>
         <v-menu
           offset-y

@@ -107,20 +107,20 @@ export default {
     this.notes = this.line.notes.map(note => ({ text: note }))
   },
   methods: {
-    save () {
-      const notes = this.notes.map(note => note.text)
-      this.$emit('update:line', { ...this.line, notes })
-      return this.$logService.updateLine(this.projectId, this.logId, this.line._id, { notes }).then(() => {
-        this.$emit('updated')
+    async save () {
+      try {
+        const notes = this.notes.map(note => note.text)
+        this.$emit('update:line', { ...this.line, notes })
+        const updatedLine = await this.$logService.updateLine(this.projectId, this.logId, this.line._id, { notes })
+        this.$emit('updated', updatedLine)
         return true
-      })
-        .catch((error) => {
-          const msg = error.response?.data?.msg
-          if (msg) {
-            this.$noty.warn(msg.join(', '))
-          }
-          return false
-        })
+      } catch (error) {
+        const msg = error.response?.data?.msg
+        if (msg) {
+          this.$noty.warn(msg.join(', '))
+        }
+        return false
+      }
     },
     addNote () {
       const note = { text: '' }

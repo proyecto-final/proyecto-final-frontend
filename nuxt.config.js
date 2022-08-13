@@ -118,7 +118,8 @@ export default {
           avatar1: '#9D3F7A',
           avatar1Bg: '#F4E6F4',
           avatar6: '#77C07B',
-          note1Bg: '#F6F1EA'
+          note1Bg: '#F6F1EA',
+          note2: '#8E6733'
         }
       }
     }
