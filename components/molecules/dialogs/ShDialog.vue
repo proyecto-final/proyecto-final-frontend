@@ -11,12 +11,17 @@
       <v-progress-linear v-if="loading" indeterminate color="primary" />
       <v-card class="pa-6">
         <div class="d-flex justify-space-between align-center">
+          <slot name="prepend-title" :close="close" />
           <ShHeading3 neutral>
             {{ title }}
           </ShHeading3>
-          <ShIconButton color="neutral" icon="mdi-close" title="Cerrar" @click="$emit('input', false)" />
+          <slot name="close">
+            <ShIconButton color="neutral" icon="mdi-close" title="Cerrar" @click="close()" />
+          </slot>
         </div>
-        <slot />
+        <div :class="bodyClass">
+          <slot />
+        </div>
         <div>
           <div class="d-flex justify-end">
             <div>
@@ -69,6 +74,15 @@ export default {
     hidePrimaryButton: {
       type: Boolean,
       default: false
+    },
+    bodyClass: {
+      type: String,
+      default: ''
+    }
+  },
+  methods: {
+    close () {
+      this.$emit('input', false)
     }
   }
 }

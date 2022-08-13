@@ -16,4 +16,8 @@ export default class Timeline {
   update (projectId, timelineId, timeline) {
     return this.$axios.$patch(`/api/project/${projectId}/timeline/${timelineId}`, timeline)
   }
+
+  create (projectId, timeline) {
+    return this.$axios.$post(`/api/project/${projectId}/timeline`, timeline)
+  }
 }

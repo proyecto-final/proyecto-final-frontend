@@ -27,6 +27,7 @@ export default {
         warning: '#F8F0DC',
         success: '#E5F5E5',
         error: '#FFF0EC',
+        vulnerability: '#F4E6F4',
         user: '#FFF0EC',
         sherlock: '#FFF0EC'
       }
