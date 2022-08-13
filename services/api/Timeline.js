@@ -14,10 +14,6 @@ export default class Timeline {
   }
 
   update (projectId, timelineId, timeline) {
-    const title = timeline.title
-    const description = timeline.description
-    const log = timeline.lines[0].log
-    const lines = timeline.lines.map(({ line, tags }) => ({ id: line, tags }))
-    return this.$axios.$patch(`/api/project/${projectId}/timeline/${timelineId}`, { title, description, log, lines })
+    return this.$axios.$patch(`/api/project/${projectId}/timeline/${timelineId}`, { ...timeline, lines: timeline.lines.map(({ line, tags }) => ({ id: line, tags })) })
   }
 }
