@@ -133,34 +133,6 @@ export default {
     serverItemsLength: 0,
     loading: false
   }),
-  fetch () {
-    this.loading = true
-    const filter = {}
-    if (this.filter.dates?.length === 2) {
-      const smallerDate = this.filter.dates[0] < this.filter.dates[1] ? this.filter.dates[0] : this.filter.dates[1]
-      const biggerDate = this.filter.dates[0] > this.filter.dates[1] ? this.filter.dates[0] : this.filter.dates[1]
-      filter.dateFrom = smallerDate
-      filter.dateTo = biggerDate
-    }
-    this.$logService.getLines(this.projectId, this.logId, {
-      offset: (this.options.page - 1) * this.options.itemsPerPage,
-      limit: this.options.itemsPerPage,
-      raw: this.filter.raw,
-      ...filter
-    }).then((result) => {
-      this.lines.push(...result.rows.map((row, index) => ({
-        ...row,
-        index: index + 1,
-        isSelected: !!this.timelineLines.find(line => line._id === row._id),
-        tags: []
-      })))
-      this.serverItemsLength = result.count
-    }).catch(() => {
-      this.$noty.warn('Hubo un error al cargar los eventos')
-    }).finally(() => {
-      this.loading = false
-    })
-  },
   computed: {
     projectId () {
       return this.$route.params.projectId
@@ -214,7 +186,7 @@ export default {
         limit: 100,
         isSelected: true
       }).then((result) => {
-        this.timelineLines = result.rows
+        this.timelineLines = result.rows.map(line => ({ ...line, tags: [] }))
       })
     },
     getLines () {
@@ -232,7 +204,7 @@ export default {
         raw: this.filter.raw,
         ...filter
       }).then((result) => {
-        this.lines.push(...result.rows)
+        this.lines.push(...result.rows.map(line => ({ ...line, tags: [] })))
         this.serverItemsLength = result.count
       }).catch(() => {
         this.$noty.warn('Hubo un error al cargar los eventos')

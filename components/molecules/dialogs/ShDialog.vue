@@ -2,6 +2,7 @@
   <v-dialog
     v-bind="$attrs"
     permanent
+    :fullscreen="fullscreen"
     v-on="$listeners"
   >
     <template #activator="props">
@@ -9,17 +10,20 @@
     </template>
     <template #default>
       <v-progress-linear v-if="loading" indeterminate color="primary" />
-      <v-card class="pa-6">
+      <v-card
+        class="pa-6"
+        :class="{'no-rounded': fullscreen, [cardClass]: true}"
+      >
         <div class="d-flex justify-space-between align-center">
           <slot name="prepend-title" :close="close" />
-          <ShHeading3 neutral>
+          <ShHeading3 neutral class="pl-4">
             {{ title }}
           </ShHeading3>
           <slot name="close">
             <ShIconButton color="neutral" icon="mdi-close" title="Cerrar" @click="close()" />
           </slot>
         </div>
-        <div :class="bodyClass">
+        <div>
           <slot />
         </div>
         <div>
@@ -75,9 +79,13 @@ export default {
       type: Boolean,
       default: false
     },
-    bodyClass: {
+    cardClass: {
       type: String,
       default: ''
+    },
+    fullscreen: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {
@@ -87,3 +95,8 @@ export default {
   }
 }
 </script>
+<style scoped>
+.no-rounded {
+  border-radius: 0 !important;
+}
+</style>

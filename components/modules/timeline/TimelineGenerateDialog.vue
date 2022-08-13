@@ -26,15 +26,15 @@
             mdi-check-circle
           </v-icon>
         </div>
-        <div class="d-flex flex-column align-center justify-center">
-          <ShHeading2>
+        <div>
+          <ShHeading2 class="d-flex justify-center my-4">
             Tu timeline se generó con correctamente.
           </ShHeading2>
-          <ShBody class="my-4">
+          <ShBody class="d-flex justify-center my-4">
             Para compartirlo, lo descargarás en PDF o bien copiarás el <br>
             link. En caso que quieras editarlo, lo harás desde Timelines.
           </ShBody>
-          <div>
+          <div class="d-flex justify-center my-4">
             <ShSecondaryButton class="mx-2" @click="$router.push(`/${projectId}/timelines`)">
               Ir a timelines
             </ShSecondaryButton>
@@ -51,7 +51,7 @@
       </template>
       <template v-else>
         <div>
-          <v-alert type="warning" icon="mdi-alert" class="mb-6 mt-2">
+          <v-alert type="warning" icon="mdi-alert" class="justify-space-between mb-6 mt-2">
             <ShBodySmall class="white-text">
               Una vez que se genere, lo podrás descargar o copiar su link para que lo vean desde cualquier dispositivo.
             </ShBodySmall>
