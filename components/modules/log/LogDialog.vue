@@ -100,6 +100,7 @@
                 label="Descripción"
                 class="mx-2"
                 :rules="[$rules.maxLength(250)]"
+                rows="4"
               />
             </div>
           </v-tab-item>
@@ -201,7 +202,7 @@ export default {
 }
 ::v-deep .v-input__prepend-inner{
   margin-right: 0px !important;
-  margin-top: 32px;
+  margin-top: auto !important;
   display: flex;
   align-self: center;
 }

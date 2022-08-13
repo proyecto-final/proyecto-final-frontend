@@ -34,8 +34,8 @@ export default class Log {
     return this.$axios.$get(`/api/project/${projectId}/correlate/log/${logId}/line`, { params })
   }
 
-  updateLine (projectId, logId, lineId, selection) {
-    return this.$axios.$patch(`/api/project/${projectId}/correlate/log/${logId}/line/${lineId}`, selection)
+  updateLine (projectId, logId, lineId, line) {
+    return this.$axios.$patch(`/api/project/${projectId}/correlate/log/${logId}/line/${lineId}`, line)
   }
 
   getVulnerabilities (projectId, params) {
