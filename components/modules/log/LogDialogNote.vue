@@ -2,12 +2,11 @@
   <ShAsyncDialog
     width="700"
     confirm-text="Guardar"
-    cancel-text="Descartar"
     title="Notas"
+    hide-secondary-button
     :async-confirm-function="save"
     :submit-on-enter="false"
     v-on="$listeners"
-    @open="setInitialData"
   >
     <template #activator="{on}">
       <slot name="activator" :on="on">
@@ -33,10 +32,10 @@
           <v-card
             v-for="(note,index) in notes"
             :key="index"
-            :class="`mb-3 ${note.isSelected ? 'selected' : 'default'}`"
+            :class="`mb-3 ${note === selectedNote ? 'selected' : 'default'}`"
             flat
             outlined
-            @click="editNote(index)"
+            @click="editNote(note)"
           >
             <div class="ml-3 d-flex justify-space-between align-center">
               <div>
@@ -48,57 +47,35 @@
                 <ShIconButton
                   icon="mdi-trash-can-outline"
                   title="Eliminar"
-                  @click="removeNote(index)"
+                  @click.stop="removeNote(index)"
                 />
               </div>
             </div>
           </v-card>
         </v-col>
         <v-col v-else>
-          <ShHeading3 neutral class="d-flex justify-center align-center">
+          <ShHeading3 neutral class="d-flex justify-center">
             No existen notas...
           </ShHeading3>
         </v-col>
         <v-divider vertical />
         <v-col>
-          <div>
+          <div v-if="selectedNote">
             <ShTextArea
-              v-model="noteMessage"
+              v-model="selectedNote.text"
               placeholder="Escriba su nota..."
               is-note
               flat
               :rules="[$rules.maxLength(70)]"
             />
           </div>
-          <div class="d-flex justify-right mb-7">
-            <v-btn
-              v-if="isEditing"
-              text
-              color="neutral"
-              small
-              :ripple="false"
-              class="btn-no-bg no-uppercase"
-              @click="saveEdit"
-            >
-              <v-icon small>
-                mdi-plus
-              </v-icon>
-              Guardar cambios
-            </v-btn>
-            <v-btn
-              v-else
-              text
-              color="neutral"
-              small
-              :ripple="false"
-              class="btn-no-bg no-uppercase"
-              @click="addNote"
-            >
+          <div>
+            <ShSecondaryButton small @click="addNote">
               <v-icon small>
                 mdi-plus
               </v-icon>
               Agregar nota
-            </v-btn>
+            </ShSecondaryButton>
           </div>
         </v-col>
       </v-row>
@@ -106,7 +83,6 @@
   </ShAsyncDialog>
 </template>
 <script>
-import { mapState } from 'vuex'
 export default {
   props: {
     projectId: {
@@ -123,47 +99,42 @@ export default {
     }
   },
   data: () => ({
-    note: {
-      text: '',
-      isSelected: false
-    },
-    noteMessage: '',
-    isEditing: false,
-    editingIndex: null,
-    notes: [{ text: 'Esta es una dummy note', isSelected: false }, { text: 'Esta es otra dummy note pero mas larga', isSelected: false }]
+    selectedNote: null,
+    notes: [],
+    loading: false
   }),
-  computed: {
-    ...mapState('user', ['user'])
+  mounted () {
+    this.notes = this.line.notes.map(note => ({ text: note }))
   },
   methods: {
     save () {
-      this.$logService.updateLine(this.projectId, this.logId, this.line._id, this.note)
-    },
-    setInitialData () {
-      this.noteMessage = ''
+      const notes = this.notes.map(note => note.text)
+      this.$emit('update:line', { ...this.line, notes })
+      return this.$logService.updateLine(this.projectId, this.logId, this.line._id, notes).then(() => {
+        this.$emit('updated')
+        return true
+      })
+        .catch((error) => {
+          const msg = error.response?.data?.msg
+          if (msg) {
+            this.$noty.warn(msg.join(', '))
+          }
+          return false
+        })
     },
     addNote () {
-      this.notes.push({ text: this.noteMessage, isSelected: false })
-      this.noteMessage = ''
+      const note = { text: '' }
+      this.notes.push(note)
+      this.selectedNote = note
     },
     removeNote (noteIndex) {
       this.notes.splice(noteIndex, 1)
+      if (!this.notes.includes(this.selectedNote)) {
+        this.selectedNote = null
+      }
     },
-    editNote (noteIndex) {
-      this.notes.forEach((note) => {
-        note.isSelected = false
-      })
-      this.noteMessage = this.notes[noteIndex].text
-      this.notes[noteIndex].isSelected = true
-      this.editingIndex = noteIndex
-      this.isEditing = true
-    },
-    saveEdit () {
-      this.notes[this.editingIndex].text = this.noteMessage
-      this.notes[this.editingIndex].isSelected = false
-      this.editingIndex = null
-      this.isEditing = false
-      this.noteMessage = ''
+    editNote (note) {
+      this.selectedNote = note
     },
     cutTo (str, length) {
       return str.length > length ? `${str.substr(0, length - 3)}...` : str
@@ -172,15 +143,6 @@ export default {
 }
 </script>
 <style scoped>
-.justify-right {
-  justify-content: end;
-}
-.justify-center {
-  justify-content: center;
-}
-.align-center {
-  align-items: center;
-}
 .selected {
   background-color: var(--v-note1Bg-base);
 }
@@ -192,11 +154,5 @@ export default {
 }
 .user-viewport-height-note {
   max-height: calc(392px - 144px);
-}
-.btn-no-bg::before {
-  background-color: transparent !important;
-}
-.no-uppercase {
-  text-transform: unset !important;
 }
 </style>

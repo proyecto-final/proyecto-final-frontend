@@ -66,6 +66,7 @@
               :project-id="projectId"
               :log-id="logId"
               :line="line"
+              @updated="line => $emit('update:line', line)"
             />
             <LogLinkVulnerabilitiesDialog
               :project-id="projectId"
