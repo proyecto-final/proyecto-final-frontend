@@ -33,28 +33,22 @@
           <v-card
             v-for="(note,index) in notes"
             :key="index"
-            :class="`mb-3 ${isEditing ? 'selected' : 'default'}`"
+            :class="`mb-3 ${note.isSelected ? 'selected' : 'default'}`"
             flat
             outlined
+            @click="editNote(index)"
           >
-            <div class="ml-2 d-flex justify-space-between">
+            <div class="ml-3 d-flex justify-space-between align-center">
               <div>
                 <ShBody neutral>
-                  {{ cutTo(note, 23) }}
+                  {{ cutTo(note.text, 28) }}
                 </ShBody>
               </div>
               <div>
                 <ShIconButton
                   icon="mdi-trash-can-outline"
                   title="Eliminar"
-                  v-on="on"
                   @click="removeNote(index)"
-                />
-                <ShIconButton
-                  icon="mdi-square-edit-outline"
-                  title="Editar"
-                  v-on="on"
-                  @click="editNote(index)"
                 />
               </div>
             </div>
@@ -69,56 +63,12 @@
         <v-col>
           <div>
             <ShTextArea
-              v-model="note"
+              v-model="noteMessage"
               placeholder="Escriba su nota..."
               is-note
               flat
               :rules="[$rules.maxLength(70)]"
             />
-          </div>
-          <div class="d-flex justify-right mb-7">
-            <v-btn
-              v-if="isEditing"
-              text
-              color="neutral"
-              small
-              :ripple="false"
-              class="btn-no-bg no-uppercase"
-              @click="cancelEdit"
-            >
-              <v-icon x-small>
-                mdi-trash-can
-              </v-icon>
-              Descartar cambios
-            </v-btn>
-            <v-btn
-              v-if="isEditing"
-              text
-              color="neutral"
-              small
-              :ripple="false"
-              class="btn-no-bg no-uppercase"
-              @click="saveEdit"
-            >
-              <v-icon x-small>
-                mdi-plus-circle
-              </v-icon>
-              Guardar cambios
-            </v-btn>
-            <v-btn
-              v-else
-              text
-              color="neutral"
-              small
-              :ripple="false"
-              class="btn-no-bg no-uppercase"
-              @click="addNote"
-            >
-              <v-icon x-small>
-                mdi-plus-circle
-              </v-icon>
-              Agregar nota
-            </v-btn>
           </div>
         </v-col>
       </v-row>
@@ -143,10 +93,12 @@ export default {
     }
   },
   data: () => ({
-    note: '',
-    notes: ['Esta es una dummy note...', 'Esta es otra dummy note...'],
-    isEditing: false,
-    editingIndex: null
+    note: {
+      text: '',
+      isSelected: false
+    },
+    noteMessage: '',
+    notes: [{ text: 'Esta es una dummy note', isSelected: false }, { text: 'Esta es otra dummy note pero mas larga', isSelected: false }]
   }),
   computed: {
     ...mapState('user', ['user'])
@@ -156,29 +108,21 @@ export default {
       this.$logService.updateLine(this.projectId, this.logId, this.line._id, this.note)
     },
     setInitialData () {
-      this.note = ''
+      this.noteMessage = ''
     },
     addNote () {
       this.notes.push(this.note)
-      this.note = ''
-    },
-    saveEdit () {
-      this.notes[this.editingIndex] = this.note
-      this.editingIndex = null
-      this.isEditing = false
-    },
-    cancelEdit () {
-      this.editingIndex = null
-      this.isEditing = false
-      this.note = ''
+      this.noteMessage = ''
     },
     removeNote (noteIndex) {
       this.notes.splice(noteIndex, 1)
     },
     editNote (noteIndex) {
-      this.note = this.notes[noteIndex]
-      this.editingIndex = noteIndex
-      this.isEditing = true
+      this.notes.forEach((note) => {
+        note.isSelected = false
+      })
+      this.noteMessage = this.notes[noteIndex].text
+      this.notes[noteIndex].isSelected = true
     },
     cutTo (str, length) {
       return str.length > length ? `${str.substr(0, length - 3)}...` : str
