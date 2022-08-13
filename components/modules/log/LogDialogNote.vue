@@ -7,6 +7,7 @@
     :async-confirm-function="save"
     :submit-on-enter="false"
     v-on="$listeners"
+    @open="setInitialData"
   >
     <template #activator="{on}">
       <slot name="activator" :on="on">
@@ -69,8 +70,8 @@
               :rules="[$rules.maxLength(70)]"
             />
           </div>
-          <div>
-            <ShSecondaryButton small @click="addNote">
+          <div class="d-flex justify-center align-center">
+            <ShSecondaryButton small class="mb-5" @click="addNote">
               <v-icon small>
                 mdi-plus
               </v-icon>
@@ -138,6 +139,11 @@ export default {
     },
     cutTo (str, length) {
       return str.length > length ? `${str.substr(0, length - 3)}...` : str
+    },
+    setInitialData () {
+      if (this.notes.length > 0) {
+        this.selectedNote = this.notes[0]
+      }
     }
   }
 }
@@ -147,7 +153,7 @@ export default {
   background-color: var(--v-note1Bg-base);
 }
 .default {
-  background-color: #DFE2F5;
+  background-color: var(--v-neutral-darken1);
 }
 .v-card.v-sheet.theme--light {
   border-radius: 12px !important;
