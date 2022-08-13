@@ -60,7 +60,7 @@
         <div>
           <v-row>
             <ShTextField
-              v-model="title"
+              v-model="timelineMetadata.title"
               class="mt-4 mx-4"
               label="Título *"
               :rules="[$rules.required('title'), $rules.fieldLength('title', 2, 32)]"
@@ -68,7 +68,7 @@
           </v-row>
           <v-row>
             <ShTextArea
-              v-model="description"
+              v-model="timelineMetadata.description"
               class="mx-4 mb-4"
               height="144"
               label="Descripción"
@@ -81,6 +81,10 @@
   </ShAsyncDialog>
 </template>
 <script>
+const getEmptyTimelineMetadata = () => ({
+  title: '',
+  description: ''
+})
 export default {
   props: {
     projectId: {
@@ -94,38 +98,31 @@ export default {
   },
   data: () => ({
     showSuccess: false,
-    title: '',
-    description: ''
+    timelineMetadata: getEmptyTimelineMetadata()
   }),
   methods: {
     save () {
-      if (this.showSuccess) {
-        return Promise.resolve(true)
+      const timeline = {
+        ...this.timelineMetadata,
+        log: this.logLines[0].log,
+        lines: this.logLines.map(({ _id, tags }) => ({ id: _id, tags }))
       }
-      const savePromise = this.$timelineService.create(this.projectId, this.title, this.description, this.logLines)
-      return savePromise.catch((error) => {
+      const savePromise = this.$timelineService.create(this.projectId, timeline)
+      return savePromise.then((result) => {
+        if (result) {
+          this.showSuccess = true
+        }
+      }).catch((error) => {
         const msg = error.response?.data?.msg
         if (msg) {
           this.$noty.warn(msg.join(', '))
         }
-        return false
-      }).then((result) => {
-        if (result) {
-          this.showSuccess = true
-        }
-        return false
-      })
+      }).finally(() => { return false })
     },
     resetDialog () {
       this.showSuccess = false
-      this.title = ''
-      this.description = ''
+      this.timelineMetadata = getEmptyTimelineMetadata()
     }
   }
 }
 </script>
-<style scoped>
-.no-uppercase {
-     text-transform: unset !important;
-}
-</style>

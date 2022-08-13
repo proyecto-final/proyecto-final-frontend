@@ -127,10 +127,10 @@
             <v-tab-item>
               <v-row>
                 <v-col>
-                  <v-card color="#FBE6E5" elevation="0" class="mt-3 w-100">
+                  <v-card color="analizedLines lighten-1" elevation="0" class="mt-3 w-100">
                     <v-card-text>
                       <div>
-                        <v-icon color="#B2453E" class="mt-3 mb-4 mx-4">
+                        <v-icon color="analizedLines" class="mt-3 mb-4 mx-4">
                           mdi-code-tags
                         </v-icon>
                       </div>
@@ -148,10 +148,10 @@
                   </v-card>
                 </v-col>
                 <v-col>
-                  <v-card color="#F4E6F4" elevation="0" class="mt-3 w-100">
+                  <v-card color="analizedEvents lighten-1" elevation="0" class="mt-3 w-100">
                     <v-card-text>
                       <div>
-                        <v-icon color="#9D3F7A" class="mt-3 mb-4 mx-4">
+                        <v-icon color="analizedEvents" class="mt-3 mb-4 mx-4">
                           mdi-bug
                         </v-icon>
                       </div>
@@ -225,20 +225,20 @@
                         <v-progress-linear
                           rounded
                           height="17"
-                          background-color="#0470B8"
-                          color="#50A8FF"
+                          background-color="sherlockDetectedEvents"
+                          color="userDetectedEvents"
                           :value="userDetectedEventsPercentage"
                         />
                       </div>
                       <div class="d-flex justify-center">
                         <div>
-                          <v-icon color="#50A8FF">
+                          <v-icon color="userDetectedEvents">
                             mdi-circle
                           </v-icon>
                           <ShBodySmall neutral class="mx-3">
                             Usuario
                           </ShBodySmall>
-                          <v-icon color="#0470B8">
+                          <v-icon color="sherlockDetectedEvents">
                             mdi-circle
                           </v-icon>
                           <ShBodySmall neutral class="mx-3">

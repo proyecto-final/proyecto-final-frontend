@@ -9,6 +9,12 @@
     append-icon="mdi-chevron-down"
     v-on="$listeners"
   >
+    <template v-for="(_, scopedSlotName) in $scopedSlots" #[scopedSlotName]="slotData">
+      <slot :name="scopedSlotName" v-bind="slotData" />
+    </template>
+    <template v-for="(_, slotName) in $slots" #[slotName]>
+      <slot :name="slotName" />
+    </template>
     <template #label>
       <ShSpecialLabel v-if="label">
         {{ label }}
