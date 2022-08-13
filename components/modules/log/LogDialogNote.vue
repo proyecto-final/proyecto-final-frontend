@@ -70,6 +70,36 @@
               :rules="[$rules.maxLength(70)]"
             />
           </div>
+          <div class="d-flex justify-right mb-7">
+            <v-btn
+              v-if="isEditing"
+              text
+              color="neutral"
+              small
+              :ripple="false"
+              class="btn-no-bg no-uppercase"
+              @click="saveEdit"
+            >
+              <v-icon small>
+                mdi-plus
+              </v-icon>
+              Guardar cambios
+            </v-btn>
+            <v-btn
+              v-else
+              text
+              color="neutral"
+              small
+              :ripple="false"
+              class="btn-no-bg no-uppercase"
+              @click="addNote"
+            >
+              <v-icon small>
+                mdi-plus
+              </v-icon>
+              Agregar nota
+            </v-btn>
+          </div>
         </v-col>
       </v-row>
     </template>
@@ -98,6 +128,8 @@ export default {
       isSelected: false
     },
     noteMessage: '',
+    isEditing: false,
+    editingIndex: null,
     notes: [{ text: 'Esta es una dummy note', isSelected: false }, { text: 'Esta es otra dummy note pero mas larga', isSelected: false }]
   }),
   computed: {
@@ -111,7 +143,7 @@ export default {
       this.noteMessage = ''
     },
     addNote () {
-      this.notes.push(this.note)
+      this.notes.push({ text: this.noteMessage, isSelected: false })
       this.noteMessage = ''
     },
     removeNote (noteIndex) {
@@ -123,6 +155,15 @@ export default {
       })
       this.noteMessage = this.notes[noteIndex].text
       this.notes[noteIndex].isSelected = true
+      this.editingIndex = noteIndex
+      this.isEditing = true
+    },
+    saveEdit () {
+      this.notes[this.editingIndex].text = this.noteMessage
+      this.notes[this.editingIndex].isSelected = false
+      this.editingIndex = null
+      this.isEditing = false
+      this.noteMessage = ''
     },
     cutTo (str, length) {
       return str.length > length ? `${str.substr(0, length - 3)}...` : str
@@ -150,7 +191,7 @@ export default {
   border-radius: 12px !important;
 }
 .user-viewport-height-note {
-  max-height: calc(362px - 144px);
+  max-height: calc(392px - 144px);
 }
 .btn-no-bg::before {
   background-color: transparent !important;
