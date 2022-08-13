@@ -9,6 +9,10 @@ export default class Timeline {
     return this.$axios.$get(`/api/project/${projectId}/timeline`, { params })
   }
 
+  getSpecific (projectId, timelineId) {
+    return this.$axios.$get(`/api/project/${projectId}/timeline/${timelineId}`)
+  }
+
   deleteTimeline (projectId, timelineId) {
     return this.$axios.$delete(`/api/project/${projectId}/timeline/${timelineId}`)
   }

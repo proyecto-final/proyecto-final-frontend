@@ -10,15 +10,18 @@
     v-on="$listeners"
   >
     <template #activator="{on}">
-      <ShButton :disabled="logLines.length == 0" :block="$vuetify.breakpoint.smAndDown" v-on="on">
+      <ShButton v-if="!isReadOnly" :disabled="logLines.length == 0" :block="$vuetify.breakpoint.smAndDown" v-on="on">
         Previsualizar timeline
+      </ShButton>
+      <ShButton v-else text v-on="on">
+        Ver Reporte
       </ShButton>
     </template>
     <template #prepend-title="{close}">
-      <ShIconButton color="neutral" icon="mdi-close" title="Cerrar" @click="close()" />
+      <ShIconButton v-if="!isReadOnly" color="neutral" icon="mdi-close" title="Cerrar" @click="close()" />
     </template>
     <template #close>
-      <TimelineGenerateDialog :project-id="projectId" :log-lines="logLines" />
+      <TimelineGenerateDialog v-if="!isReadOnly" :project-id="projectId" :log-lines="logLines" />
     </template>
     <template #default>
       <v-row justify="center">
@@ -83,6 +86,7 @@
                             v-on="on"
                           >
                             <ShIconButton
+                              v-if="!isReadOnly"
                               class="mb-2"
                               color="neutral"
                               icon="mdi-tag-plus"
@@ -107,7 +111,14 @@
                       </div>
                     </v-col>
                     <v-col>
-                      <ShIconButton class="d-flex align-center" color="red" icon="mdi-delete" title="Borrar" @click="removeLine(logLine)" />
+                      <ShIconButton
+                        v-if="!isReadOnly"
+                        class="d-flex align-center"
+                        color="red"
+                        icon="mdi-delete"
+                        title="Borrar"
+                        @click="removeLine(logLine)"
+                      />
                     </v-col>
                   </v-row>
                 </v-timeline-item>
@@ -252,29 +263,41 @@ export default {
     logLines: {
       type: Array,
       required: true
+    },
+    timelineId: {
+      type: String,
+      default: ''
+    },
+    isReadOnly: {
+      type: Boolean,
+      default: false
     }
   },
   data: () => ({
     open: false,
     distinctTags: [],
     isSelectedAll: true,
-    newTag: ''
+    newTag: '',
+    existingLines: []
   }),
   computed: {
+    lines2Show () {
+      return this.timelineId ? this.existingLines : this.logLines
+    },
     showableLogLines () {
       const tags2Show = this.distinctTags.filter(tag => tag.isSelected).map(tag => tag.tag)
       return this.isSelectedAll
-        ? this.logLines
-        : this.logLines.filter(line => line.tags.some(tag => tags2Show.includes(tag)))
+        ? this.lines2Show
+        : this.lines2Show.filter(line => line.tags.some(tag => tags2Show.includes(tag)))
     },
     logLinesCount () {
-      return this.logLines.length
+      return this.lines2Show.length
     },
     detectedEvents () {
       return this.vulnerabilites.length
     },
     vulnerabilites () {
-      return this.logLines.map(line => line.vulnerabilites).flat()
+      return this.lines2Show.map(line => line.vulnerabilites).flat()
     },
     userDetectedEvents () {
       return this.vulnerabilites.filter(vulnerability => vulnerability.isCustom).length
@@ -289,11 +312,25 @@ export default {
       return this.$route.params.projectId
     }
   },
+  watch: {
+    open (value) {
+      if (value) {
+        this.getLinesIfExists()
+      }
+    }
+  },
   mounted () {
     const differentTags = new Set(this.logLines.map(line => line.tags).flat())
     this.distinctTags = Array.from(differentTags).map(tag => ({ tag, isSelected: false }))
   },
   methods: {
+    getLinesIfExists () {
+      if (this.timelineId) {
+        this.$timelineService.getSpecific(this.projectId, this.timelineId).then((result) => {
+          this.existingLines = result.lines
+        })
+      }
+    },
     selectTag (tag) {
       tag.isSelected = !tag.isSelected
       if (tag.isSelected) {

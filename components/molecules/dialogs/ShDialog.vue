@@ -12,7 +12,7 @@
       <v-card class="pa-6">
         <div class="d-flex justify-space-between align-center">
           <slot name="prepend-title" :close="close" />
-          <ShHeading3 neutral>
+          <ShHeading3 neutral class="pl-4">
             {{ title }}
           </ShHeading3>
           <slot name="close">
