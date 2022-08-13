@@ -6,7 +6,7 @@
     title="Previsualización del timeline"
     fullscreen
     hide-secondary-button
-    body-class="bg-default"
+    card-class="bg-default"
     v-on="$listeners"
   >
     <template #activator="{on}">
@@ -24,7 +24,7 @@
       <TimelineGenerateDialog v-if="!isReadOnly" :project-id="projectId" :log-lines="logLines" />
     </template>
     <template #default>
-      <v-row justify="center">
+      <v-row justify="center" no-gutters>
         <v-col cols="8">
           <div>
             <v-alert type="warning" icon="mdi-alert" class="justify-space-between mb-6 mt-2">
