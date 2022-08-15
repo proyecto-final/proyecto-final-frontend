@@ -200,21 +200,19 @@ export default {
       })
     },
     getTimelineLines () {
-      return this.$timelineService.getSpecific(this.projectId, this.timelineId).then((result) => {
-        this.timelineLines = result.lines
-      })
+      return this.$timelineService.getSpecific(this.projectId, this.timelineId)
+        .then((result) => {
+          this.timelineLines = result.lines
+        })
     },
     markLogLines () {
       this.lineIds = this.timelineLines.map(lineId => lineId.line)
       return this.$logService.saveMarkedLogsLines(this.projectId, this.logId, this.lineIds)
-        .then(() => {
-          return true
-        }).catch((error) => {
+        .catch((error) => {
           const msg = error.response?.data?.msg
           if (msg) {
             this.$noty.warn(msg.join(', '))
           }
-          return false
         })
     },
     getLines () {
