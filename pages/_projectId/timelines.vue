@@ -63,6 +63,7 @@
               :log-id="item.log"
               is-read-only
               :timeline-id="item._id"
+              :timeline-description="item.description"
             />
             <v-menu v-model="display[item._id]" offset-y close-on-content-click>
               <template #activator="{ on, attrs }">

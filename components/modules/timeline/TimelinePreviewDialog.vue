@@ -62,73 +62,88 @@
                   {{ tag.tag }}
                 </ShChip>
               </div>
-              <v-timeline v-for="(logLine, index) in showableLogLines" :key="index" dense clipped-left>
-                <v-timeline-item small color="primary">
-                  <v-row>
-                    <v-col>
-                      <ShBody strong class="mb-4">
-                        {{ logLine.raw }}
-                      </ShBody>
-                      <div>
-                        <ShChip
-                          v-for="(vulnerability, vulnerabilityIndex) in logLine.vulnerabilites"
-                          :key="`${index}-${vulnerabilityIndex}`"
-                          class="mb-2 mx-1"
-                          color="vulnerability"
-                        >
-                          <v-icon>
-                            mdi-link
-                          </v-icon>
-                          {{ vulnerability.name }}
-                        </ShChip>
-                      </div>
-                      <ShChip v-for="(tag, tagIndex) in logLine.tags" :key="`${index}-${tagIndex}`" class="mb-2 mx-1">
-                        {{ tag }}
-                      </ShChip>
-                      <v-menu offset-y :close-on-content-click="false" @input="resetTag">
-                        <template #activator="{ on, attrs }">
-                          <span
-                            v-bind="attrs"
-                            v-on="on"
-                          >
-                            <ShIconButton
-                              v-if="!isReadOnly"
-                              class="mb-2"
-                              color="neutral"
-                              icon="mdi-tag-plus"
-                              title="Agregar tag"
-                            />
-                          </span>
-                        </template>
-                        <template #default>
-                          <v-form @submit.prevent="addTag(logLine)">
-                            <ShTextField
-                              v-model="newTag"
-                              hide-details
-                              label="Tag *"
-                            />
-                          </v-form>
-                        </template>
-                      </v-menu>
-                      <div>
-                        <ShBody neutral>
-                          {{ logLine.timestamp | date }}
-                        </ShBody>
-                      </div>
-                    </v-col>
-                    <v-col>
-                      <ShIconButton
-                        v-if="!isReadOnly"
-                        class="d-flex align-center"
-                        color="red"
-                        icon="mdi-delete"
-                        title="Borrar"
-                        @click="removeLine(logLine)"
-                      />
-                    </v-col>
-                  </v-row>
-                </v-timeline-item>
-              </v-timeline>
+              <div class="d-flex justify-space-between">
+                <div class="mr-10">
+                  <v-timeline v-for="(logLine, index) in showableLogLines" :key="index" dense clipped-left>
+                    <v-timeline-item small color="primary">
+                      <v-row>
+                        <v-col>
+                          <ShBody strong class="mb-4">
+                            {{ logLine.raw }}
+                          </ShBody>
+                          <div>
+                            <ShChip
+                              v-for="(vulnerability, vulnerabilityIndex) in logLine.vulnerabilites"
+                              :key="`${index}-${vulnerabilityIndex}`"
+                              class="mb-2 mx-1"
+                              color="vulnerability"
+                            >
+                              <v-icon>
+                                mdi-link
+                              </v-icon>
+                              {{ vulnerability.name }}
+                            </ShChip>
+                          </div>
+                          <ShChip v-for="(tag, tagIndex) in logLine.tags" :key="`${index}-${tagIndex}`" class="mb-2 mx-1">
+                            {{ tag }}
+                          </ShChip>
+                          <v-menu offset-y :close-on-content-click="false" @input="resetTag">
+                            <template #activator="{ on, attrs }">
+                              <span
+                                v-bind="attrs"
+                                v-on="on"
+                              >
+                                <ShIconButton
+                                  v-if="!isReadOnly"
+                                  class="mb-2"
+                                  color="neutral"
+                                  icon="mdi-tag-plus"
+                                  title="Agregar tag"
+                                />
+                              </span>
+                            </template>
+                            <template #default>
+                              <v-form @submit.prevent="addTag(logLine)">
+                                <ShTextField
+                                  v-model="newTag"
+                                  hide-details
+                                  label="Tag *"
+                                />
+                              </v-form>
+                            </template>
+                          </v-menu>
+                          <div>
+                            <ShBody neutral>
+                              {{ logLine.timestamp | date }}
+                            </ShBody>
+                          </div>
+                        </v-col>
+                        <v-col>
+                          <ShIconButton
+                            v-if="!isReadOnly"
+                            class="d-flex align-center"
+                            color="red"
+                            icon="mdi-delete"
+                            title="Borrar"
+                            @click="removeLine(logLine)"
+                          />
+                        </v-col>
+                      </v-row>
+                    </v-timeline-item>
+                  </v-timeline>
+                </div>
+                <v-card v-if="isReadOnly" color="yellow-background" flat class="mx-2 w-100" height="50%">
+                  <v-card-text>
+                    <ShHeading2 neutral>
+                      Descripción
+                    </ShHeading2>
+                    <br>
+                    <ShBodySmall>
+                      {{ timelineDescription === '' ? 'El timeline no posee descripción' : timelineDescription }}
+                    </ShBodySmall>
+                  </v-card-text>
+                </v-card>
+              </div>
             </v-tab-item>
             <v-tab-item>
               <v-row>
@@ -275,6 +290,10 @@ export default {
       default: ''
     },
     timelineId: {
+      type: String,
+      default: ''
+    },
+    timelineDescription: {
       type: String,
       default: ''
     },
