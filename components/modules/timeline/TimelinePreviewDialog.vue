@@ -18,10 +18,16 @@
       </ShButton>
     </template>
     <template #prepend-title="{close}">
-      <ShIconButton v-if="!isReadOnly" color="neutral" icon="mdi-close" title="Cerrar" @click="close()" />
+      <ShIconButton color="neutral" icon="mdi-close" title="Cerrar" @click="close()" />
     </template>
     <template #close>
-      <TimelineGenerateDialog v-if="!isReadOnly" :project-id="projectId" :log-lines="logLines" />
+      <ShButton v-if="isEditing" class="ma-4" @click="saveExistingTimeline">
+        Guardar
+      </ShButton>
+      <TimelineGenerateDialog v-else-if="!isReadOnly" :project-id="projectId" :log-lines="logLines" />
+      <ShButton v-else class="ma-4" @click="redirectToLogPage">
+        Editar líneas de log
+      </ShButton>
     </template>
     <template #default>
       <v-row justify="center" no-gutters>
@@ -264,11 +270,19 @@ export default {
       type: Array,
       required: true
     },
+    logId: {
+      type: String,
+      default: ''
+    },
     timelineId: {
       type: String,
       default: ''
     },
     isReadOnly: {
+      type: Boolean,
+      default: false
+    },
+    isEditing: {
       type: Boolean,
       default: false
     }
@@ -282,7 +296,7 @@ export default {
   }),
   computed: {
     lines2Show () {
-      return this.timelineId ? this.existingLines : this.logLines
+      return this.timelineId && !this.isEditing ? this.existingLines : this.logLines
     },
     showableLogLines () {
       const tags2Show = this.distinctTags.filter(tag => tag.isSelected).map(tag => tag.tag)
@@ -325,7 +339,7 @@ export default {
   },
   methods: {
     getLinesIfExists () {
-      if (this.timelineId) {
+      if (this.timelineId && this.isReadOnly) {
         this.$timelineService.getSpecific(this.projectId, this.timelineId).then((result) => {
           this.existingLines = result.lines
         })
@@ -370,6 +384,31 @@ export default {
     },
     resetTag () {
       this.newTag = ''
+    },
+    redirectToLogPage () {
+      this.$router.push(`/${this.projectId}/logs/${this.logId}?timelineId=${this.timelineId}`)
+    },
+    redirectToTimelinePage () {
+      this.$router.push(`/${this.projectId}/timelines`)
+    },
+    saveExistingTimeline () {
+      const timeline = { lines: this.lines2Show }
+      if (this.isEditing && this.timelineId) {
+        timeline.lines = this.lines2Show.map(({ _id, tags }) => ({ line: _id, tags }))
+      }
+      return this.$timelineService.update(this.projectId, this.timelineId, timeline)
+        .then((timeline) => {
+          this.$emit('updated', timeline)
+          this.redirectToTimelinePage()
+          return true
+        })
+        .catch((error) => {
+          const msg = error.response?.data?.msg
+          if (msg) {
+            this.$noty.warn(msg.join(', '))
+          }
+          return false
+        })
     }
   }
 }
