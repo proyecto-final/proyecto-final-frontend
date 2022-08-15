@@ -132,7 +132,7 @@
                     </v-timeline-item>
                   </v-timeline>
                 </div>
-                <v-card v-if="isReadOnly" color="yellow-background" flat class="mx-2 w-100" height="50%">
+                <v-card v-if="isReadOnly" color="note1Bg" flat class="mx-2 w-100" height="50%">
                   <v-card-text>
                     <ShHeading2 neutral>
                       Descripción
