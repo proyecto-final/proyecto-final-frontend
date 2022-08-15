@@ -107,19 +107,12 @@ export default {
         log: this.logLines[0].log,
         lines: this.logLines.map(({ _id, tags }) => ({ id: _id, tags }))
       }
-      const savePromise = this.$timelineService.create(this.projectId, timeline)
-      const cleanupDraftPromise = this.$logService.saveMarkedLogsLines(this.projectId, timeline.log, [])
       try {
-        const result = await savePromise
-        await cleanupDraftPromise
-        if (result) {
-          this.showSuccess = true
-        }
+        await Promise.all([this.$timelineService.create(this.projectId, timeline), this.$logService.saveMarkedLogsLines(this.projectId, timeline.log, [])])
+        this.showSuccess = true
       } catch (error) {
         const msg = error.response?.data?.msg
-        if (msg) {
-          this.$noty.warn(msg.join(', '))
-        }
+        if (msg) { this.$noty.warn(msg.join(', ')) }
       }
       return false
     },
