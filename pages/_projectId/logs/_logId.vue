@@ -66,6 +66,8 @@
       <div class="d-flex justify-center">
         <TimelinePreviewDialog
           :log-lines="timelineLines"
+          :is-editing="!!timelineId"
+          :timeline-id="timelineId"
           @update:logLine="setLogLineTags"
           @update:logLines="setTimelineLines"
         />
@@ -123,6 +125,7 @@ export default {
       page: 1,
       itemsPerPage: 20
     },
+    lineIds: [],
     filter: {
       raw: '',
       dates: [],
@@ -136,6 +139,9 @@ export default {
   computed: {
     projectId () {
       return this.$route.params.projectId
+    },
+    timelineId () {
+      return this.$route.query.timelineId
     },
     logId () {
       return this.$route.params.logId
@@ -161,6 +167,10 @@ export default {
     this.$store.commit('navigation/SET_PAGE_TITLE', `Log - ${this.logId}`)
     this.$store.commit('navigation/CAN_GO_BACK', true)
     this.loading = true
+    if (this.timelineId) {
+      await this.getTimelineLines()
+      await this.markLogLines()
+    }
     await this.getSelectedLines()
     await this.getLines()
   },
@@ -188,6 +198,22 @@ export default {
       }).then((result) => {
         this.timelineLines = result.rows.map(line => ({ ...line, tags: [] }))
       })
+    },
+    getTimelineLines () {
+      return this.$timelineService.getSpecific(this.projectId, this.timelineId)
+        .then((result) => {
+          this.timelineLines = result.lines
+        })
+    },
+    markLogLines () {
+      this.lineIds = this.timelineLines.map(lineId => lineId.line)
+      return this.$logService.saveMarkedLogsLines(this.projectId, this.logId, this.lineIds)
+        .catch((error) => {
+          const msg = error.response?.data?.msg
+          if (msg) {
+            this.$noty.warn(msg.join(', '))
+          }
+        })
     },
     getLines () {
       const filter = {}

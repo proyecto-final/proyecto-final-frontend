@@ -60,6 +60,7 @@
           <div class="d-flex">
             <TimelinePreviewDialog
               :log-lines="item.lines"
+              :log-id="item.log"
               is-read-only
               :timeline-id="item._id"
             />
