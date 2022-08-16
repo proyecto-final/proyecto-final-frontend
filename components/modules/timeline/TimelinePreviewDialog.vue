@@ -33,6 +33,11 @@
       <v-row justify="center" no-gutters>
         <v-col cols="8">
           <div>
+            <v-alert v-if="isLogDeleted" type="error" icon="mdi-alert" class="justify-space-between mb-6 mt-2">
+              <ShBodySmall class="white-text">
+                No es posible editar la timeline dado que el log asociado a la misma ha sido eliminado.
+              </ShBodySmall>
+            </v-alert>
             <v-alert type="warning" icon="mdi-alert" class="justify-space-between mb-6 mt-2">
               <ShBodySmall class="white-text">
                 Recordá que el reporte incluye las líneas de código resaltadas y los eventos vinculados.<br>
@@ -292,7 +297,8 @@ export default {
     distinctTags: [],
     isSelectedAll: true,
     newTag: '',
-    existingLines: []
+    existingLines: [],
+    isLogDeleted: false
   }),
   computed: {
     lines2Show () {
@@ -386,7 +392,15 @@ export default {
       this.newTag = ''
     },
     redirectToLogPage () {
-      this.$router.push(`/${this.projectId}/logs/${this.logId}?timelineId=${this.timelineId}`)
+      return this.$logService.getLines(this.projectId, this.logId, {
+        offset: 0,
+        limit: 100
+      }).then(() => {
+        this.$router.push(`/${this.projectId}/logs/${this.logId}?timelineId=${this.timelineId}`)
+        this.isLogDeleted = false
+      }).catch(() => {
+        this.isLogDeleted = true
+      })
     },
     redirectToTimelinePage () {
       this.$router.push(`/${this.projectId}/timelines`)
