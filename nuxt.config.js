@@ -115,22 +115,10 @@ export default {
             darken1: '#DFE2F5',
             darken2: '#242736'
           },
-          vulnerability: {
-            base: '#9D3F7A'
-          },
-          analizedEvents: {
-            base: '#9D3F7A',
-            lighten1: '#F4E6F4'
-          },
-          analizedLines: {
-            base: '#B2453E',
-            lighten1: '#FBE6E5'
-          },
-          userDetectedEvents: '#50A8FF',
-          sherlockDetectedEvents: '#0470B8',
           avatar1: '#9D3F7A',
           avatar1Bg: '#F4E6F4',
-          avatar6: '#77C07B'
+          avatar6: '#77C07B',
+          note1Bg: '#F6F1EA'
         }
       }
     }
