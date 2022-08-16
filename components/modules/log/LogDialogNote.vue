@@ -67,16 +67,22 @@
               placeholder="Escriba su nota..."
               is-note
               flat
-              :rules="[$rules.maxLength(200)]"
+              :rules="[$rules.maxLength(200), $rules.moreThanSpaces('nota')]"
             />
           </div>
           <div class="d-flex justify-center align-center">
-            <ShSecondaryButton small class="mb-5" @click="addNote">
+            <ShButton
+              text
+              small
+              class="mb-5"
+              :disabled="!isBetween(selectedNote.text.length, 1, 200) || onlySpaces(selectedNote.text)"
+              @click="addNote"
+            >
               <v-icon small>
                 mdi-plus
               </v-icon>
               Nueva nota
-            </ShSecondaryButton>
+            </ShButton>
           </div>
         </v-col>
       </v-row>
@@ -124,11 +130,9 @@ export default {
       }
     },
     addNote () {
-      if (this.isBetween(this.selectedNote.text.length, 1, 200)) {
-        const note = { text: '' }
-        this.notes.push(note)
-        this.selectedNote = note
-      }
+      const note = { text: '' }
+      this.notes.push(note)
+      this.selectedNote = note
     },
     removeNote (noteIndex) {
       this.notes.splice(noteIndex, 1)
@@ -146,11 +150,15 @@ export default {
     },
     setInitialData () {
       if (this.notes.length > 0) {
+        this.notes = this.line.notes.map(note => ({ text: note }))
         this.selectedNote = this.notes[0]
       }
     },
     isBetween (value, min, max) {
       return value >= min && value <= max
+    },
+    onlySpaces (str) {
+      return str.trim().length === 0
     }
   }
 }
