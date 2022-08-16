@@ -67,7 +67,7 @@
               placeholder="Escriba su nota..."
               is-note
               flat
-              :rules="[$rules.maxLength(70)]"
+              :rules="[$rules.maxLength(200)]"
             />
           </div>
           <div class="d-flex justify-center align-center">
@@ -75,7 +75,7 @@
               <v-icon small>
                 mdi-plus
               </v-icon>
-              Agregar nota
+              Nueva nota
             </ShSecondaryButton>
           </div>
         </v-col>
@@ -124,9 +124,11 @@ export default {
       }
     },
     addNote () {
-      const note = { text: '' }
-      this.notes.push(note)
-      this.selectedNote = note
+      if (this.isBetween(this.selectedNote.text.length, 1, 200)) {
+        const note = { text: '' }
+        this.notes.push(note)
+        this.selectedNote = note
+      }
     },
     removeNote (noteIndex) {
       this.notes.splice(noteIndex, 1)
@@ -135,7 +137,9 @@ export default {
       }
     },
     editNote (note) {
-      this.selectedNote = note
+      if (this.isBetween(this.selectedNote.text.length, 1, 200)) {
+        this.selectedNote = note
+      }
     },
     cutTo (str, length) {
       return str.length > length ? `${str.substr(0, length - 3)}...` : str
@@ -144,6 +148,9 @@ export default {
       if (this.notes.length > 0) {
         this.selectedNote = this.notes[0]
       }
+    },
+    isBetween (value, min, max) {
+      return value >= min && value <= max
     }
   }
 }
