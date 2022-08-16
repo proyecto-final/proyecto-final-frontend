@@ -33,8 +33,8 @@
       <v-row justify="center" no-gutters>
         <v-col cols="8">
           <div>
-            <v-alert v-if="isLogDeleted" type="error" icon="mdi-alert" class="justify-space-between mb-6 mt-2">
-              <ShBodySmall class="white-text">
+            <v-alert v-if="isLogDeleted" type="warning" outlined icon="mdi-alert" class="justify-space-between mb-6 mt-2">
+              <ShBodySmall class="black-text">
                 No es posible editar la timeline dado que el log asociado a la misma ha sido eliminado.
               </ShBodySmall>
             </v-alert>
@@ -344,12 +344,14 @@ export default {
     this.distinctTags = Array.from(differentTags).map(tag => ({ tag, isSelected: false }))
   },
   created () {
-    return this.$logService.getLines(this.projectId, this.logId, {
-      offset: 0,
-      limit: 1
-    }).catch(() => {
-      this.isLogDeleted = true
-    })
+    if (!this.isEditing && this.isReadOnly) {
+      return this.$logService.getLines(this.projectId, this.logId, {
+        offset: 0,
+        limit: 1
+      }).catch(() => {
+        this.isLogDeleted = true
+      })
+    }
   },
   methods: {
     getLinesIfExists () {
