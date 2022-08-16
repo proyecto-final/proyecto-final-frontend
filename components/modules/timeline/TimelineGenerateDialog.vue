@@ -101,23 +101,20 @@ export default {
     timelineMetadata: getEmptyTimelineMetadata()
   }),
   methods: {
-    save () {
+    async save () {
       const timeline = {
         ...this.timelineMetadata,
         log: this.logLines[0].log,
         lines: this.logLines.map(({ _id, tags }) => ({ id: _id, tags }))
       }
-      const savePromise = this.$timelineService.create(this.projectId, timeline)
-      return savePromise.then((result) => {
-        if (result) {
-          this.showSuccess = true
-        }
-      }).catch((error) => {
+      try {
+        await Promise.all([this.$timelineService.create(this.projectId, timeline), this.$logService.saveMarkedLogsLines(this.projectId, timeline.log, [])])
+        this.showSuccess = true
+      } catch (error) {
         const msg = error.response?.data?.msg
-        if (msg) {
-          this.$noty.warn(msg.join(', '))
-        }
-      }).finally(() => { return false })
+        if (msg) { this.$noty.warn(msg.join(', ')) }
+      }
+      return false
     },
     resetDialog () {
       this.showSuccess = false
