@@ -191,6 +191,38 @@
                 </v-col>
               </v-row>
               <v-row>
+                <v-col class="d-flex justify-center">
+                  <v-card width="600" height="600">
+                    <VerticalBarChart />
+                  </v-card>
+                </v-col>
+                <v-col class="d-flex justify-center">
+                  <v-card width="600" height="600">
+                    <HorizontalBarChart />
+                  </v-card>
+                </v-col>
+                <v-col class="d-flex justify-center">
+                  <v-card width="600" height="600">
+                    <PieChart />
+                  </v-card>
+                </v-col>
+                <v-col class="d-flex justify-center">
+                  <v-card width="600" height="600">
+                    <DoughnutChart />
+                  </v-card>
+                </v-col>
+                <v-col class="d-flex justify-center">
+                  <v-card width="600" height="600">
+                    <LineChart />
+                  </v-card>
+                </v-col>
+                <v-col class="d-flex justify-center">
+                  <v-card width="600" height="600">
+                    <AreaChart />
+                  </v-card>
+                </v-col>
+              </v-row>
+              <v-row>
                 <v-col>
                   <v-card v-if="detectedEvents > 0" elevation="0" class="w-100">
                     <v-card-text>
