@@ -9,11 +9,19 @@ export default class Timeline {
     return this.$axios.$get(`/api/project/${projectId}/timeline`, { params })
   }
 
+  getSpecific (projectId, timelineId) {
+    return this.$axios.$get(`/api/project/${projectId}/timeline/${timelineId}`)
+  }
+
   deleteTimeline (projectId, timelineId) {
     return this.$axios.$delete(`/api/project/${projectId}/timeline/${timelineId}`)
   }
 
   update (projectId, timelineId, timeline) {
-    return this.$axios.$patch(`/api/project/${projectId}/timeline/${timelineId}`, timeline)
+    return this.$axios.$patch(`/api/project/${projectId}/timeline/${timelineId}`, { ...timeline, lines: timeline.lines.map(({ line, tags }) => ({ id: line, tags })) })
+  }
+
+  create (projectId, timeline) {
+    return this.$axios.$post(`/api/project/${projectId}/timeline`, timeline)
   }
 }

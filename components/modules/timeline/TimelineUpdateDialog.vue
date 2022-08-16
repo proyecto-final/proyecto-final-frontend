@@ -24,7 +24,7 @@
           <ShTextField
             v-model="timeline.title"
             label="Nombre *"
-            :rules="[$rules.required('nombre'), $rules.maxLength(32)]"
+            :rules="[$rules.required('nombre'), $rules.moreThanSpaces('nombre'), $rules.hasLengthBetween(2,32)]"
           />
         </div>
         <div>

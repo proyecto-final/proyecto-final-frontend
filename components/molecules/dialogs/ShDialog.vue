@@ -2,6 +2,7 @@
   <v-dialog
     v-bind="$attrs"
     permanent
+    :fullscreen="fullscreen"
     v-on="$listeners"
   >
     <template #activator="props">
@@ -9,14 +10,22 @@
     </template>
     <template #default>
       <v-progress-linear v-if="loading" indeterminate color="primary" />
-      <v-card class="pa-6">
+      <v-card
+        class="pa-6"
+        :class="{'no-rounded': fullscreen, [cardClass]: true}"
+      >
         <div class="d-flex justify-space-between align-center">
+          <slot name="prepend-title" :close="close" />
           <ShHeading3 neutral>
             {{ title }}
           </ShHeading3>
-          <ShIconButton color="neutral" icon="mdi-close" title="Cerrar" @click="$emit('input', false)" />
+          <slot name="close">
+            <ShIconButton color="neutral" icon="mdi-close" title="Cerrar" @click="close()" />
+          </slot>
         </div>
-        <slot />
+        <div>
+          <slot />
+        </div>
         <div>
           <div class="d-flex justify-end">
             <div>
@@ -69,7 +78,25 @@ export default {
     hidePrimaryButton: {
       type: Boolean,
       default: false
+    },
+    cardClass: {
+      type: String,
+      default: ''
+    },
+    fullscreen: {
+      type: Boolean,
+      default: false
+    }
+  },
+  methods: {
+    close () {
+      this.$emit('input', false)
     }
   }
 }
 </script>
+<style scoped>
+.no-rounded {
+  border-radius: 0 !important;
+}
+</style>
