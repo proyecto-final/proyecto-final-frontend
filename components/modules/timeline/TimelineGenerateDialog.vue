@@ -38,7 +38,7 @@
             <ShSecondaryButton class="mx-2" @click="$router.push(`/${projectId}/timelines`)">
               Ir a timelines
             </ShSecondaryButton>
-            <ShButton class="mx-2">
+            <ShButton class="mx-2" :loading="gettingLink" @click="copyShareLinkToClipboard">
               <v-icon>mdi-content-copy</v-icon>
               Copiar link
             </ShButton>
@@ -98,6 +98,9 @@ export default {
   },
   data: () => ({
     showSuccess: false,
+    gettingLink: false,
+    createdTimeline: [],
+    newTimeline: null,
     timelineMetadata: getEmptyTimelineMetadata()
   }),
   methods: {
@@ -108,13 +111,28 @@ export default {
         lines: this.logLines.map(({ _id, tags }) => ({ id: _id, tags }))
       }
       try {
-        await Promise.all([this.$timelineService.create(this.projectId, timeline), this.$logService.saveMarkedLogsLines(this.projectId, timeline.log, [])])
+        const result = await Promise.all([this.$timelineService.create(this.projectId, timeline), this.$logService.saveMarkedLogsLines(this.projectId, timeline.log, [])])
         this.showSuccess = true
+        this.newTimeline = result[0]
       } catch (error) {
         const msg = error.response?.data?.msg
         if (msg) { this.$noty.warn(msg.join(', ')) }
       }
       return false
+    },
+    copyShareLinkToClipboard () {
+      this.gettingLink = true
+      this.$timelineService.getTimelineInvitation(this.projectId, this.newTimeline._id)
+        .then((response) => {
+          const sharedURL = `${window.location.origin}/report/?token=${response.invitationToken}`
+          navigator.clipboard.writeText(sharedURL)
+          this.$noty.success('Se ha copiado el link para compartir la timeline en el portapapeles')
+        }).catch((error) => {
+          const msg = error.response?.data?.msg
+          if (msg) {
+            this.$noty.warn(msg.join(', '))
+          }
+        }).finally(() => { this.gettingLink = false })
     },
     resetDialog () {
       this.showSuccess = false
