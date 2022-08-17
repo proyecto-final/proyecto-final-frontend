@@ -132,6 +132,9 @@ export default {
     redirectToLogPage () {
       this.$router.push(`/${this.projectId}/logs/${this.logId}?timelineId=${this.timelineId}`)
     },
+    redirectToTimelinePage () {
+      this.$router.push(`/${this.projectId}/timelines`)
+    },
     saveExistingTimeline () {
       const timeline = { lines: this.lines2Show }
       if (this.isEditing && this.timelineId) {
