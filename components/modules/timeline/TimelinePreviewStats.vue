@@ -236,7 +236,7 @@
 <script>
 export default {
   props: {
-    logLines: {
+    lines2Show: {
       type: Array,
       required: true
     },
@@ -266,8 +266,8 @@ export default {
     showableLogLines () {
       const tags2Show = this.distinctTags.filter(tag => tag.isSelected).map(tag => tag.tag)
       return this.isSelectedAll
-        ? this.logLines
-        : this.logLines.filter(line => line.tags.some(tag => tags2Show.includes(tag)))
+        ? this.lines2Show
+        : this.lines2Show.filter(line => line.tags.some(tag => tags2Show.includes(tag)))
     },
     detectedEvents () {
       return this.vulnerabilites.length
@@ -285,8 +285,21 @@ export default {
       return this.$route.params.projectId
     }
   },
+  watch: {
+    lines2Show: {
+      handler (lines2ShowValue) {
+        const differentTags = new Set(lines2ShowValue.map(line => line.tags).flat())
+        const wasSelected = tag => !!this.distinctTags.find(existingTag => existingTag.tag === tag)?.isSelected
+        this.distinctTags = Array.from(differentTags)
+          .map(tag => ({
+            tag,
+            isSelected: wasSelected(tag)
+          }))
+      }
+    }
+  },
   mounted () {
-    const differentTags = new Set(this.logLines.map(line => line.tags).flat())
+    const differentTags = new Set(this.lines2Show.map(line => line.tags).flat())
     this.distinctTags = Array.from(differentTags).map(tag => ({ tag, isSelected: false }))
   },
   methods: {
@@ -308,19 +321,19 @@ export default {
       this.$router.push(`/${this.projectId}/timelines`)
     },
     removeLine (logLine) {
-      const remainingLines = this.logLines.filter(line => line !== logLine)
+      const remainingLines = this.lines2Show.filter(line => line !== logLine)
       this.$emit('updateLogLines', { remainingLines })
       const remainingTags = Array.from(new Set(remainingLines.map(line => line.tags).flat()))
       this.distinctTags = this.distinctTags.filter(tag => remainingTags.includes(tag.tag))
       this.$nextTick(() => {
-        if (this.logLines.length === 0) {
-          this.$emit('removeLine')
+        if (this.lines2Show.length === 0) {
+          this.$emit('closeDialog')
         }
       })
     },
     addTag (logLine) {
       if (!logLine.tags.includes(this.newTag)) {
-        this.$emit('addTag', { logLine, newTag: this.newTag })
+        this.$emit('addTagInALine', { logLine, newTag: this.newTag })
         if (!this.distinctTags.map(tag => tag.tag).includes(this.newTag)) {
           this.distinctTags.push({ tag: this.newTag, isSelected: false })
         }

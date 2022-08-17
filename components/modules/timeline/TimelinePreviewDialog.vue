@@ -41,14 +41,14 @@
             </v-alert>
           </div>
           <TimelinePreviewStats
-            :log-lines="lines2Show"
+            :lines2-show="lines2Show"
             :is-read-only="isReadOnly"
             :timeline-description="timelineDescription"
             :log-lines-count="logLinesCount"
             :vulnerabilites="vulnerabilites"
-            @addTag="addTag"
+            @addTagInALine="addTagInALine"
             @updateLogLines="updateLogLines"
-            @removeLines="removeLines"
+            @closeDialog="closeDialog"
           />
         </v-col>
       </v-row>
@@ -120,10 +120,10 @@ export default {
     updateLogLines ({ remainingLines }) {
       this.$emit('update:logLines', remainingLines)
     },
-    removeLines () {
+    closeDialog () {
       this.open = false
     },
-    addTag ({ logLine, newTag }) {
+    addTagInALine ({ logLine, newTag }) {
       this.$emit('update:logLine', {
         logLine,
         tags: [...logLine.tags, newTag]

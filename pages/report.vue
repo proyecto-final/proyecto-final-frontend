@@ -10,7 +10,7 @@
           <template v-else-if="isValidToken">
             <div class="mb-4">
               <ShHeading3 neutral>
-                Timeline
+                Reporte Compartido
               </ShHeading3>
             </div>
             <div class="d-flex justify-center mb-8">
@@ -21,7 +21,7 @@
               </div>
             </div>
             <TimelinePreviewStats
-              :log-lines="timeline.lines"
+              :lines2-show="timeline.lines"
               is-read-only
               :timeline-description="timeline.description"
               :log-lines-count="timeline.lines.length"
@@ -59,7 +59,7 @@ export default {
   }),
   created () {
     this.loading = true
-    this.$timelineService.getSpecific('2', '62fbb34b3b19a262b5dfc83e')
+    this.$timelineService.getSpecific('2', '62fd2a430d657f6555a9ca3f')
       .then((response) => {
         this.timeline = response
         this.isValidToken = true
