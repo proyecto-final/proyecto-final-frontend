@@ -46,7 +46,7 @@ export default {
           pointBackgroundColor: '#069BFF',
           pointBorderColor: '#069BFF',
           tension: 0.1,
-          fill: true
+          fill: 'origin'
         },
         {
           label: 'Puerto 80',
@@ -57,7 +57,11 @@ export default {
           pointBackgroundColor: '#FF4069',
           pointBorderColor: '#FF4069',
           tension: 0.1,
-          fill: true
+          fill: {
+            target: 'origin',
+            above: 'rgb(255, 0, 0)', // Area will be red above the origin
+            below: 'rgb(0, 0, 255)' // And blue below the origin
+          }
         }]
 
       },

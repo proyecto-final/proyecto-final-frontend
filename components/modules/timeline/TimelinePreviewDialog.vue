@@ -192,32 +192,48 @@
               </v-row>
               <v-row>
                 <v-col class="d-flex justify-center">
-                  <v-card width="600" height="600">
-                    <VerticalBarChart />
+                  <v-card>
+                    <div class="mt-4 ml-4">
+                      <ShHeading2>
+                        Intentos de login
+                      </ShHeading2>
+                      <ShBodySmall neutral>
+                        Intentos de login por parte de los usuarios de la compañía
+                      </ShBodySmall>
+                    </div>
+                    <VerticalBarChart class="ma-6" />
                   </v-card>
                 </v-col>
                 <v-col class="d-flex justify-center">
-                  <v-card width="600" height="600">
-                    <HorizontalBarChart />
+                  <v-card>
+                    <div class="mt-4 ml-4">
+                      <ShHeading2>
+                        Intentos de login
+                      </ShHeading2>
+                      <ShBodySmall neutral>
+                        Intentos de login por parte de los usuarios de la compañía
+                      </ShBodySmall>
+                    </div>
+                    <HorizontalBarChart class="ma-6" />
                   </v-card>
                 </v-col>
                 <v-col class="d-flex justify-center">
-                  <v-card width="600" height="600">
+                  <v-card>
                     <PieChart />
                   </v-card>
                 </v-col>
                 <v-col class="d-flex justify-center">
-                  <v-card width="600" height="600">
+                  <v-card>
                     <DoughnutChart />
                   </v-card>
                 </v-col>
                 <v-col class="d-flex justify-center">
-                  <v-card width="600" height="600">
+                  <v-card>
                     <LineChart />
                   </v-card>
                 </v-col>
                 <v-col class="d-flex justify-center">
-                  <v-card width="600" height="600">
+                  <v-card>
                     <AreaChart />
                   </v-card>
                 </v-col>
