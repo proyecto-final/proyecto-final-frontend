@@ -75,11 +75,9 @@
             <ShTextArea
               v-model="selectedNote.text"
               placeholder="Escriba su nota..."
-              maxlength="201"
-              minlength="1"
-              is-note
+              maxlength="200"
+              yellow-bg
               flat
-              :rules="[$rules.maxLength(200)]"
             />
           </div>
           <div class="d-flex justify-center align-center">
@@ -127,7 +125,7 @@ export default {
   methods: {
     async save () {
       try {
-        this.notes = this.notes.filter(note => !(note.text.trim().length === 0))
+        this.notes = this.notes.filter(note => note.text.trim().length !== 0)
         const notes = this.notes.map(note => note.text)
         this.$emit('update:line', { ...this.line, notes })
         const updatedLine = await this.$logService.updateLine(this.projectId, this.logId, this.line._id, { notes })
@@ -143,7 +141,7 @@ export default {
     },
     addNote () {
       const note = { text: '' }
-      this.notes = this.notes.filter(note => !(note.text.trim().length === 0))
+      this.notes = this.notes.filter(note => note.text.trim().length !== 0)
       this.notes.push(note)
       this.selectedNote = note
     },
@@ -173,6 +171,7 @@ export default {
   border-radius: 12px !important;
 }
 .user-viewport-height-note {
-  max-height: 248px;
+  max-height: 350px;
+  min-height: 350px;
 }
 </style>

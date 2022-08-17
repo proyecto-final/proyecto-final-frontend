@@ -1,6 +1,6 @@
 <template>
   <v-textarea
-    :class="isNote ? 'yellow-background' : 'neutral-background'"
+    :class="yellowBg ? 'yellow-background' : 'neutral-background'"
     filled
     dense
     rounded
@@ -20,7 +20,7 @@
 <script>
 export default {
   props: {
-    isNote: {
+    yellowBg: {
       type: Boolean,
       default: false
     }
