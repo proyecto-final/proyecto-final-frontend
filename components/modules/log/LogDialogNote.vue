@@ -70,7 +70,7 @@
               minlength="1"
               is-note
               flat
-              :rules="[$rules.maxLength(200), $rules.moreThanSpaces('nota')]"
+              :rules="[$rules.maxLength(200), $rules.moreThanSpaces('')]"
             />
           </div>
           <div class="d-flex justify-center align-center">
