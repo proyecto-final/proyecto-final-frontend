@@ -33,7 +33,8 @@
           <v-card
             v-for="(note,index) in notes"
             :key="index"
-            :class="`mb-3 ${note === selectedNote ? 'selected' : 'default'}`"
+            class="mb-3"
+            :class="`${note === selectedNote ? 'selected' : 'default'}`"
             flat
             outlined
             @click="editNote(note)"
@@ -65,6 +66,8 @@
             <ShTextArea
               v-model="selectedNote.text"
               placeholder="Escriba su nota..."
+              maxlength="201"
+              minlength="1"
               is-note
               flat
               :rules="[$rules.maxLength(200), $rules.moreThanSpaces('nota')]"
@@ -141,7 +144,7 @@ export default {
       }
     },
     editNote (note) {
-      if (this.isBetween(this.selectedNote.text.length, 1, 200)) {
+      if (this.isBetween(this.selectedNote.text.length, 1, 200) && !this.onlySpaces(this.selectedNote.text)) {
         this.selectedNote = note
       }
     },
@@ -174,6 +177,6 @@ export default {
   border-radius: 12px !important;
 }
 .user-viewport-height-note {
-  max-height: calc(392px - 144px);
+  max-height: 248px;
 }
 </style>
