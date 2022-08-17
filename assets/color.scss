@@ -7,5 +7,8 @@
 }
 
 .bg-gray {
-  background-color: var(--v-neutral-darken1);
+  background-color: var(--v-neutral-darken1) !important;
+}
+.bg-selected-note {
+  background-color: var(--v-note1Bg-base) !important;
 }

@@ -34,7 +34,7 @@
             v-for="(note,index) in notes"
             :key="index"
             class="mb-3"
-            :class="`${note === selectedNote ? 'selected' : 'default'}`"
+            :class="`${note === selectedNote ? 'bg-selected-note' : 'bg-gray'}`"
             flat
             outlined
             @click="editNote(note)"
@@ -167,12 +167,6 @@ export default {
 }
 </script>
 <style scoped>
-.selected {
-  background-color: var(--v-note1Bg-base);
-}
-.default {
-  background-color: var(--v-neutral-darken1);
-}
 .v-card.v-sheet.theme--light {
   border-radius: 12px !important;
 }
