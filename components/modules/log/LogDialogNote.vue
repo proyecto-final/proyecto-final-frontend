@@ -28,6 +28,15 @@
       </slot>
     </template>
     <template #default>
+      <v-row class="justify-center">
+        <div>
+          <v-alert type="warning" icon="mdi-alert" class="justify-space-between mb-6 mt-2">
+            <ShBodySmall class="white-text">
+              Serán eliminadas aquellas notas sin contenido al momento de cerrar esta ventana o guardar.
+            </ShBodySmall>
+          </v-alert>
+        </div>
+      </v-row>
       <v-row>
         <v-col v-if="notes.length > 0" class="h-100 user-viewport-height-note sh-scrollbar">
           <v-card
@@ -78,7 +87,6 @@
               text
               small
               class="mb-5"
-              :disabled="!isBetween(selectedNote.text.length, 1, 200) || onlySpaces(selectedNote.text)"
               @click="addNote"
             >
               <v-icon small>
@@ -134,6 +142,7 @@ export default {
     },
     addNote () {
       const note = { text: '' }
+      this.notes = this.notes.filter(note => !(note.text.trim().length === 0))
       this.notes.push(note)
       this.selectedNote = note
     },
@@ -144,9 +153,7 @@ export default {
       }
     },
     editNote (note) {
-      if (this.isBetween(this.selectedNote.text.length, 1, 200) && !this.onlySpaces(this.selectedNote.text)) {
-        this.selectedNote = note
-      }
+      this.selectedNote = note
     },
     cutTo (str, length) {
       return str.length > length ? `${str.substr(0, length - 3)}...` : str
@@ -156,9 +163,6 @@ export default {
         this.notes = this.line.notes.map(note => ({ text: note }))
         this.selectedNote = this.notes[0]
       }
-    },
-    isBetween (value, min, max) {
-      return value >= min && value <= max
     },
     onlySpaces (str) {
       return str.trim().length === 0

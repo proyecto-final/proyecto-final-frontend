@@ -39,7 +39,7 @@
             <v-icon>
               mdi-note-text
             </v-icon>
-            Nota agre...
+            Nota agregada
           </ShChip>
         </div>
         <v-menu
