@@ -79,7 +79,7 @@
               minlength="1"
               is-note
               flat
-              :rules="[$rules.maxLength(200), $rules.moreThanSpaces('')]"
+              :rules="[$rules.maxLength(200)]"
             />
           </div>
           <div class="d-flex justify-center align-center">
@@ -127,6 +127,7 @@ export default {
   methods: {
     async save () {
       try {
+        this.notes = this.notes.filter(note => !(note.text.trim().length === 0))
         const notes = this.notes.map(note => note.text)
         this.$emit('update:line', { ...this.line, notes })
         const updatedLine = await this.$logService.updateLine(this.projectId, this.logId, this.line._id, { notes })
@@ -163,9 +164,6 @@ export default {
         this.notes = this.line.notes.map(note => ({ text: note }))
         this.selectedNote = this.notes[0]
       }
-    },
-    onlySpaces (str) {
-      return str.trim().length === 0
     }
   }
 }
