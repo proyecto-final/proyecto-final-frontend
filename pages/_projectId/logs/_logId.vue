@@ -249,6 +249,10 @@ export default {
     },
     setLine (line, updatedLine) {
       Object.assign(line, updatedLine)
+      const timelineLineToUpdate = this.timelineLines.find(timelineLine => timelineLine._id === updatedLine._id)
+      if (timelineLineToUpdate) {
+        Object.assign(timelineLineToUpdate, updatedLine)
+      }
     },
     getNextLines (entries) {
       if (entries[0].isIntersecting && !this.loading) {
