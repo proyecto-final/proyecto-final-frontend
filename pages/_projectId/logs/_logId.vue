@@ -118,7 +118,7 @@
   </v-row>
 </template>
 <script>
-import { debounce } from 'lodash'
+import { debounce, extend } from 'lodash'
 export default {
   data: () => ({
     options: {
@@ -249,6 +249,7 @@ export default {
     },
     setLine (line, updatedLine) {
       Object.assign(line, updatedLine)
+      extend(this.timelineLines.find(timelineLine => timelineLine._id === updatedLine._id), updatedLine)
     },
     getNextLines (entries) {
       if (entries[0].isIntersecting && !this.loading) {
