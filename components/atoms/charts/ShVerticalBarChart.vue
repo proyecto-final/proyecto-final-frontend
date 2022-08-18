@@ -6,7 +6,6 @@
     :height="height"
   />
 </template>
-
 <script>
 import { Bar } from 'vue-chartjs/legacy'
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
@@ -24,26 +23,16 @@ export default {
     height: {
       type: Number,
       default: 400
-    }
-  },
-  data () {
-    return {
-      chartData: {
-        labels: ['May', 'Jun', 'Jul'],
-        datasets: [{
-          label: 'Logins jperez',
-          backgroundColor: '#FF4069',
-          data: [40, 20, 10]
-        },
-        {
-          label: 'Logins hgomez',
-          backgroundColor: '#069BFF',
-          data: [25, 10, 5]
-        }]
-      },
-      chartOptions: {
-        responsive: true
-      }
+    },
+    // Object attr: labels and datasets (label, bgColor, data)
+    chartData: {
+      type: Object,
+      required: true
+    },
+    // Object attr: responsive
+    chartOptions: {
+      type: Object,
+      default: () => {}
     }
   }
 }

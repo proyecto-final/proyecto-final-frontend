@@ -201,40 +201,20 @@
                         Intentos de login por parte de los usuarios de la compañía
                       </ShBodySmall>
                     </div>
-                    <VerticalBarChart class="ma-6" />
-                  </v-card>
-                </v-col>
-                <v-col class="d-flex justify-center">
-                  <v-card>
-                    <div class="mt-4 ml-4">
-                      <ShHeading2>
-                        Intentos de login
-                      </ShHeading2>
-                      <ShBodySmall neutral>
-                        Intentos de login por parte de los usuarios de la compañía
-                      </ShBodySmall>
-                    </div>
-                    <HorizontalBarChart class="ma-6" />
-                  </v-card>
-                </v-col>
-                <v-col class="d-flex justify-center">
-                  <v-card>
-                    <PieChart />
-                  </v-card>
-                </v-col>
-                <v-col class="d-flex justify-center">
-                  <v-card>
-                    <DoughnutChart />
-                  </v-card>
-                </v-col>
-                <v-col class="d-flex justify-center">
-                  <v-card>
-                    <LineChart />
-                  </v-card>
-                </v-col>
-                <v-col class="d-flex justify-center">
-                  <v-card>
-                    <AreaChart />
+                    <ShVerticalBarChart
+                      class="ma-6"
+                      :chart-data="{
+                        labels: ['Jan', 'Feb', 'Mar'],
+                        datasets: [{
+                          label: 'Login perez',
+                          backgroundColor: '#388E3C',
+                          data: [40,20,30]
+                        }]
+                      }"
+                      :chart-options="{
+                        responsive: true
+                      }"
+                    />
                   </v-card>
                 </v-col>
               </v-row>

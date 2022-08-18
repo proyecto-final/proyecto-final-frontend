@@ -24,27 +24,16 @@ export default {
     height: {
       type: Number,
       default: 400
-    }
-  },
-  data () {
-    return {
-      chartData: {
-        labels: ['May', 'Jun', 'Jul'],
-        datasets: [{
-          label: 'Logins jperez',
-          backgroundColor: '#FF4069',
-          data: [40, 20, 10]
-        },
-        {
-          label: 'Logins hgomez',
-          backgroundColor: '#069BFF',
-          data: [25, 10, 5]
-        }]
-      },
-      chartOptions: {
-        responsive: true,
-        indexAxis: 'y'
-      }
+    },
+    // Object attr: labels and datasets (label, bgColor, data)
+    chartData: {
+      type: Object,
+      required: true
+    },
+    // Object attr: responsive, indexAxis: 'y'
+    chartOptions: {
+      type: Object,
+      default: () => {}
     }
   }
 }

@@ -24,34 +24,17 @@ export default {
     height: {
       type: Number,
       default: 400
-    }
-  },
-  data () {
-    return {
-      chartData: {
-        labels: ['January',
-          'February',
-          'March',
-          'April',
-          'May',
-          'June',
-          'July'
-        ],
-        datasets: [{
-          label: 'Puerto 433',
-          data: [2, 10, 5, 9, 0, 6, 3],
-          backgroundColor: 'transparent',
-          borderColor: '#069BFF',
-          borderWidth: 1,
-          pointBackgroundColor: '#069BFF',
-          pointBorderColor: '#069BFF',
-          tension: 0.1
-        }]
-
-      },
-      chartOptions: {
-        responsive: true
-      }
+    },
+    // Object attr: labels and datasets (label, bgColor, borderColor, data,
+    // borderWidth: 1, pointBgColor, pointBorderColor, tension: 0.1, fill)
+    chartData: {
+      type: Object,
+      required: true
+    },
+    // Object attr: responsive
+    chartOptions: {
+      type: Object,
+      default: () => {}
     }
   }
 }
