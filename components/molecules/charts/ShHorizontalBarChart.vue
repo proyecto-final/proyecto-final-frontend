@@ -6,6 +6,7 @@
     :height="height"
   />
 </template>
+
 <script>
 import { Bar } from 'vue-chartjs/legacy'
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
@@ -28,11 +29,26 @@ export default {
     chartData: {
       type: Object,
       required: true
-    },
-    // Object attr: responsive
-    chartOptions: {
-      type: Object,
-      default: () => {}
+    }
+  },
+  data () {
+    return {
+      chartOptions: {
+        responsive: true,
+        indexAxis: 'y',
+        scales: {
+          x: {
+            grid: {
+              display: false
+            }
+          },
+          y: {
+            grid: {
+              display: false
+            }
+          }
+        }
+      }
     }
   }
 }

@@ -30,11 +30,13 @@ export default {
     chartData: {
       type: Object,
       required: true
-    },
-    // Object attr: responsive
-    chartOptions: {
-      type: Object,
-      default: () => {}
+    }
+  },
+  data () {
+    return {
+      chartOptions: {
+        responsive: true
+      }
     }
   }
 }

@@ -29,11 +29,14 @@ export default {
     chartData: {
       type: Object,
       required: true
-    },
-    // Object attr: responsivem, hoverOffset: 4
-    chartOptions: {
-      type: Object,
-      default: () => {}
+    }
+  },
+  data () {
+    return {
+      chartOptions: {
+        responsive: true,
+        hoverOffset: 4
+      }
     }
   }
 }

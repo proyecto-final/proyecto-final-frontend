@@ -29,11 +29,15 @@ export default {
     chartData: {
       type: Object,
       required: true
-    },
-    // Object attr: responsive, hoverOffset: 4, cutout: 50%
-    chartOptions: {
-      type: Object,
-      default: () => {}
+    }
+  },
+  data () {
+    return {
+      chartOptions: {
+        responsive: true,
+        hoverOffset: 4,
+        cutout: '50%'
+      }
     }
   }
 }
