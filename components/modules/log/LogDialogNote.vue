@@ -158,10 +158,8 @@ export default {
       return str.length > length ? `${str.substr(0, length - 3)}...` : str
     },
     setInitialData () {
-      if (this.notes.length > 0) {
-        this.notes = this.line.notes.map(note => ({ text: note }))
-        this.selectedNote = this.notes[0]
-      }
+      this.notes = this.line.notes.map(note => ({ text: note }))
+      this.selectedNote = this.notes[0]
     }
   }
 }
