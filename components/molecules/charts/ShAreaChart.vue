@@ -6,57 +6,22 @@
     :height="height"
   />
 </template>
-
 <script>
-import { Line as ChartLine } from 'vue-chartjs/legacy'
-import { Chart as ChartJS, Title, Tooltip, Legend, LineElement, CategoryScale, LinearScale, PointElement } from 'chart.js'
-
-ChartJS.register(Title, Tooltip, Legend, LineElement, CategoryScale, LinearScale, PointElement)
+import lineChartMixin from '@/services/helpers/mixins/lineChartMixin'
 
 export default {
-  name: 'LineChart',
-  components: { ChartLine },
-  props: {
-    width: {
-      type: Number,
-      default: 400
-    },
-    height: {
-      type: Number,
-      default: 400
-    },
-    // Should be default borderWidth: 1 , tension: 0.1 and fill: true
-    chartData: {
-      type: Object,
-      required: true,
-      validator (chartData) {
-        return 'labels' in chartData &&
-      'datasets' in chartData &&
-      chartData.datasets instanceof Object &&
-      'label' in chartData.datasets &&
-      'data' in chartData.datasets &&
-      'backgroundColor' in chartData.datasets &&
-      'borderColor' in chartData.datasets &&
-      'borderWidth' in chartData.datasets &&
-      'pointBackgroundColor' in chartData.datasets &&
-      'pointBorderColor' in chartData.datasets &&
-      'tension' in chartData.datasets &&
-      'fill' in chartData.datasets
-      }
-    }
-  },
-  data () {
-    return {
-      chartOptions: {
-        responsive: true,
-        plugins: {
-          filler: {
-            propagate: false,
-            drawTime: 'beforeDraw'
-          }
+  mixins: [lineChartMixin],
+  data: () => ({
+    chartData: { ...lineChartMixin.chartData, fill: true },
+    chartOptions: {
+      ...lineChartMixin.chartOptions,
+      plugins: {
+        filler: {
+          propagate: false,
+          drawTime: 'beforeDraw'
         }
       }
     }
-  }
+  })
 }
 </script>

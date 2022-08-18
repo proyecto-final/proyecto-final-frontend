@@ -220,7 +220,7 @@
                   />
                 </v-col>
                 <v-col class="d-flex justify-center">
-                  <ShVerticalBarChartCard
+                  <ShHorizontalBarChartCard
                     title="Login jperez"
                     description="Intentos de login del usuario jperez"
                     :chart-data="{

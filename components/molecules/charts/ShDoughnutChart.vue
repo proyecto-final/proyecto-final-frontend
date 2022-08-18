@@ -6,45 +6,13 @@
     :height="height"
   />
 </template>
-
 <script>
-import { Doughnut } from 'vue-chartjs/legacy'
-import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement, CategoryScale, LinearScale } from 'chart.js'
-
-ChartJS.register(Title, Tooltip, Legend, ArcElement, CategoryScale, LinearScale)
+import pieChartMixin from '@/services/helpers/mixins/pieChartMixin'
 
 export default {
-  name: 'DoughnutChart',
-  components: { Doughnut },
-  props: {
-    width: {
-      type: Number,
-      default: 400
-    },
-    height: {
-      type: Number,
-      default: 400
-    },
-    chartData: {
-      type: Object,
-      required: true,
-      validator (chartData) {
-        return 'labels' in chartData &&
-      'datasets' in chartData &&
-      chartData.datasets instanceof Object &&
-      'data' in chartData.datasets &&
-      'backgroundColor' in chartData.datasets
-      }
-    }
-  },
-  data () {
-    return {
-      chartOptions: {
-        responsive: true,
-        hoverOffset: 4,
-        cutout: '50%'
-      }
-    }
-  }
+  mixins: [pieChartMixin],
+  data: () => ({
+    chartOptions: { ...pieChartMixin.chartOptions, cutout: '50%' }
+  })
 }
 </script>
