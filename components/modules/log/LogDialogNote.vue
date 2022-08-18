@@ -128,7 +128,8 @@ export default {
         this.notes = this.notes.filter(note => note.text.trim().length !== 0)
         const notes = this.notes.map(note => note.text)
         this.$emit('update:line', { ...this.line, notes })
-        const updatedLine = await this.$logService.updateLine(this.projectId, this.logId, this.line._id, { notes })
+        const vulnerabilites = this.line.vulnerabilites.filter(vulnerability => !vulnerability.isNew)
+        const updatedLine = await this.$logService.updateLine(this.projectId, this.logId, this.line._id, { notes, vulnerabilites })
         this.$emit('updated', updatedLine)
         return true
       } catch (error) {
