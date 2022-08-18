@@ -25,10 +25,17 @@ export default {
       type: Number,
       default: 400
     },
-    // Object attr: labels and datasets (label, bgColor, data)
     chartData: {
       type: Object,
-      required: true
+      required: true,
+      validator (chartData) {
+        return 'labels' in chartData &&
+      'datasets' in chartData &&
+      chartData.datasets instanceof Object &&
+      'label' in chartData.datasets &&
+      'data' in chartData.datasets &&
+      'backgroundColor' in chartData.datasets
+      }
     }
   },
   data () {

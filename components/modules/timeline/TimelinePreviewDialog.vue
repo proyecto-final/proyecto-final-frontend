@@ -205,6 +205,34 @@
                     }"
                   />
                 </v-col>
+                <v-col class="d-flex justify-center">
+                  <ShVerticalBarChartCard
+                    title="Login jperez"
+                    description="Intentos de login del usuario jperez"
+                    :chart-data="{
+                      labels: ['Jan', 'Feb', 'Mar'],
+                      datasets: [{
+                        label: 'Login perez',
+                        backgroundColor: '#388E3C',
+                        data: [40,20,30]
+                      }]
+                    }"
+                  />
+                </v-col>
+                <v-col class="d-flex justify-center">
+                  <ShVerticalBarChartCard
+                    title="Login jperez"
+                    description="Intentos de login del usuario jperez"
+                    :chart-data="{
+                      labels: ['Jan', 'Feb', 'Mar'],
+                      datasets: [{
+                        label: 'Login perez',
+                        backgroundColor: '#388E3C',
+                        data: [40,20,30]
+                      }]
+                    }"
+                  />
+                </v-col>
               </v-row>
               <v-row>
                 <v-col>

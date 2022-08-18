@@ -25,17 +25,36 @@ export default {
       type: Number,
       default: 400
     },
-    // Object attr: labels and datasets (label, bgColor, borderColor, data,
-    // borderWidth: 1, pointBgColor, pointBorderColor, tension: 0.1, fill)
+    // Should be default borderWidth: 1 , tension: 0.1 and fill: true
     chartData: {
       type: Object,
-      required: true
+      required: true,
+      validator (chartData) {
+        return 'labels' in chartData &&
+      'datasets' in chartData &&
+      chartData.datasets instanceof Object &&
+      'label' in chartData.datasets &&
+      'data' in chartData.datasets &&
+      'backgroundColor' in chartData.datasets &&
+      'borderColor' in chartData.datasets &&
+      'borderWidth' in chartData.datasets &&
+      'pointBackgroundColor' in chartData.datasets &&
+      'pointBorderColor' in chartData.datasets &&
+      'tension' in chartData.datasets &&
+      'fill' in chartData.datasets
+      }
     }
   },
   data () {
     return {
       chartOptions: {
-        responsive: true
+        responsive: true,
+        plugins: {
+          filler: {
+            propagate: false,
+            drawTime: 'beforeDraw'
+          }
+        }
       }
     }
   }
