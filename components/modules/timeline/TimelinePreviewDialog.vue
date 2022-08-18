@@ -13,9 +13,17 @@
       <ShButton v-if="!isReadOnly" :disabled="logLines.length == 0" :block="$vuetify.breakpoint.smAndDown" v-on="on">
         Previsualizar timeline
       </ShButton>
-      <ShButton v-else text v-on="on">
-        Ver Reporte
-      </ShButton>
+      <div v-else class="d-flex">
+        <ShButton text v-on="on">
+          Ver Reporte
+        </ShButton>
+        <ShShareButton
+          redirect-to="report"
+          success-message="Se ha copiado el link para compartir la timeline en el portapapeles"
+          :organization-id="projectId"
+          :timeline-id="timelineId"
+        />
+      </div>
     </template>
     <template #prepend-title="{close}">
       <ShIconButton color="neutral" icon="mdi-close" title="Cerrar" @click="close()" />

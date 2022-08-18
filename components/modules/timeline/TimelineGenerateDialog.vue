@@ -38,10 +38,12 @@
             <ShSecondaryButton class="mx-2" @click="$router.push(`/${projectId}/timelines`)">
               Ir a timelines
             </ShSecondaryButton>
-            <ShButton class="mx-2" :loading="gettingLink" @click="copyShareLinkToClipboard">
-              <v-icon>mdi-content-copy</v-icon>
-              Copiar link
-            </ShButton>
+            <ShShareButton
+              redirect-to="report"
+              success-message="Se ha copiado el link para compartir la timeline en el portapapeles"
+              :organization-id="projectId"
+              :timeline-id="newTimeline._id"
+            />
             <ShButton class="mx-2">
               <v-icon>mdi-file-pdf-box</v-icon>
               Descargar
@@ -98,7 +100,6 @@ export default {
   },
   data: () => ({
     showSuccess: false,
-    gettingLink: false,
     createdTimeline: [],
     newTimeline: null,
     timelineMetadata: getEmptyTimelineMetadata()
@@ -119,20 +120,6 @@ export default {
         if (msg) { this.$noty.warn(msg.join(', ')) }
       }
       return false
-    },
-    copyShareLinkToClipboard () {
-      this.gettingLink = true
-      this.$timelineService.getTimelineInvitation(this.projectId, this.newTimeline._id)
-        .then((response) => {
-          const sharedURL = `${window.location.origin}/report/?token=${response.invitationToken}`
-          navigator.clipboard.writeText(sharedURL)
-          this.$noty.success('Se ha copiado el link para compartir la timeline en el portapapeles')
-        }).catch((error) => {
-          const msg = error.response?.data?.msg
-          if (msg) {
-            this.$noty.warn(msg.join(', '))
-          }
-        }).finally(() => { this.gettingLink = false })
     },
     resetDialog () {
       this.showSuccess = false
