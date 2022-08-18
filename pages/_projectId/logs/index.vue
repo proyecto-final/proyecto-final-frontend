@@ -23,7 +23,7 @@
           v-model="filter.state"
           hide-details
           clearable
-          :items="[{ text: 'Cargado', value: 'processed' }, { text: 'Procesando...', value: 'processing' }]"
+          :items="[{ text: 'Cargado', value: 'processed' }, { text: 'Procesando...', value: 'processing' }, { text: 'Error', value: 'error' }]"
           placeholder="Filtrar por estado"
           @input="$fetch"
         />
@@ -53,19 +53,17 @@
         </div>
       </template>
       <template #[`item.status`]="{ item }">
-        <ShChip :color="item.state === 'processed' ? 'success' : 'warning'">
-          {{ item.state === 'processed' ? 'Cargado' : 'Procesando...' }}
-        </ShChip>
+        <ShStatusChip :status="item.state" />
       </template>
       <template #[`item.actions`]="{ item }">
         <div class="d-flex">
-          <ShButton :disabled="item.state === 'processing'" text @click="redirectToLogPage(item._id)">
+          <ShButton :disabled="item.state === 'processing' || item.state === 'error' " text @click="redirectToLogPage(item._id)">
             Ver log
           </ShButton>
           <v-menu v-model="display[item._id]" offset-y close-on-content-click>
             <template #activator="{ on, attrs }">
               <v-btn
-                :disabled="item.state === 'processing'"
+                :disabled="item.state === 'processing' || item.state === 'error' "
                 icon
                 v-bind="attrs"
                 v-on="on"
