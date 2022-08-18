@@ -113,6 +113,10 @@ export default {
     submitOnEnter: {
       type: Boolean,
       default: true
+    },
+    isNote: {
+      type: Boolean,
+      default: false
     }
   },
   data: () => ({
