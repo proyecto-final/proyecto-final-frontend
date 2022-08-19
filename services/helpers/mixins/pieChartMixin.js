@@ -30,7 +30,15 @@ export default {
   data: () => ({
     chartOptions: {
       responsive: true,
-      hoverOffset: 4
+      hoverOffset: 4,
+      layout: {
+        padding: {
+          left: 30,
+          right: 30,
+          bottom: 10,
+          top: 5
+        }
+      }
     }
   })
 }

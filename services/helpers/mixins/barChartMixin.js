@@ -42,8 +42,15 @@ export default {
             display: false
           }
         }
+      },
+      layout: {
+        padding: {
+          left: 30,
+          right: 30,
+          bottom: 10,
+          top: 5
+        }
       }
-
     }
   })
 }
