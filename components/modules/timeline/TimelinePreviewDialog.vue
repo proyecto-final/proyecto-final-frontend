@@ -209,6 +209,8 @@
                       }"
                     />
                   </ShChartCard>
+                </v-col>
+                <v-col class="d-flex justify-center">
                   <ShChartCard
                     title="Login de usuarios"
                     description="Intentos de login de usuarios sospechosos"

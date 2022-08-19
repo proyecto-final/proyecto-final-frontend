@@ -1,5 +1,5 @@
 <template>
-  <v-card class="ma-4">
+  <v-card class="w-100" flat outlined>
     <template #default>
       <div class="mt-4 ml-4">
         <ShHeading2>
