@@ -47,8 +47,13 @@ export default {
         padding: {
           left: 30,
           right: 30,
-          bottom: 10,
-          top: 5
+          bottom: 30,
+          top: 30
+        }
+      },
+      plugins: {
+        legend: {
+          display: false
         }
       }
     }

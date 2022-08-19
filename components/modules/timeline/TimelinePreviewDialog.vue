@@ -194,29 +194,33 @@
                 <v-col class="d-flex justify-center">
                   <ShChartCard
                     title="Login jperez"
-                    description="Intentos de login del usuario jperez"
+                    description="Intentos de login del usuario lperez"
                   >
                     <ShVerticalBarChart
                       :chart-data="{
                         labels: ['Jan', 'Feb', 'Mar'],
                         datasets: [{
-                          label: 'Login perez',
-                          backgroundColor: '#388E3C',
+                          label: 'Login lperez',
+                          backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                          borderWidth: 1,
+                          borderColor: 'rgb(54, 162, 235)',
                           data: [40,20,30]
                         }]
                       }"
                     />
                   </ShChartCard>
                   <ShChartCard
-                    title="Login jperez"
-                    description="Intentos de login del usuario jperez"
+                    title="Login de usuarios"
+                    description="Intentos de login de usuarios sospechosos"
                   >
                     <ShHorizontalBarChart
                       :chart-data="{
-                        labels: ['Jan', 'Feb', 'Mar'],
+                        labels: ['plopez', 'mrey', 'jmiranda'],
                         datasets: [{
-                          label: 'Login perez',
-                          backgroundColor: '#388E3C',
+                          label: '',
+                          backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                          borderWidth: 1,
+                          borderColor: 'rgb(54, 162, 235)',
                           data: [40,20,30]
                         }]
                       }"
