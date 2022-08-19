@@ -1,7 +1,7 @@
 <template>
   <ChartLine
     :chart-options="chartOptions"
-    :chart-data="chartData"
+    :chart-data="chartDataToShow"
     :width="width"
     :height="height"
   />
@@ -12,7 +12,6 @@ import lineChartMixin from '@/services/helpers/mixins/lineChartMixin'
 export default {
   mixins: [lineChartMixin],
   data: () => ({
-    chartData: { ...lineChartMixin.chartData, fill: true },
     chartOptions: {
       ...lineChartMixin.chartOptions,
       plugins: {
@@ -22,6 +21,11 @@ export default {
         }
       }
     }
-  })
+  }),
+  computed: {
+    chartDataToShow () {
+      return { ...this.chartData, fill: true }
+    }
+  }
 }
 </script>
