@@ -61,7 +61,7 @@
               datasets: [{
                 backgroundColor: 'rgba(54, 162, 235, 0.2)',
                 borderWidth: 1,
-                borderColor: 'rgb(54, 162, 235)',
+                borderColor: 'white',
                 data: [40,20,30]
               }]
             }"
@@ -79,7 +79,7 @@
               datasets: [{
                 backgroundColor: 'rgba(54, 162, 235, 0.2)',
                 borderWidth: 1,
-                borderColor: 'rgb(54, 162, 235)',
+                borderColor: 'white',
                 data: [40,20,30]
               }]
             }"
