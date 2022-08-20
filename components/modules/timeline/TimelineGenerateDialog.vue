@@ -39,10 +39,8 @@
               Ir a timelines
             </ShSecondaryButton>
             <ShShareButton
-              redirect-to="report"
-              success-message="Se ha copiado el link para compartir la timeline en el portapapeles"
-              :organization-id="projectId"
-              :timeline-id="newTimeline._id"
+              :share-function="getShareLink"
+              button-text="Copiar link"
             />
             <ShButton class="mx-2">
               <v-icon>mdi-file-pdf-box</v-icon>
@@ -120,6 +118,19 @@ export default {
         if (msg) { this.$noty.warn(msg.join(', ')) }
       }
       return false
+    },
+    getShareLink () {
+      return this.$timelineService.createTimelineInvitationToken(this.projectId, this.newTimeline._id)
+        .then((response) => {
+          const URLToCopy = `${window.location.origin}/report/${response.token}`
+          navigator.clipboard.writeText(URLToCopy)
+          this.$noty.success('Se ha copiado el link para compartir la timeline en el portapapeles')
+        }).catch((error) => {
+          const msg = error.response?.data?.msg
+          if (msg) {
+            this.$noty.warn(msg.join(', '))
+          }
+        })
     },
     resetDialog () {
       this.showSuccess = false

@@ -15,9 +15,8 @@
         <v-col cols="12" md="4" lg="3">
           <div class="d-flex justify-end">
             <ShShareButton
-              redirect-to="register"
-              success-message="Se ha copiado el link de registro en el portapapeles"
-              :organization-id="organizationId"
+              :share-function="getShareLink"
+              button-text="Copiar el link de registro"
             />
           </div>
         </v-col>
@@ -208,6 +207,19 @@ export default {
     }, 500),
     setUser (user, updatedUser) {
       Object.assign(user, updatedUser)
+    },
+    getShareLink () {
+      return this.$organizationService.getInvitationToken(this.organizationId)
+        .then((response) => {
+          const registerURL = `${window.location.origin}/register?token=${response.invitationToken}`
+          navigator.clipboard.writeText(registerURL)
+          this.$noty.success('Se ha copiado el link de registro en el portapapeles')
+        }).catch((error) => {
+          const msg = error.response?.data?.msg
+          if (msg) {
+            this.$noty.warn(msg.join(', '))
+          }
+        })
     }
   }
 }

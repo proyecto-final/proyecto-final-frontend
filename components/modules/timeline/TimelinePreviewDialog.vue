@@ -18,10 +18,8 @@
           Ver Reporte
         </ShButton>
         <ShShareButton
-          redirect-to="report"
-          success-message="Se ha copiado el link para compartir la timeline en el portapapeles"
-          :organization-id="projectId"
-          :timeline-id="timelineId"
+          :share-function="getShareLink"
+          button-text="Copiar link"
         />
       </div>
     </template>
@@ -124,6 +122,19 @@ export default {
           this.existingLines = result.lines
         })
       }
+    },
+    getShareLink () {
+      return this.$timelineService.createTimelineInvitationToken(this.projectId, this.timelineId)
+        .then((response) => {
+          const URLToCopy = `${window.location.origin}/report/${response.token}`
+          navigator.clipboard.writeText(URLToCopy)
+          this.$noty.success('Se ha copiado el link para compartir la timeline en el portapapeles')
+        }).catch((error) => {
+          const msg = error.response?.data?.msg
+          if (msg) {
+            this.$noty.warn(msg.join(', '))
+          }
+        })
     },
     updateLogLines ({ remainingLines }) {
       this.$emit('update:logLines', remainingLines)

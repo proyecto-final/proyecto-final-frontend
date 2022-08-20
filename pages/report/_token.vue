@@ -57,9 +57,14 @@ export default {
     loading: false,
     isValidToken: false
   }),
+  computed: {
+    token () {
+      return this.$route.params.token
+    }
+  },
   created () {
     this.loading = true
-    this.$timelineService.getSpecific('2', '62fd2a430d657f6555a9ca3f')
+    this.$timelineService.getByToken(this.token)
       .then((response) => {
         this.timeline = response
         this.isValidToken = true

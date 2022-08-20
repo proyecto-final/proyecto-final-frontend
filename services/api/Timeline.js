@@ -24,4 +24,13 @@ export default class Timeline {
   create (projectId, timeline) {
     return this.$axios.$post(`/api/project/${projectId}/timeline`, timeline)
   }
+
+  createTimelineInvitationToken (projectId, timelineId) {
+    return this.$axios.$post(`/api/project/${projectId}/timeline/${timelineId}/generate-token`)
+  }
+
+  getByToken (token) {
+    const dummyValue = '57'
+    return this.$axios.$get(`/api/project/${dummyValue}/timeline/external/${token}`)
+  }
 }
