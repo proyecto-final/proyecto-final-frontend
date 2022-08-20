@@ -190,7 +190,7 @@
                   </v-card>
                 </v-col>
               </v-row>
-              <TimelineCharts />
+              <TimelineCharts :log-lines="logLines" />
               <v-row>
                 <v-col>
                   <v-card v-if="detectedEvents > 0" elevation="0" class="w-100">

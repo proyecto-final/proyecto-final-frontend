@@ -134,16 +134,14 @@
 <script>
 export default {
   props: {
-    title: {
-      type: String,
-      default: ''
+    logLines: {
+      type: Array,
+      required: true
     }
   },
   data: () => ({
     filter: {
-      raw: '',
-      dates: [],
-      eventId: null
+      dates: []
     }
   }),
   watch: {
