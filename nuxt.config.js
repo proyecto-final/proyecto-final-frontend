@@ -126,24 +126,6 @@ export default {
             base: '#B2453E',
             lighten1: '#FBE6E5'
           },
-          chartsFill: {
-            red: 'rgba(255, 99, 132, 0.2)',
-            orange: 'rgba(255, 159, 64, 0.2)',
-            yellow: 'rgba(255, 205, 86, 0.2)',
-            green: 'rgba(75, 192, 192, 0.2)',
-            blue: 'rgba(54, 162, 235, 0.2)',
-            purple: 'rgba(153, 102, 255, 0.2)',
-            grey: 'rgba(201, 203, 207, 0.2)'
-          },
-          chartsBorder: {
-            red: 'rgb(255, 99, 132)',
-            orange: 'rgb(255, 159, 64)',
-            yellow: 'rgb(255, 205, 86)',
-            green: 'rgb(75, 192, 192)',
-            blue: 'rgb(54, 162, 235)',
-            purple: 'rgb(153, 102, 255)',
-            grey: 'rgb(201, 203, 207)'
-          },
           userDetectedEvents: '#50A8FF',
           sherlockDetectedEvents: '#0470B8',
           avatar1: '#9D3F7A',
