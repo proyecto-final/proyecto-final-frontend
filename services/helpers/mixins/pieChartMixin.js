@@ -36,7 +36,7 @@ export default {
           left: 30,
           right: 30,
           bottom: 30,
-          top: 30
+          top: 10
         }
       }
     }

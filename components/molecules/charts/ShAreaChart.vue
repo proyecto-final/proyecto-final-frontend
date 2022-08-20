@@ -20,8 +20,11 @@ export default {
         ...this.chartOptions,
         plugins: {
           filler: {
-            propagate: false,
+            propagate: true,
             drawTime: 'beforeDraw'
+          },
+          legend: {
+            display: false
           }
         }
       }

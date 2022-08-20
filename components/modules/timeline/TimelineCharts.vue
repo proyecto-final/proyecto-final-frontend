@@ -40,8 +40,8 @@
     </v-col>
     <v-col class="d-flex justify-center">
       <ShChartCard
-        title="Vulnerabilidades detectada"
-        description="Potenciales intentos de explotación de vulnerabilidades conocidas y asociadas a distintos patrones de ataque reconocidos por la plataforma de inteligencia MITRE ATT&CK"
+        title="Direcciones IP detectadas"
+        description="Representación de las direcciones IP que establecieron conexiones entrantes y salientes en los equipos analizados."
       >
         <ShPieChart
           :chart-data="{
@@ -58,8 +58,8 @@
     </v-col>
     <v-col class="d-flex justify-center">
       <ShChartCard
-        title="Vulnerabilidades detectada"
-        description="Potenciales intentos de explotación de vulnerabilidades asociadas a distintos patrones de ataque reconocidos por la plataforma de inteligencia MITRE ATT&CK"
+        title="Usuarios detectados"
+        description="Representación de los usuarios que realizaron actividades sospechosas en los equipos analizados."
       >
         <ShDoughnutChart
           :chart-data="{
@@ -76,8 +76,8 @@
     </v-col>
     <v-col class="d-flex justify-center">
       <ShChartCard
-        title="Vulnerabilidades detectada"
-        description="Potenciales intentos de explotación de vulnerabilidades asociadas a distintos patrones de ataque reconocidos por la plataforma de inteligencia MITRE ATT&CK"
+        title="Cronología de eventos"
+        description="Representación de los eventos analizados a lo largo del tiempo."
       >
         <ShLineChart
           :chart-data="{
@@ -97,8 +97,8 @@
     </v-col>
     <v-col class="d-flex justify-center">
       <ShChartCard
-        title="Vulnerabilidades detectada"
-        description="Potenciales intentos de explotación de vulnerabilidades asociadas a distintos patrones de ataque reconocidos por la plataforma de inteligencia MITRE ATT&CK"
+        title="TBD"
+        description="TBD"
       >
         <ShAreaChart
           :chart-data="{
