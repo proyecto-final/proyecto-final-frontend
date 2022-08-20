@@ -1,6 +1,6 @@
 <template>
   <Bar
-    :chart-options="chartOptions"
+    :chart-options="chartOptionsToShow"
     :chart-data="chartData"
     :width="width"
     :height="height"
@@ -11,8 +11,10 @@ import barChartMixin from '@/services/helpers/mixins/barChartMixin'
 
 export default {
   mixins: [barChartMixin],
-  data: () => ({
-    chartOptions: { ...barChartMixin.chartOptions, indexAxis: 'y' }
-  })
+  computed: {
+    chartOptionsToShow () {
+      return { ...this.chartOptions, indexAxis: 'y' }
+    }
+  }
 }
 </script>

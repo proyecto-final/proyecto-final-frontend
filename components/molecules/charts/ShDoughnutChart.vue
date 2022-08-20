@@ -1,6 +1,6 @@
 <template>
   <Doughnut
-    :chart-options="chartOptions"
+    :chart-options="chartOptionsToShow"
     :chart-data="chartData"
     :width="width"
     :height="height"
@@ -11,8 +11,10 @@ import pieChartMixin from '@/services/helpers/mixins/pieChartMixin'
 
 export default {
   mixins: [pieChartMixin],
-  data: () => ({
-    chartOptions: { ...pieChartMixin.chartOptions, cutout: '50%' }
-  })
+  computed: {
+    chartOptionsToShow () {
+      return { ...this.chartOptions, cutout: '50%' }
+    }
+  }
 }
 </script>

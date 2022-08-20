@@ -1,6 +1,6 @@
 <template>
   <ChartLine
-    :chart-options="chartOptions"
+    :chart-options="chartOptionsToShow"
     :chart-data="chartDataToShow"
     :width="width"
     :height="height"
@@ -11,20 +11,20 @@ import lineChartMixin from '@/services/helpers/mixins/lineChartMixin'
 
 export default {
   mixins: [lineChartMixin],
-  data: () => ({
-    chartOptions: {
-      ...lineChartMixin.chartOptions,
-      plugins: {
-        filler: {
-          propagate: false,
-          drawTime: 'beforeDraw'
-        }
-      }
-    }
-  }),
   computed: {
     chartDataToShow () {
       return { ...this.chartData, fill: true }
+    },
+    chartOptionsToShow () {
+      return {
+        ...this.chartOptions,
+        plugins: {
+          filler: {
+            propagate: false,
+            drawTime: 'beforeDraw'
+          }
+        }
+      }
     }
   }
 }
