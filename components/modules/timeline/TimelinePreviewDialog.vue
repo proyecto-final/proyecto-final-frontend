@@ -31,7 +31,7 @@
         Guardar
       </ShButton>
       <TimelineGenerateDialog v-else-if="!isReadOnly" :project-id="projectId" :log-lines="logLines" />
-      <ShButton v-else class="ma-4" @click="redirectToLogPage">
+      <ShButton v-else class="ma-4" :disabled="isLogDeleted" @click="redirectToLogPage">
         Editar líneas de log
       </ShButton>
     </template>
@@ -39,6 +39,11 @@
       <v-row justify="center" no-gutters>
         <v-col cols="8">
           <div>
+            <v-alert v-if="isLogDeleted" type="warning" outlined icon="mdi-alert" class="justify-space-between mb-6 mt-2">
+              <ShBodySmall class="black-text">
+                No es posible editar la timeline dado que el log asociado a la misma ha sido eliminado.
+              </ShBodySmall>
+            </v-alert>
             <v-alert type="warning" icon="mdi-alert" class="justify-space-between mb-6 mt-2">
               <ShBodySmall class="white-text">
                 Recordá que el reporte incluye las líneas de código resaltadas y los eventos vinculados.<br>
