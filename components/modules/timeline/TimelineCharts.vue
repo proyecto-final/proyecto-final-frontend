@@ -33,7 +33,7 @@
       </v-col>
       <v-col class="d-flex justify-center">
         <ShChartCard
-          title="Vulnerabilidades detectada"
+          title="Vulnerabilidades detectadas"
           description="Potenciales intentos de explotación de vulnerabilidades asociadas a distintos patrones de ataque reconocidos por la plataforma de inteligencia MITRE ATT&CK."
         >
           <ShHorizontalBarChart
@@ -132,6 +132,8 @@
   </div>
 </template>
 <script>
+import { debounce } from 'lodash'
+
 export default {
   props: {
     logLines: {
@@ -153,7 +155,11 @@ export default {
       },
       deep: true
     }
+  },
+  methods: {
+    fetchDebounced: debounce(function () {
+      this.$fetch()
+    }, 500)
   }
 }
-
 </script>
