@@ -1,5 +1,5 @@
 <template>
-  <ShButton class="mx-2" :loading="gettingLink" @click="copyLinkToClipboard">
+  <ShButton text class="mx-2" :loading="gettingLink" @click="copyLinkToClipboard">
     <v-icon>mdi-content-copy</v-icon>
     {{ buttonText }}
   </ShButton>
