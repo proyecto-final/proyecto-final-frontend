@@ -190,46 +190,7 @@
                   </v-card>
                 </v-col>
               </v-row>
-              <v-row>
-                <v-col class="d-flex justify-center">
-                  <ShChartCard
-                    title="Login jperez"
-                    description="Intentos de login del usuario lperez"
-                  >
-                    <ShVerticalBarChart
-                      :chart-data="{
-                        labels: ['Jan', 'Feb', 'Mar'],
-                        datasets: [{
-                          label: 'Login lperez',
-                          backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                          borderWidth: 1,
-                          borderColor: 'rgb(54, 162, 235)',
-                          data: [40,20,30]
-                        }]
-                      }"
-                    />
-                  </ShChartCard>
-                </v-col>
-                <v-col class="d-flex justify-center">
-                  <ShChartCard
-                    title="Login de usuarios"
-                    description="Intentos de login de usuarios sospechosos"
-                  >
-                    <ShHorizontalBarChart
-                      :chart-data="{
-                        labels: ['plopez', 'mrey', 'jmiranda'],
-                        datasets: [{
-                          label: '',
-                          backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                          borderWidth: 1,
-                          borderColor: 'rgb(54, 162, 235)',
-                          data: [40,20,30]
-                        }]
-                      }"
-                    />
-                  </ShChartCard>
-                </v-col>
-              </v-row>
+              <TimelineCharts />
               <v-row>
                 <v-col>
                   <v-card v-if="detectedEvents > 0" elevation="0" class="w-100">
