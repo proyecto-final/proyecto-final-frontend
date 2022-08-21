@@ -3,6 +3,7 @@
     width="600"
     confirm-text="Actualizar"
     title="Actualizar timeline"
+    success-text="Timeline actualizado"
     :async-confirm-function="updateFromLog"
     persistent
     v-on="$listeners"
