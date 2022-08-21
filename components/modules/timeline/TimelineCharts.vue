@@ -29,7 +29,7 @@
         >
           <ShVerticalBarChart
             :chart-data="{
-              labels: ['Eventos'],
+              labels: [''],
               datasets: Object.values(amountPerEvent)
             }"
           />
@@ -43,7 +43,7 @@
           <ShHorizontalBarChart
             :color-offset="6"
             :chart-data="{
-              labels: ['Vulnerabilidades'],
+              labels: [''],
               datasets: Object.values(amountPerVulnerability)
             }"
           />
