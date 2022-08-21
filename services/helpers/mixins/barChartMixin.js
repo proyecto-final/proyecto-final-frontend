@@ -9,6 +9,10 @@ export default {
   name: 'BarChart',
   components: { Bar },
   props: {
+    colorOffset: {
+      type: Number,
+      default: 0
+    },
     width: {
       type: Number,
       default: 400
@@ -39,7 +43,7 @@ export default {
           ...dataset,
           data: [dataset.data],
           borderWidth: 1,
-          backgroundColor: this.getColorForIndex(idx)
+          backgroundColor: this.getColorForIndex(this.colorOffset + idx)
         }
       })
     }

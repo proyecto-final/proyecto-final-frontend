@@ -41,6 +41,7 @@
           description="Potenciales intentos de explotación de vulnerabilidades asociadas a distintos patrones de ataque reconocidos por la plataforma de inteligencia MITRE ATT&CK."
         >
           <ShHorizontalBarChart
+            :color-offset="6"
             :chart-data="{
               labels: ['Vulnerabilidades'],
               datasets: Object.values(amountPerVulnerability)
