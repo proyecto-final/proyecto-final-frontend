@@ -48,7 +48,7 @@
               Estadísticas
             </v-tab>
             <v-tab-item class="pb-2">
-              <div class="mb-4 mt-4">
+              <div class="my-4">
                 <ShChip class="mx-1" @click="selectAll">
                   <v-icon v-if="isSelectedAll">
                     mdi-check
@@ -62,12 +62,12 @@
                   {{ tag.tag }}
                 </ShChip>
               </div>
-              <div class="d-flex justify-space-between">
-                <div class="mr-10">
+              <v-row>
+                <v-col cols="8">
                   <v-timeline v-for="(logLine, index) in showableLogLines" :key="index" dense clipped-left>
                     <v-timeline-item small color="primary">
-                      <v-row>
-                        <v-col>
+                      <div class="d-flex align-center">
+                        <div>
                           <ShBody strong class="mb-4">
                             {{ logLine.raw }}
                           </ShBody>
@@ -117,33 +117,34 @@
                               {{ logLine.timestamp | date }}
                             </ShBody>
                           </div>
-                        </v-col>
-                        <v-col>
+                        </div>
+                        <div v-if="!isReadOnly" class="ml-2">
                           <ShIconButton
-                            v-if="!isReadOnly"
                             class="d-flex align-center"
                             color="red"
                             icon="mdi-delete"
                             title="Borrar"
                             @click="removeLine(logLine)"
                           />
-                        </v-col>
-                      </v-row>
+                        </div>
+                      </div>
                     </v-timeline-item>
                   </v-timeline>
-                </div>
-                <v-card v-if="isReadOnly" color="note1Bg" flat class="mx-2 w-100" height="50%">
-                  <v-card-text>
-                    <ShHeading2 neutral>
-                      Descripción
-                    </ShHeading2>
-                    <br>
-                    <ShBodySmall>
-                      {{ timelineDescription === '' ? 'El timeline no posee descripción' : timelineDescription }}
-                    </ShBodySmall>
-                  </v-card-text>
-                </v-card>
-              </div>
+                </v-col>
+                <v-col cols="4">
+                  <v-card v-if="isReadOnly" color="note1Bg" flat class="mx-2">
+                    <v-card-text>
+                      <ShHeading2 neutral>
+                        Descripción
+                      </ShHeading2>
+                      <br>
+                      <ShBodySmall>
+                        {{ timelineDescription === '' ? 'El timeline no posee descripción' : timelineDescription }}
+                      </ShBodySmall>
+                    </v-card-text>
+                  </v-card>
+                </v-col>
+              </v-row>
             </v-tab-item>
             <v-tab-item>
               <v-row>
@@ -183,21 +184,21 @@
                       </div>
                       <div>
                         <ShBodySmall neutral class="mb-4 mx-4">
-                          Eventos analizados
+                          Vulnerabilidades analizadas
                         </ShBodySmall>
                       </div>
                     </v-card-text>
                   </v-card>
                 </v-col>
               </v-row>
-              <TimelineCharts :log-lines="logLines" />
+              <TimelineCharts :log-lines="lines2Show" />
               <v-row>
                 <v-col>
                   <v-card v-if="detectedEvents > 0" elevation="0" class="w-100">
                     <v-card-text>
                       <div class="d-flex justify-space-between align-center my-4">
                         <ShHeading2 class="mt-3 mb-4">
-                          Eventos analizados
+                          Vulnerabilidades analizadas
                         </ShHeading2>
                         <ShBodySmall neutral>
                           Usuario VS Sherlock

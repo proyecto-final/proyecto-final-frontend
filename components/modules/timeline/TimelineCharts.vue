@@ -1,18 +1,28 @@
 <template>
   <div>
-    <v-row class="mt-3">
-      <v-col cols="12" md="6" lg="4">
-        <ShDatePicker
-          v-model="filter.dates"
-          hide-details
-          clearable
-          range
-          placeholder="Filtrar por fecha"
-        />
-      </v-col>
-    </v-row>
+    <v-card class="w-100 pa-4 my-6" flat outlined>
+      <div>
+        <ShHeading1>
+          Reportes
+        </ShHeading1>
+        <ShBodySmall neutral>
+          En esta sección podrás analizar la información recabada por chainsaw y realizar filtros para poder obtener mayor información sobre los eventos analizados.
+        </ShBodySmall>
+      </div>
+      <v-row class="mt-2">
+        <v-col cols="12" md="4" lg="3">
+          <ShDatePicker
+            v-model="filter.dates"
+            hide-details
+            clearable
+            range
+            placeholder="Filtrar por fecha"
+          />
+        </v-col>
+      </v-row>
+    </v-card>
     <v-row>
-      <v-col class="d-flex justify-center">
+      <v-col xl="6" cols="12">
         <ShChartCard
           title="ID de eventos detectados"
           description="Cantidad de eventos independientes detectados en la evidencia analizada. Dichos eventos representan las acciones de los usuarios dentro de los equipos involucrados en la investigación."
@@ -31,7 +41,7 @@
           />
         </ShChartCard>
       </v-col>
-      <v-col class="d-flex justify-center">
+      <v-col xl="6" cols="12">
         <ShChartCard
           title="Vulnerabilidades detectadas"
           description="Potenciales intentos de explotación de vulnerabilidades asociadas a distintos patrones de ataque reconocidos por la plataforma de inteligencia MITRE ATT&CK."
@@ -50,7 +60,7 @@
           />
         </ShChartCard>
       </v-col>
-      <v-col class="d-flex justify-center">
+      <v-col xl="6" cols="12">
         <ShChartCard
           title="Direcciones IP detectadas"
           description="Representación de las direcciones IP que establecieron conexiones entrantes y salientes en los equipos analizados."
@@ -68,7 +78,7 @@
           />
         </ShChartCard>
       </v-col>
-      <v-col class="d-flex justify-center">
+      <v-col xl="6" cols="12">
         <ShChartCard
           title="Usuarios detectados"
           description="Representación de los usuarios que realizaron actividades sospechosas en los equipos analizados."
@@ -86,7 +96,7 @@
           />
         </ShChartCard>
       </v-col>
-      <v-col class="d-flex justify-center">
+      <v-col xl="6" cols="12">
         <ShChartCard
           title="Cronología de eventos"
           description="Representación de los eventos analizados a lo largo del tiempo."
@@ -107,7 +117,7 @@
           />
         </ShChartCard>
       </v-col>
-      <v-col class="d-flex justify-center">
+      <v-col xl="6" cols="12">
         <ShChartCard
           title="TBD"
           description="TBD"
@@ -132,8 +142,6 @@
   </div>
 </template>
 <script>
-import { debounce } from 'lodash'
-
 export default {
   props: {
     logLines: {
@@ -146,20 +154,47 @@ export default {
       dates: []
     }
   }),
-  watch: {
-    'filter.dates': {
-      handler (dates) {
-        if ([0, 2].includes(dates?.length)) {
-          this.fetchDebounced()
+  computed: {
+    filteredLogLines () {
+      // TODO: make the filters work here
+      return this.logLines
+    },
+    amountPerEvent () {
+      const getIdentifier = line => line.detail?.eventId
+      return this.filteredLogLines.reduce((countPerEvent, line) => {
+        const identifier = getIdentifier(line)
+        if (!countPerEvent[identifier]) {
+          countPerEvent[identifier] = { count: 0, name: identifier }
         }
-      },
-      deep: true
+        countPerEvent[identifier].count++
+        return countPerEvent
+      }, {})
+    },
+    vulnerabilities () {
+      return this.logLines.map(line => line.vulnerabilites).flat()
+    },
+    amountPerVulnerability () {
+      const getIdentifier = vulnerability => vulnerability._id
+      return this.vulnerabilities.reduce((countPerEvent, vulnerability) => {
+        const identifier = getIdentifier(vulnerability)
+        if (!countPerEvent[identifier]) {
+          countPerEvent[identifier] = { count: 0, name: vulnerability.name }
+        }
+        countPerEvent[identifier].count++
+        return countPerEvent
+      }, {})
+    },
+    amountPerUser () {
+      const getIdentifier = line => line.detail?.userId || line.detail?.userName
+      return this.filteredLogLines.reduce((countPerEvent, line) => {
+        const identifier = getIdentifier(line)
+        if (!countPerEvent[identifier]) {
+          countPerEvent[identifier] = { count: 0, name: identifier }
+        }
+        countPerEvent[identifier].count++
+        return countPerEvent
+      }, {})
     }
-  },
-  methods: {
-    fetchDebounced: debounce(function () {
-      this.$fetch()
-    }, 500)
   }
 }
 </script>

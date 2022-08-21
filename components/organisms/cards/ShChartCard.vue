@@ -1,7 +1,7 @@
 <template>
-  <v-card class="w-100" flat outlined>
+  <v-card class="w-100 pa-4" flat outlined>
     <template #default>
-      <div class="mt-4 ml-6">
+      <div>
         <ShHeading2>
           {{ title }}
         </ShHeading2>
@@ -10,7 +10,7 @@
         </ShBodySmall>
       </div>
       <div>
-        <ShChip class="mt-4 ml-6">
+        <ShChip>
           4624
         </ShChip>
       </div>
