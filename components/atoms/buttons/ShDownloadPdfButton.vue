@@ -23,10 +23,6 @@ export default {
       type: String,
       required: true
     },
-    logId: {
-      type: String,
-      required: true
-    },
     timelineId: {
       type: String,
       required: true
@@ -34,7 +30,7 @@ export default {
   },
   methods: {
     downloadPdf () {
-      this.$timelineService.downloadPdf(this.projectId, this.logId, this.timelineId)
+      this.$timelineService.downloadPdf(this.projectId, this.timelineId)
         .then((data) => {
           const downloadLink = document.createElement('a')
           downloadLink.href = window.URL.createObjectURL(new Blob([data], { type: 'application/pdf' }))
@@ -45,7 +41,14 @@ export default {
         })
         .catch((error) => {
           const msg = error.response?.data?.msg
-          if (msg) { this.$noty.warn(msg.join(', ')) }
+          const status = error.response?.status
+          if (msg) {
+            this.$noty.warn(msg.join(', '))
+          } else if (status === 404) {
+            this.$noty.warn('No se encontró la timeline')
+          } else {
+            this.$noty.warn('Ocurrió un error al descargar la timeline')
+          }
         })
     }
   }

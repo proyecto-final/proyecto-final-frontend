@@ -45,7 +45,6 @@
             <ShDownloadPdfButton
               class="mx-2"
               :project-id="projectId"
-              :log-id="logId"
               :timeline-id="timelineId"
             />
           </div>
@@ -101,7 +100,6 @@ export default {
   data: () => ({
     showSuccess: false,
     timelineMetadata: getEmptyTimelineMetadata(),
-    logId: '',
     timelineId: ''
   }),
   methods: {
@@ -115,9 +113,7 @@ export default {
       try {
         const [createdTimeline] = await Promise.all([this.$timelineService.create(this.projectId, timeline), this.$logService.saveMarkedLogsLines(this.projectId, timeline.log, [])])
         this.showSuccess = true
-        const { log, _id } = createdTimeline
-        this.logId = log._id
-        this.timelineId = _id
+        this.timelineId = createdTimeline._id
       } catch (error) {
         const msg = error.response?.data?.msg
         if (msg) { this.$noty.warn(msg.join(', ')) }
