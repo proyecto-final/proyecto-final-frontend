@@ -28,7 +28,7 @@
         <TimelineGenerateDialog v-else-if="!isReadOnly" :project-id="projectId" :log-lines="logLines" />
         <template v-else>
           <TimelineUpdateFromLogDialog :project-id="projectId" :timeline-id="timelineId" />
-          <ShButton class="ma-4" :disabled="isLogDeleted" @click="redirectToLogPage">
+          <ShButton class="ma-4" @click="redirectToLogPage">
             Editar líneas de log
           </ShButton>
         </template>
@@ -295,9 +295,9 @@ export default {
       type: Array,
       required: true
     },
-    logId: {
-      type: String,
-      default: ''
+    timeline: {
+      type: Object,
+      default: null
     },
     timelineId: {
       type: String,
@@ -367,16 +367,6 @@ export default {
     const differentTags = new Set(this.logLines.map(line => line.tags).flat())
     this.distinctTags = Array.from(differentTags).map(tag => ({ tag, isSelected: false }))
   },
-  created () {
-    if (!this.isEditing && this.isReadOnly) {
-      return this.$logService.getLines(this.projectId, this.logId, {
-        offset: 0,
-        limit: 1
-      }).catch(() => {
-        this.isLogDeleted = true
-      })
-    }
-  },
   methods: {
     getLinesIfExists () {
       if (this.timelineId && this.isReadOnly) {
@@ -426,7 +416,15 @@ export default {
       this.newTag = ''
     },
     redirectToLogPage () {
-      this.$router.push(`/${this.projectId}/logs/${this.logId}?timelineId=${this.timelineId}`)
+      const logId = this.timeline.log[0]
+      this.$logService.getLines(this.projectId, logId, {
+        offset: 0,
+        limit: 1
+      }).then(() => {
+        this.$router.push(`/${this.projectId}/logs/${logId}?timelineId=${this.timelineId}`)
+      }).catch(() => {
+        this.$noty.warn('Imposible editar la timeline, el log de esta timeline ha sido eliminado')
+      })
     },
     redirectToTimelinePage () {
       this.$router.push(`/${this.projectId}/timelines`)

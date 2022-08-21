@@ -207,7 +207,7 @@ export default {
     },
     markLogLines () {
       this.lineIds = this.timelineLines.map(lineId => lineId.line)
-      return this.$logService.saveMarkedLogsLines(this.projectId, this.logId, this.lineIds)
+      return this.$logService.setMarkedLines(this.projectId, this.logId, this.lineIds)
         .catch((error) => {
           const msg = error.response?.data?.msg
           if (msg) {
