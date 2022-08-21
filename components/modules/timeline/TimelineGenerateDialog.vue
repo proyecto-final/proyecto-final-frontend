@@ -42,13 +42,12 @@
               <v-icon>mdi-content-copy</v-icon>
               Copiar link
             </ShButton>
-            <ShButton
+            <ShDownloadPdfButton
               class="mx-2"
-              :href="downloadLink()"
-            >
-              <v-icon>mdi-file-pdf-box</v-icon>
-              Descargar
-            </ShButton>
+              :project-id="projectId"
+              :log-id="logId"
+              :timeline-id="timelineId"
+            />
           </div>
         </div>
       </template>
@@ -130,9 +129,6 @@ export default {
     resetDialog () {
       this.showSuccess = false
       this.timelineMetadata = getEmptyTimelineMetadata()
-    },
-    downloadLink () {
-      return `${process.env.API_ENDPOINT}/api/project/${this.projectId}/log/${this.logId}/timeline/${this.timelineId}/report`
     }
   }
 }
