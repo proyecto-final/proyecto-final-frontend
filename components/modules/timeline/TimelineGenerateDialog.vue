@@ -117,9 +117,9 @@ export default {
         const savedMarkedLogLinesPromies = this.$logService.saveMarkedLogsLines(this.projectId, timeline.log, [])
         await Promise.all([createdTimelinePromise, savedMarkedLogLinesPromies])
         this.showSuccess = true
-        createdTimelinePromise.then((response) => {
-          this.logId = response.log._id
-          this.timelineId = response._id
+        createdTimelinePromise.then(({ log, _id }) => {
+          this.logId = log._id
+          this.timelineId = _id
         })
       } catch (error) {
         const msg = error.response?.data?.msg
