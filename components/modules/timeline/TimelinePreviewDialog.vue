@@ -27,6 +27,7 @@
       <TimelineGenerateDialog v-else-if="!isReadOnly" :project-id="projectId" :log-lines="logLines" />
       <div v-else>
         <ShButton class="ma-4" @click="redirectToLogPage">
+          <v-icon>mdi-pencil</v-icon>
           Editar líneas de log
         </ShButton>
         <ShDownloadPdfButton
