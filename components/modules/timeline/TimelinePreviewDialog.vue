@@ -29,12 +29,13 @@
         <ShButton class="ma-4" :disabled="isLogDeleted" @click="redirectToLogPage">
           Editar líneas de log
         </ShButton>
-        <ShDownloadPdfButton
+        <ShButton
           class="mx-2"
-          :project-id="projectId"
-          :log-id="logId"
-          :timeline-id="timelineId"
-        />
+          :href="downloadLink()"
+        >
+          <v-icon>mdi-file-pdf-box</v-icon>
+          Descargar
+        </ShButton>
       </div>
     </template>
     <template #default>
@@ -453,6 +454,9 @@ export default {
           }
           return false
         })
+    },
+    downloadLink () {
+      return `${process.env.API_ENDPOINT}/api/project/${this.projectId}/log/${this.logId}/timeline/${this.timelineId}/report`
     }
   }
 }

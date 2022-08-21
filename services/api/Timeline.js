@@ -24,13 +24,4 @@ export default class Timeline {
   create (projectId, timeline) {
     return this.$axios.$post(`/api/project/${projectId}/timeline`, timeline)
   }
-
-  downloadPdf (projectId, logId, timelineId) {
-    return this.$axios.$get(`/api/project/${projectId}/log/${logId}/timeline/${timelineId}/report`, {
-      headers: {
-        accept: 'application/pdf'
-      },
-      responseType: 'blob'
-    })
-  }
 }
