@@ -9,11 +9,6 @@
           {{ description }}
         </ShBodySmall>
       </div>
-      <div>
-        <ShChip>
-          4624
-        </ShChip>
-      </div>
       <slot />
     </template>
   </v-card>

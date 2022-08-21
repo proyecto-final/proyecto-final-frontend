@@ -29,14 +29,8 @@
         >
           <ShVerticalBarChart
             :chart-data="{
-              labels: ['Jan', 'Feb', 'Mar'],
-              datasets: [{
-                label: '',
-                backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                borderWidth: 1,
-                borderColor: 'rgb(54, 162, 235)',
-                data: [40,20,30]
-              }]
+              labels: ['Eventos'],
+              datasets: Object.values(amountPerEvent)
             }"
           />
         </ShChartCard>
@@ -48,14 +42,8 @@
         >
           <ShHorizontalBarChart
             :chart-data="{
-              labels: ['plopez', 'mrey', 'jmiranda'],
-              datasets: [{
-                label: '',
-                backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                borderWidth: 1,
-                borderColor: 'rgb(54, 162, 235)',
-                data: [40,20,30]
-              }]
+              labels: ['Vulnerabilidades'],
+              datasets: Object.values(amountPerVulnerability)
             }"
           />
         </ShChartCard>
@@ -160,13 +148,14 @@ export default {
       return this.logLines
     },
     amountPerEvent () {
-      const getIdentifier = line => line.detail?.eventId
+      // TODO: definir que hacer con eventos de .logs
+      const getIdentifier = line => line.detail?.eventId?.toString()
       return this.filteredLogLines.reduce((countPerEvent, line) => {
         const identifier = getIdentifier(line)
         if (!countPerEvent[identifier]) {
-          countPerEvent[identifier] = { count: 0, name: identifier }
+          countPerEvent[identifier] = { data: 0, label: identifier }
         }
-        countPerEvent[identifier].count++
+        countPerEvent[identifier].data++
         return countPerEvent
       }, {})
     },
@@ -178,20 +167,32 @@ export default {
       return this.vulnerabilities.reduce((countPerEvent, vulnerability) => {
         const identifier = getIdentifier(vulnerability)
         if (!countPerEvent[identifier]) {
-          countPerEvent[identifier] = { count: 0, name: vulnerability.name }
+          countPerEvent[identifier] = { data: 0, label: vulnerability.name }
         }
-        countPerEvent[identifier].count++
+        countPerEvent[identifier].data++
         return countPerEvent
       }, {})
     },
     amountPerUser () {
-      const getIdentifier = line => line.detail?.userId || line.detail?.userName
+      const getIdentifier = line => line.detail?.userId || line.detail?.userName || 'Sin identificar'
       return this.filteredLogLines.reduce((countPerEvent, line) => {
         const identifier = getIdentifier(line)
         if (!countPerEvent[identifier]) {
-          countPerEvent[identifier] = { count: 0, name: identifier }
+          countPerEvent[identifier] = { data: 0, label: identifier }
         }
-        countPerEvent[identifier].count++
+        countPerEvent[identifier].data++
+        return countPerEvent
+      }, {})
+    },
+    amountPerInterval () {
+      // TODO: en base a filtros cambiar intervalo
+      const getIntervalValue = date => `${new Date(date).toDateString()} - Hora:${new Date(date).getHours()}`
+      return this.filteredLogLines.reduce((countPerEvent, line) => {
+        const interval = getIntervalValue(line.timestamp)
+        if (!countPerEvent[interval]) {
+          countPerEvent[interval] = { data: 0, label: interval }
+        }
+        countPerEvent[interval].data++
         return countPerEvent
       }, {})
     }

@@ -21,9 +21,9 @@ export default {
       validator (chartData) {
         return 'labels' in chartData &&
       'datasets' in chartData &&
-      chartData.datasets instanceof Object &&
-      'data' in chartData.datasets &&
-      'backgroundColor' in chartData.datasets
+      Array.isArray(chartData.datasets) &&
+      chartData.datasets
+        .every(dataset => 'data' in dataset && 'backgroundColor' in dataset)
       }
     }
   },

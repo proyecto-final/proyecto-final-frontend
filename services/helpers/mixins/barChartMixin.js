@@ -1,9 +1,11 @@
 import { Bar } from 'vue-chartjs/legacy'
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
+import systemColorsMixin from '@/services/helpers/mixins/systemColorsMixin'
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 
 export default {
+  mixins: [systemColorsMixin],
   name: 'BarChart',
   components: { Bar },
   props: {
@@ -21,11 +23,25 @@ export default {
       validator (chartData) {
         return 'labels' in chartData &&
       'datasets' in chartData &&
-      chartData.datasets instanceof Object &&
-      'label' in chartData.datasets &&
-      'data' in chartData.datasets &&
-      'backgroundColor' in chartData.datasets
+      Array.isArray(chartData.datasets) &&
+      chartData.datasets
+        .every(dataset => 'label' in dataset && 'data' in dataset)
       }
+    }
+  },
+  computed: {
+    chartDataWithColors () {
+      return { ...this.chartData, datasets: this.datasetsWithColors }
+    },
+    datasetsWithColors () {
+      return this.chartData.datasets.map((dataset, idx) => {
+        return {
+          ...dataset,
+          data: [dataset.data],
+          borderWidth: 1,
+          backgroundColor: this.getColorForIndex(idx)
+        }
+      })
     }
   },
   data: () => ({
@@ -49,11 +65,6 @@ export default {
           right: 30,
           bottom: 30,
           top: 30
-        }
-      },
-      plugins: {
-        legend: {
-          display: false
         }
       }
     }

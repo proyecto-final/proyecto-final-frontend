@@ -20,17 +20,12 @@ export default {
       type: Object,
       required: true,
       validator (chartData) {
+        const datasetAttributes = ['label', 'data', 'backgroundColor', 'borderColor', 'borderWidth', 'tension', 'pointBackgroundColor', 'pointBorderColor']
         return 'labels' in chartData &&
       'datasets' in chartData &&
-      chartData.datasets instanceof Object &&
-      'label' in chartData.datasets &&
-      'data' in chartData.datasets &&
-      'backgroundColor' in chartData.datasets &&
-      'borderColor' in chartData.datasets &&
-      'borderWidth' in chartData.datasets &&
-      'pointBackgroundColor' in chartData.datasets &&
-      'pointBorderColor' in chartData.datasets &&
-      'tension' in chartData.datasets
+      Array.isArray(chartData.datasets) &&
+      chartData.datasets
+        .every(dataset => datasetAttributes.every(attribute => attribute in dataset))
       }
     }
   },
