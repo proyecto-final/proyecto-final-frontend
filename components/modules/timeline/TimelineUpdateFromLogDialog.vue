@@ -6,7 +6,6 @@
     :async-confirm-function="updateFromLog"
     persistent
     v-on="$listeners"
-    @open="resetDialog"
   >
     <template #activator="{on}">
       <slot name="activator" :on="on">
@@ -34,10 +33,6 @@ export default {
       type: String,
       required: true
     },
-    logId: {
-      type: String,
-      required: true
-    },
     projectId: {
       type: String,
       required: true
@@ -45,26 +40,7 @@ export default {
   },
   methods: {
     updateFromLog () {
-      this.$logService.getLines(this.projectId, this.logId, {
-        offset: 0,
-        limit: 100,
-        isSelected: true
-      }).then((result) => {
-        const timeline = {
-          log: this.logId,
-          lines: result.map(({ _id, tags }) => ({ id: _id, tags }))
-        }
-        this.$timelineService.update(this.projectId, this.timelineId, timeline)
-          .then((response) => {
-            this.$emit('updated', response)
-          })
-          .catch((error) => {
-            const msg = error.response?.data?.msg
-            if (msg) {
-              this.$noty.warn(msg.join(', '))
-            }
-          })
-      })
+      return this.$timelineService.updateFromLog(this.projectId, this.timelineId)
     }
   }
 }

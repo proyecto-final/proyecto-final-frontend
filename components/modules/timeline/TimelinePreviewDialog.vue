@@ -21,13 +21,18 @@
       <ShIconButton color="neutral" icon="mdi-close" title="Cerrar" @click="close()" />
     </template>
     <template #close>
-      <ShButton v-if="isEditing" class="ma-4" @click="saveExistingTimeline">
-        Guardar
-      </ShButton>
-      <TimelineGenerateDialog v-else-if="!isReadOnly" :project-id="projectId" :log-lines="logLines" />
-      <ShButton v-else class="ma-4" :disabled="isLogDeleted" @click="redirectToLogPage">
-        Editar líneas de log
-      </ShButton>
+      <div>
+        <ShButton v-if="isEditing" class="ma-4" @click="saveExistingTimeline">
+          Guardar
+        </ShButton>
+        <TimelineGenerateDialog v-else-if="!isReadOnly" :project-id="projectId" :log-lines="logLines" />
+        <template v-else>
+          <TimelineUpdateFromLogDialog :project-id="projectId" :timeline-id="timelineId" />
+          <ShButton class="ma-4" :disabled="isLogDeleted" @click="redirectToLogPage">
+            Editar líneas de log
+          </ShButton>
+        </template>
+      </div>
     </template>
     <template #default>
       <v-row justify="center" no-gutters>

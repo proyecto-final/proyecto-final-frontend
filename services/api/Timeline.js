@@ -24,4 +24,8 @@ export default class Timeline {
   create (projectId, timeline) {
     return this.$axios.$post(`/api/project/${projectId}/timeline`, timeline)
   }
+
+  updateFromLog (projectId, timelineId) {
+    return this.$axios.$post(`/api/project/${projectId}/timeline/${timelineId}/refresh`)
+  }
 }
