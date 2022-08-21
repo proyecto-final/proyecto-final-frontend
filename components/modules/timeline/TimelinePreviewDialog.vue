@@ -33,7 +33,6 @@
         <ShDownloadPdfButton
           class="mx-2"
           :project-id="projectId"
-          :log-id="logId"
           :timeline-id="timelineId"
         />
       </div>
