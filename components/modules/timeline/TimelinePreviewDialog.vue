@@ -25,9 +25,17 @@
         Guardar
       </ShButton>
       <TimelineGenerateDialog v-else-if="!isReadOnly" :project-id="projectId" :log-lines="logLines" />
-      <ShButton v-else class="ma-4" :disabled="isLogDeleted" @click="redirectToLogPage">
-        Editar líneas de log
-      </ShButton>
+      <div v-else>
+        <ShButton class="ma-4" :disabled="isLogDeleted" @click="redirectToLogPage">
+          Editar líneas de log
+        </ShButton>
+        <ShDownloadPdfButton
+          class="mx-2"
+          :project-id="projectId"
+          :log-id="logId"
+          :timeline-id="timelineId"
+        />
+      </div>
     </template>
     <template #default>
       <v-row justify="center" no-gutters>
@@ -35,7 +43,8 @@
           <div>
             <v-alert v-if="isLogDeleted" type="warning" outlined icon="mdi-alert" class="justify-space-between mb-6 mt-2">
               <ShBodySmall class="black-text">
-                No es posible editar la timeline dado que el log asociado a la misma ha sido eliminado.
+                El log asociado a la timeline ha sido eliminado.<br>
+                No es posible editarla y el PDF descargado no contedrá el detalle de las líneas.
               </ShBodySmall>
             </v-alert>
             <v-alert type="warning" icon="mdi-alert" class="justify-space-between mb-6 mt-2">
