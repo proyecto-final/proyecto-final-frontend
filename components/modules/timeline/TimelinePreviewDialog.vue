@@ -416,7 +416,7 @@ export default {
       this.newTag = ''
     },
     redirectToLogPage () {
-      const logId = this.timeline.log[0]
+      const logId = this.timeline.logs[0]
       this.$logService.getLines(this.projectId, logId, {
         offset: 0,
         limit: 1
