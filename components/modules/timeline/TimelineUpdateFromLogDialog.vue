@@ -17,7 +17,7 @@
     </template>
     <template #default>
       <ShHeading2 class="d-flex justify-center my-4">
-        ¿Esta seguro que desea actualizar la timeline?
+        ¿Estás seguro que deseás actualizar la timeline?
       </ShHeading2>
       <v-alert type="warning" icon="mdi-alert" class="justify-space-between mb-6 mt-2">
         <ShBodySmall class="white-text">
