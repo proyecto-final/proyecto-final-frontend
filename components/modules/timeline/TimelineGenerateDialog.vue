@@ -100,7 +100,7 @@ export default {
   data: () => ({
     showSuccess: false,
     timelineMetadata: getEmptyTimelineMetadata(),
-    timelineId: ''
+    timelineId: '',
     createdTimeline: [],
     newTimeline: null
   }),
@@ -113,11 +113,11 @@ export default {
         lines: this.logLines.map(({ _id, tags }) => ({ id: _id, tags }))
       }
       try {
-        this.timelineId = createdTimeline._id
         const [createdTimeline] = await Promise.all([
           this.$timelineService.create(this.projectId, timeline),
           this.$logService.setMarkedLines(this.projectId, timeline.log, [])])
         this.showSuccess = true
+        this.timelineId = createdTimeline._id
         this.newTimeline = createdTimeline
       } catch (error) {
         const msg = error.response?.data?.msg
