@@ -42,10 +42,11 @@
               <v-icon>mdi-content-copy</v-icon>
               Copiar link
             </ShButton>
-            <ShButton class="mx-2">
-              <v-icon>mdi-file-pdf-box</v-icon>
-              Descargar
-            </ShButton>
+            <ShDownloadPdfButton
+              class="mx-2"
+              :project-id="projectId"
+              :timeline-id="timelineId"
+            />
           </div>
         </div>
       </template>
@@ -98,7 +99,8 @@ export default {
   },
   data: () => ({
     showSuccess: false,
-    timelineMetadata: getEmptyTimelineMetadata()
+    timelineMetadata: getEmptyTimelineMetadata(),
+    timelineId: ''
   }),
   methods: {
     async save () {
@@ -109,8 +111,9 @@ export default {
         lines: this.logLines.map(({ _id, tags }) => ({ id: _id, tags }))
       }
       try {
-        await Promise.all([this.$timelineService.create(this.projectId, timeline), this.$logService.setMarkedLines(this.projectId, logId, [])])
+        const [createdTimeline] = await Promise.all([this.$timelineService.create(this.projectId, timeline), this.$logService.setMarkedLines(this.projectId, logId, [])])
         this.showSuccess = true
+        this.timelineId = createdTimeline._id
       } catch (error) {
         const msg = error.response?.data?.msg
         if (msg) { this.$noty.warn(msg.join(', ')) }

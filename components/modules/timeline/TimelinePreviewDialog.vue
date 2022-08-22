@@ -21,21 +21,25 @@
       <ShIconButton color="neutral" icon="mdi-close" title="Cerrar" @click="close()" />
     </template>
     <template #close>
-      <div>
-        <ShButton v-if="isEditing" class="ma-4" @click="saveExistingTimeline">
-          Guardar
+      <ShButton v-if="isEditing" class="ma-4" @click="saveExistingTimeline">
+        Guardar
+      </ShButton>
+      <TimelineGenerateDialog v-else-if="!isReadOnly" :project-id="projectId" :log-lines="logLines" />
+      <div v-else>
+        <TimelineUpdateFromLogDialog
+          :project-id="projectId"
+          :timeline-id="timelineId"
+          @update="getLinesIfExists"
+        />
+        <ShButton class="ma-4" @click="redirectToLogPage">
+          <v-icon>mdi-pencil</v-icon>
+          Editar líneas de log
         </ShButton>
-        <TimelineGenerateDialog v-else-if="!isReadOnly" :project-id="projectId" :log-lines="logLines" />
-        <template v-else>
-          <TimelineUpdateFromLogDialog
-            :project-id="projectId"
-            :timeline-id="timelineId"
-            @update="getLinesIfExists"
-          />
-          <ShButton class="ma-4" @click="redirectToLogPage">
-            Editar líneas de log
-          </ShButton>
-        </template>
+        <ShDownloadPdfButton
+          class="mx-2"
+          :project-id="projectId"
+          :timeline-id="timelineId"
+        />
       </div>
     </template>
     <template #default>
@@ -44,7 +48,8 @@
           <div>
             <v-alert v-if="isLogDeleted" type="warning" outlined icon="mdi-alert" class="justify-space-between mb-6 mt-2">
               <ShBodySmall class="black-text">
-                No es posible editar la timeline dado que el log asociado a la misma ha sido eliminado.
+                El log asociado a la timeline ha sido eliminado.<br>
+                No es posible editarla y el PDF descargado no contedrá el detalle de las líneas.
               </ShBodySmall>
             </v-alert>
             <v-alert type="warning" icon="mdi-alert" class="justify-space-between mb-6 mt-2">
@@ -420,7 +425,7 @@ export default {
       this.newTag = ''
     },
     redirectToLogPage () {
-      const logId = this.timeline.logs[0]
+      const logId = this.timeline.log[0]
       this.$logService.getLines(this.projectId, logId, {
         offset: 0,
         limit: 1
