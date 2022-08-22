@@ -42,6 +42,10 @@ export default {
   methods: {
     updateFromLog () {
       return this.$timelineService.updateFromLog(this.projectId, this.timelineId)
+        .then(() => {
+          this.$emit('update')
+          return true
+        })
     }
   }
 }

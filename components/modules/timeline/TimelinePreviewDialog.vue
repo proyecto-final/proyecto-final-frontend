@@ -27,7 +27,11 @@
         </ShButton>
         <TimelineGenerateDialog v-else-if="!isReadOnly" :project-id="projectId" :log-lines="logLines" />
         <template v-else>
-          <TimelineUpdateFromLogDialog :project-id="projectId" :timeline-id="timelineId" />
+          <TimelineUpdateFromLogDialog
+            :project-id="projectId"
+            :timeline-id="timelineId"
+            @update="getLinesIfExists"
+          />
           <ShButton class="ma-4" @click="redirectToLogPage">
             Editar líneas de log
           </ShButton>
