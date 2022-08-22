@@ -1,7 +1,7 @@
 <template>
   <Doughnut
     :chart-options="chartOptionsToShow"
-    :chart-data="chartData"
+    :chart-data="chartDataWithColors"
     :width="width"
     :height="height"
   />

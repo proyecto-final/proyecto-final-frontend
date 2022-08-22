@@ -1,7 +1,7 @@
 <template>
   <ChartLine
     :chart-options="chartOptions"
-    :chart-data="chartData"
+    :chart-data="chartDataWithColors"
     :width="width"
     :height="height"
   />

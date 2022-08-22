@@ -1,9 +1,11 @@
 import { Pie } from 'vue-chartjs/legacy'
 import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement, CategoryScale, LinearScale } from 'chart.js'
+import systemColorsMixin from '@/services/helpers/mixins/systemColorsMixin'
 
 ChartJS.register(Title, Tooltip, Legend, ArcElement, CategoryScale, LinearScale)
 
 export default {
+  mixins: [systemColorsMixin],
   name: 'PieChart',
   components: { Pie },
   props: {
@@ -25,6 +27,21 @@ export default {
       chartData.datasets
         .every(dataset => 'data' in dataset && 'backgroundColor' in dataset)
       }
+    }
+  },
+  computed: {
+    chartDataWithColors () {
+      return { ...this.chartData, datasets: this.datasetsWithColors }
+    },
+    datasetsWithColors () {
+      return this.chartData.datasets.map((dataset, idx) => {
+        return {
+          ...dataset,
+          data: [dataset.data],
+          borderWidth: 1,
+          backgroundColor: this.getColorForIndex(this.colorOffset + idx)
+        }
+      })
     }
   },
   data: () => ({

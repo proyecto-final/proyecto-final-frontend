@@ -56,7 +56,7 @@
         >
           <ShPieChart
             :chart-data="{
-              labels: ['plopez', 'mrey', 'jmiranda'],
+              labels: [''],
               datasets: [{
                 backgroundColor: 'rgba(54, 162, 235, 0.2)',
                 borderWidth: 1,
@@ -74,13 +74,8 @@
         >
           <ShDoughnutChart
             :chart-data="{
-              labels: ['plopez', 'mrey', 'jmiranda'],
-              datasets: [{
-                backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                borderWidth: 1,
-                borderColor: 'white',
-                data: [40,20,30]
-              }]
+              labels: [''],
+              datasets: Object.values(amountPerUser)
             }"
           />
         </ShChartCard>

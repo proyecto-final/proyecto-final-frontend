@@ -1,9 +1,11 @@
 import { Line as ChartLine } from 'vue-chartjs/legacy'
 import { Chart as ChartJS, Title, Tooltip, Legend, LineElement, CategoryScale, LinearScale, PointElement } from 'chart.js'
+import systemColorsMixin from '@/services/helpers/mixins/systemColorsMixin'
 
 ChartJS.register(Title, Tooltip, Legend, LineElement, CategoryScale, LinearScale, PointElement)
 
 export default {
+  mixins: [systemColorsMixin],
   name: 'LineChart',
   components: { ChartLine },
   props: {
@@ -27,6 +29,21 @@ export default {
       chartData.datasets
         .every(dataset => datasetAttributes.every(attribute => attribute in dataset))
       }
+    }
+  },
+  computed: {
+    chartDataWithColors () {
+      return { ...this.chartData, datasets: this.datasetsWithColors }
+    },
+    datasetsWithColors () {
+      return this.chartData.datasets.map((dataset, idx) => {
+        return {
+          ...dataset,
+          data: [dataset.data],
+          borderWidth: 1,
+          backgroundColor: this.getColorForIndex(this.colorOffset + idx)
+        }
+      })
     }
   },
   data: () => ({
