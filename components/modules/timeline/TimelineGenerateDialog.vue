@@ -38,14 +38,15 @@
             <ShSecondaryButton class="mx-2" @click="$router.push(`/${projectId}/timelines`)">
               Ir a timelines
             </ShSecondaryButton>
+            <ShDownloadPdfButton
+              class="mx-2"
+              :project-id="projectId"
+              :timeline-id="timelineId"
+            />
             <ShShareButton
               :share-function="getShareLink"
               button-text="Copiar link"
             />
-            <ShButton class="mx-2">
-              <v-icon>mdi-file-pdf-box</v-icon>
-              Descargar
-            </ShButton>
           </div>
         </div>
       </template>
@@ -98,9 +99,10 @@ export default {
   },
   data: () => ({
     showSuccess: false,
+    timelineMetadata: getEmptyTimelineMetadata(),
+    timelineId: ''
     createdTimeline: [],
-    newTimeline: null,
-    timelineMetadata: getEmptyTimelineMetadata()
+    newTimeline: null
   }),
   methods: {
     async save () {
@@ -111,6 +113,7 @@ export default {
         lines: this.logLines.map(({ _id, tags }) => ({ id: _id, tags }))
       }
       try {
+        this.timelineId = createdTimeline._id
         const [createdTimeline] = await Promise.all([
           this.$timelineService.create(this.projectId, timeline),
           this.$logService.setMarkedLines(this.projectId, timeline.log, [])])

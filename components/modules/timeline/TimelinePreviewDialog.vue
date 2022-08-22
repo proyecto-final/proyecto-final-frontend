@@ -31,9 +31,22 @@
         Guardar
       </ShButton>
       <TimelineGenerateDialog v-else-if="!isReadOnly" :project-id="projectId" :log-lines="logLines" />
-      <ShButton v-else class="ma-4" @click="redirectToLogPage">
-        Editar líneas de log
-      </ShButton>
+      <div v-else>
+        <TimelineUpdateFromLogDialog
+          :project-id="projectId"
+          :timeline-id="timelineId"
+          @update="getLinesIfExists"
+        />
+        <ShButton class="ma-4" @click="redirectToLogPage">
+          <v-icon>mdi-pencil</v-icon>
+          Editar líneas de log
+        </ShButton>
+        <ShDownloadPdfButton
+          class="mx-2"
+          :project-id="projectId"
+          :timeline-id="timelineId"
+        />
+      </div>
     </template>
     <template #default>
       <v-row justify="center" no-gutters>
@@ -145,7 +158,7 @@ export default {
       })
     },
     redirectToLogPage () {
-      const logId = this.timeline.logs[0]
+      const logId = this.timeline.log[0]
       this.$logService.getLines(this.projectId, logId, {
         offset: 0,
         limit: 1
