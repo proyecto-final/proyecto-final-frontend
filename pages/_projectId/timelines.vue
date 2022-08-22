@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="pa-6">
     <div v-if="shouldShowEmtpyState" class="mb-6 screen-min-height d-flex align-center justify-center">
       <ShTableEmptyState
         class="my-10"
@@ -60,7 +60,7 @@
           <div class="d-flex">
             <TimelinePreviewDialog
               :log-lines="item.lines"
-              :log-id="item.log"
+              :timeline="item"
               is-read-only
               :timeline-id="item._id"
               :timeline-description="item.description"

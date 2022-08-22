@@ -104,15 +104,16 @@ export default {
   }),
   methods: {
     async save () {
+      const logId = this.logLines[0].log
       const timeline = {
         ...this.timelineMetadata,
-        log: this.logLines[0].log,
+        logs: [logId],
         lines: this.logLines.map(({ _id, tags }) => ({ id: _id, tags }))
       }
       try {
         const [createdTimeline] = await Promise.all([
           this.$timelineService.create(this.projectId, timeline),
-          this.$logService.saveMarkedLogsLines(this.projectId, timeline.log, [])])
+          this.$logService.setMarkedLines(this.projectId, timeline.log, [])])
         this.showSuccess = true
         this.newTimeline = createdTimeline
       } catch (error) {
