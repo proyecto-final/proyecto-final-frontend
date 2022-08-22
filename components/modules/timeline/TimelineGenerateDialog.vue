@@ -111,7 +111,7 @@ export default {
         lines: this.logLines.map(({ _id, tags }) => ({ id: _id, tags }))
       }
       try {
-        const [createdTimeline] = await Promise.all([this.$timelineService.create(this.projectId, timeline), this.$logService.saveMarkedLogsLines(this.projectId, timeline.log, [])])
+        const [createdTimeline] = await Promise.all([this.$timelineService.create(this.projectId, timeline), this.$logService.setMarkedLines(this.projectId, logId, [])])
         this.showSuccess = true
         this.timelineId = createdTimeline._id
       } catch (error) {

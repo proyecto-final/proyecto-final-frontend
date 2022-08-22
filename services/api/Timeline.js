@@ -33,4 +33,8 @@ export default class Timeline {
       responseType: 'blob'
     })
   }
+
+  updateFromLog (projectId, timelineId) {
+    return this.$axios.$post(`/api/project/${projectId}/timeline/${timelineId}/refresh`)
+  }
 }
