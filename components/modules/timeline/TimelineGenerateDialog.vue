@@ -115,7 +115,7 @@ export default {
       try {
         const [createdTimeline] = await Promise.all([
           this.$timelineService.create(this.projectId, timeline),
-          this.$logService.setMarkedLines(this.projectId, timeline.log, [])])
+          this.$logService.setMarkedLines(this.projectId, logId, [])])
         this.showSuccess = true
         this.timelineId = createdTimeline._id
         this.newTimeline = createdTimeline
