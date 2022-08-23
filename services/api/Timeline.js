@@ -37,4 +37,13 @@ export default class Timeline {
   updateFromLog (projectId, timelineId) {
     return this.$axios.$post(`/api/project/${projectId}/timeline/${timelineId}/refresh`)
   }
+
+  createTimelineInvitationToken (projectId, timelineId) {
+    return this.$axios.$post(`/api/project/${projectId}/timeline/${timelineId}/generate-token`)
+  }
+
+  getByToken (token) {
+    const dummyValue = '57'
+    return this.$axios.$get(`/api/project/${dummyValue}/timeline/external/${token}`)
+  }
 }
