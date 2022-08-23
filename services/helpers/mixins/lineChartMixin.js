@@ -41,6 +41,7 @@ export default {
           ...dataset,
           data: [dataset.data],
           borderWidth: 1,
+          tension: 0.1,
           backgroundColor: this.getColorForIndex(this.colorOffset + idx)
         }
       })

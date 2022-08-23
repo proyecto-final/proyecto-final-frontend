@@ -39,6 +39,7 @@ export default {
           ...dataset,
           data: [dataset.data],
           borderWidth: 1,
+          borderColor: 'white',
           backgroundColor: this.getColorForIndex(this.colorOffset + idx)
         }
       })

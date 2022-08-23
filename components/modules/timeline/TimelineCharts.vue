@@ -57,12 +57,7 @@
           <ShPieChart
             :chart-data="{
               labels: [''],
-              datasets: [{
-                backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                borderWidth: 1,
-                borderColor: 'white',
-                data: [40,20,30]
-              }]
+              datasets: Object.values(amountPerIp)
             }"
           />
         </ShChartCard>
@@ -171,6 +166,17 @@ export default {
     },
     amountPerUser () {
       const getIdentifier = line => line.detail?.userId || line.detail?.userName || 'Sin identificar'
+      return this.filteredLogLines.reduce((countPerEvent, line) => {
+        const identifier = getIdentifier(line)
+        if (!countPerEvent[identifier]) {
+          countPerEvent[identifier] = { data: 0, label: identifier }
+        }
+        countPerEvent[identifier].data++
+        return countPerEvent
+      }, {})
+    },
+    amountPerIp () {
+      const getIdentifier = line => line.detail?.ip || 'Sin identificar'
       return this.filteredLogLines.reduce((countPerEvent, line) => {
         const identifier = getIdentifier(line)
         if (!countPerEvent[identifier]) {
