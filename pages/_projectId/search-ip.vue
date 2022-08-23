@@ -13,7 +13,20 @@
         />
       </v-col>
     </v-row>
-    <SearchIpCard :ip="ip" />
+    <ShTableEmptyState
+      v-if="!isSearching"
+      class="my-10"
+      img-src="/empty-state/search-ip.svg"
+    >
+      <template #heading>
+        Buscá la IP que necesites
+      </template>
+      <template #body>
+        Ingresá la dirección IP en el buscador<br>
+        para visualizar sus detalles.
+      </template>
+    </ShTableEmptyState>
+    <SearchIpCard v-else :ip="ip" />
   </div>
 </template>
 <script>
@@ -21,6 +34,7 @@ import { debounce } from 'lodash'
 export default {
   data: () => ({
     loading: false,
+    isSearching: false,
     filter: {
       name: null,
       date: null
@@ -47,6 +61,7 @@ export default {
   methods: {
     search () {
       this.loading = true
+      this.isSearching = true
       this.fetchDebounced()
     },
     fetchDebounced: debounce(function () {
