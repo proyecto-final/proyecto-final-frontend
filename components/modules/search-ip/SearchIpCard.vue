@@ -99,12 +99,38 @@
       <template v-if="ip.isReported">
         <v-divider class="mt-8 mb-4" />
         <div>
-          <ShBodySmall neutral strong class="ml-1">
-            {{ `Reportes (${ip.reports})` }}
-          </ShBodySmall>
-          <v-icon color="neutral base" class="float-right">
-            mdi-chevron-down
-          </v-icon>
+          <div>
+            <div v-if="!showReports">
+              <ShBodySmall neutral strong>
+                {{ `Reportes (${ip.reports})` }}
+              </ShBodySmall>
+              <v-icon color="neutral base" class="float-right" @click="getReports">
+                mdi-chevron-down
+              </v-icon>
+            </div>
+            <div v-else class="mt-2">
+              <ShBodySmall neutral strong>
+                {{ `Reportes (${ip.reports})` }}
+              </ShBodySmall>
+              <v-icon color="neutral base" class="float-right" @click="getReports">
+                mdi-chevron-up
+              </v-icon>
+              <div v-for="(report, index) in reports" :key="index" class="justify-comment">
+                <ShBodySmall neutral strong>
+                  {{ report.date }}
+                </ShBodySmall>
+                <br>
+                <ShShowMoreLessText
+                  :text="report.comment"
+                  :characters-to-show="70"
+                />
+                <ShChip v-for="(category, index2) in report.categories" :key="index2" class="mt-3 mr-2" small color="note1">
+                  {{ category }}
+                </ShChip>
+                <v-divider class="my-4" />
+              </div>
+            </div>
+          </div>
         </div>
       </template>
     </v-card-text>
@@ -117,6 +143,40 @@ export default {
       type: Object,
       required: true
     }
+  },
+  data: () => ({
+    reports: [{ date: '47 seconds', comment: ' Aug 23 05:39:48 ns03 sshd[941662]: Failed password for root from 61.177.173.37 port 60239 ssh2 Aug 23 05:39:50 ns03 sshd[941662]: Failed password for root from 61.177.173.37 port 60239 ssh2 Aug 23 05:39:52 ns03 sshd[941666]: pam_unix(sshd:auth): authentication failure logname= uid=0 euid=0 tty=ssh ruser= rhost=61.177.173.37 user=root Aug 23 05:39:55 ns03 sshd[941666]: Failed password for root from 61.177.173.37 port 21499 ssh2 Aug 23 05:39:58 ns03 sshd[941666]: Failed password for root from 61.177.173.37 port 21499 ssh2', categories: ['Brute Force', 'SSH'] },
+      { date: '24 minutes ago', comment: 'Unauthorized connection attempt detected from IP address 61.177.173.37 to port 22 (warsaw) [p]', categories: ['Brute Force', 'Exploited Host'] }],
+    options: {
+      page: 1,
+      itemsPerPage: 10
+    },
+    showReports: false,
+    headers: [
+      {
+        text: 'Fecha',
+        value: 'date'
+      },
+      {
+        text: 'Comentario',
+        value: 'comment'
+      },
+      {
+        text: 'Categorías',
+        value: 'categories'
+      }
+    ],
+    serverItemsLength: 2,
+    loading: false
+  }),
+  methods: {
+    getReports () {
+      if (this.showReports) {
+        this.showReports = false
+      } else {
+        this.showReports = true
+      }
+    }
   }
 }
 </script>
@@ -128,5 +188,10 @@ export default {
 .red-text{
   color: #E3231D;
   vertical-align: middle
+}
+.justify-comment{
+  margin-top: 10px;
+    text-align: justify;
+    text-justify: inter-word
 }
 </style>
