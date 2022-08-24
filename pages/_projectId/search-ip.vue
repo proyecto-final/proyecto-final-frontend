@@ -5,11 +5,11 @@
         <v-form @submit.prevent="search">
           <ShSearchField
             v-model="filter.ip"
-            hide-details
             clearable
             placeholder="Buscar IP"
             maxlength="32"
             class="mt-4"
+            :rules="[$rules.required(''), $rules.ipFormat()]"
           />
         </v-form>
       </v-col>
@@ -39,18 +39,12 @@ export default {
       ip: null
     },
     ip: null
-    /* ip: {
-      isReported: true,
-      reputation: 70,
-      reports: 467,
-      country: 'Argentina',
-      city: 'General Rodríguez',
-      isp: 'Fibertel',
-      asn: 'AS3209',
-      tor: false,
-      vpn: false
-    } */
   }),
+  computed: {
+    projectId () {
+      return this.$route.params.projectId
+    }
+  },
   created () {
     this.$store.commit('navigation/SET_PAGE_TITLE', 'Buscar IPS')
     this.$store.commit('navigation/CAN_GO_BACK', false)
@@ -58,14 +52,13 @@ export default {
   methods: {
     search () {
       this.loading = true
-      console.log(this.filter.ip)
-      /* this.$searchIpService.getIp(this.projectId, this.filter.name).then((result) => {
+      this.$searchIpService.getIp(this.projectId, this.filter.ip).then((result) => {
         this.ip = result
       }).catch(() => {
         this.$noty.warn('Hubo un error al cargar la dirección IP ingresada')
       }).finally(() => {
         this.loading = false
-      }) */
+      })
     }
   }
 }

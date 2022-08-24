@@ -5,7 +5,7 @@ export default class SearchIp {
     this.router = router
   }
 
-  getIp (projectId, params) {
-    return this.$axios.$get(`/api/project/${projectId}/ip-analysis/`, { params })
+  getIp (projectId, ip) {
+    return this.$axios.$post(`/api/project/${projectId}/ip-analysis/`, { ip })
   }
 }

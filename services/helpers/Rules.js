@@ -7,6 +7,11 @@ export default class Rules {
     return value => (!!value && value.trim().length !== 0) || `El campo ${field} debe poseer un caracter que no sea espacio`
   }
 
+  ipFormat (field) {
+    return /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(field) ||
+    'El campo debe poseer un formato válido de IP'
+  }
+
   maxLength (max) {
     return value => value.length <= max || `El campo debe tener hasta ${max} caracteres`
   }
