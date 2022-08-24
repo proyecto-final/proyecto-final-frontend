@@ -1,20 +1,22 @@
 <template>
-  <div class="mb-6">
+  <div class="mb-6 px-4">
     <v-row justify="space-between">
       <v-col cols="12" md="4" lg="3">
-        <ShSearchField
-          v-model="filter.name"
-          hide-details
-          clearable
-          placeholder="Buscar IP"
-          maxlength="32"
-          class="ml-4 mt-4"
-          @input="search"
-        />
+        <v-form @submit.prevent="search">
+          <ShSearchField
+            v-model="filter.ip"
+            hide-details
+            clearable
+            placeholder="Buscar IP"
+            maxlength="32"
+            class="mt-4"
+          />
+        </v-form>
       </v-col>
     </v-row>
+    <v-progress-linear v-if="loading" indeterminate color="primary" />
     <ShTableEmptyState
-      v-if="!isSearching"
+      v-if="!ip"
       class="my-10"
       img-src="/empty-state/search-ip.svg"
     >
@@ -30,16 +32,14 @@
   </div>
 </template>
 <script>
-import { debounce } from 'lodash'
 export default {
   data: () => ({
     loading: false,
-    isSearching: false,
     filter: {
-      name: null,
-      date: null
+      ip: null
     },
-    ip: {
+    ip: null
+    /* ip: {
       isReported: true,
       reputation: 70,
       reports: 467,
@@ -49,11 +49,8 @@ export default {
       asn: 'AS3209',
       tor: false,
       vpn: false
-    }
+    } */
   }),
-  fetch () {
-    this.loading = true
-  },
   created () {
     this.$store.commit('navigation/SET_PAGE_TITLE', 'Buscar IPS')
     this.$store.commit('navigation/CAN_GO_BACK', false)
@@ -61,12 +58,15 @@ export default {
   methods: {
     search () {
       this.loading = true
-      this.isSearching = true
-      this.fetchDebounced()
-    },
-    fetchDebounced: debounce(function () {
-      this.$fetch()
-    }, 500)
+      console.log(this.filter.ip)
+      /* this.$searchIpService.getIp(this.projectId, this.filter.name).then((result) => {
+        this.ip = result
+      }).catch(() => {
+        this.$noty.warn('Hubo un error al cargar la dirección IP ingresada')
+      }).finally(() => {
+        this.loading = false
+      }) */
+    }
   }
 }
 </script>
