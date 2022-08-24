@@ -103,12 +103,24 @@
                 rows="4"
               />
             </div>
+            <div class="d-flex">
+              <v-progress-linear
+                v-model="value"
+                rounded
+                color="primary"
+                class="mx-2 mb-2"
+                :active="show"
+                :indeterminate="query"
+                :query="true"
+              />
+            </div>
           </v-tab-item>
         </v-tabs>
       </div>
     </template>
   </ShAsyncDialog>
 </template>
+<script src="/axios.min.js"></script>
 <script>
 export default {
   props: {
@@ -140,9 +152,16 @@ export default {
       }
       const fileMetadatas = this.logFiles.map(({ title, description }) => ({ title, description }))
       const files = this.logFiles.map(({ file }) => file)
+
+      var config = {
+            onUploadProgress: function(progressEvent) {
+              var percentCompleted = Math.round( (progressEvent.loaded * 100) / progressEvent.total )
+            }
+          }
+
       return this.$logService.save(this.projectId,
         files,
-        fileMetadatas)
+        fileMetadatas, config)
         .then((log) => {
           this.$emit('created', log)
           return true
