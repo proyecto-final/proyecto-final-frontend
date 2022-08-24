@@ -17,10 +17,10 @@
         <div>
           <ShHeading1>
             {{ ip.raw }}
+            <ShBodySmall strong :class="`${goodReputation ? 'green-text' : 'red-text'}`">
+              {{ goodReputation ? 'Sin Reportes' : 'Reportada' }}
+            </ShBodySmall>
           </ShHeading1>
-          <ShBodySmall strong :class="`${goodReputation ? 'green-text' : 'red-text'}`">
-            {{ goodReputation ? 'Sin Reportes' : 'Reportada' }}
-          </ShBodySmall>
         </div>
         <v-row no-gutters class="my-2">
           <v-col>
@@ -30,7 +30,7 @@
               </ShBodySmall>
             </div>
             <div>
-              <ShBodySmall neutral strong>
+              <ShBodySmall neutral strong class="mr-1">
                 {{ ip.country || 'País no encontrado' }}
               </ShBodySmall>
             </div>
@@ -57,7 +57,7 @@
               </ShBodySmall>
             </div>
             <div>
-              <ShBodySmall neutral strong>
+              <ShBodySmall neutral strong class="mr-1">
                 {{ ip.ISP || 'ISP no encontrado' }}
               </ShBodySmall>
             </div>
@@ -116,7 +116,7 @@
               <div v-show="showReports" class="sh-scrollbar mh-200-px mt-2">
                 <div v-for="(report, index) in ip.reports" :key="index" class="justify-comment">
                   <ShBodySmall neutral strong>
-                    {{ report.reportedAt }}
+                    {{ report.reportedAt | date }}
                   </ShBodySmall>
                   <ShShowMoreLessText
                     :text="report.comment"
@@ -170,7 +170,7 @@ export default {
 }
 .justify-comment{
   margin-top: 10px;
-    text-align: justify;
-    text-justify: inter-word
+  text-align: justify;
+  text-justify: inter-word
 }
 </style>

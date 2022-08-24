@@ -4,6 +4,7 @@
       {{ cutTo(text, charactersToShow) }}
     </ShBodySmall>
     <ShIconButton
+      v-if="text.length > charactersToShow"
       icon="mdi-plus"
       color="neutral"
       title="Mostrar más"
