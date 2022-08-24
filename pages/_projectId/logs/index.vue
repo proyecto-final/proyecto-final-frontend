@@ -192,3 +192,8 @@ export default {
   }
 }
 </script>
+<style scoped>
+.screen-min-height{
+  min-height: calc(100vh - 150px);
+}
+</style>
