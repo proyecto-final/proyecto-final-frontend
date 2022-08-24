@@ -23,7 +23,7 @@
           <v-alert type="warning" icon="mdi-alert" class="justify-space-between mb-6 mt-2">
             <ShBodySmall class="white-text">
               Podrás subir hasta <strong>5</strong> logs juntos en formato <strong>.evtx o .log</strong>.<br>
-              Recordá que el tamaño máximo por archivo es de <strong>50mb</strong>.
+              Recordá que el tamaño máximo por archivo es de <strong>5MB</strong>.
             </ShBodySmall>
           </v-alert>
         </div>
@@ -126,7 +126,7 @@ export default {
       const MEGABYTES_5 = 1024 * 1024 * 5
       return this.logFiles.length > 5
         ? 'Solo puedes subir hasta 5 archivos'
-        : this.logFiles.some(file => file.file.size > MEGABYTES_5) ? 'Solo puedes subir archivos de hasta 50mb' : ''
+        : this.logFiles.some(file => file.file.size > MEGABYTES_5) ? 'Solo puedes subir archivos de hasta 5MB' : ''
     }
   },
   methods: {
