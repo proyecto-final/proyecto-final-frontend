@@ -1,13 +1,12 @@
 <template>
   <div class="mb-6 px-4">
     <v-row justify="space-between">
-      <v-col cols="12" md="4" lg="3">
+      <v-col cols="4">
         <v-form @submit.prevent="search">
           <ShSearchField
             v-model="filter.ip"
             clearable
             placeholder="Buscar IP"
-            maxlength="32"
             class="mt-4"
             :rules="[$rules.required(''), $rules.ipFormat()]"
           />

@@ -2,7 +2,7 @@
   <v-card
     :color="goodReputation ? '#E4F5E5' : '#FFF0EC'"
     flat
-    class="ml-4 mt-4 w-30"
+    class="w-30"
   >
     <v-card-text class="py-2">
       <div class="pa-4">
