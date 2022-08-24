@@ -102,7 +102,7 @@
           </v-col>
         </v-row>
         <v-divider />
-        <v-row no-gutters class="mt-2">
+        <div class="mt-2">
           <div v-if="!goodReputation">
             <div class="mt-2">
               <div class="d-flex justify-space-between">
@@ -130,7 +130,7 @@
               </div>
             </div>
           </div>
-        </v-row>
+        </div>
       </div>
     </v-card-text>
   </v-card>
