@@ -9,7 +9,7 @@
       color="neutral"
       title="Mostrar más"
       small
-      @click="showMore"
+      @click="showMoreLess"
     />
   </div>
   <div v-else>
@@ -21,7 +21,7 @@
       color="neutral"
       title="Mostrar menos"
       small
-      @click="showLess"
+      @click="showMoreLess"
     />
   </div>
 </template>
@@ -44,11 +44,8 @@ export default {
     cutTo (str, length) {
       return str.length > length ? `${str.substr(0, length - 3)}...` : str
     },
-    showMore () {
-      this.readMore = true
-    },
-    showLess () {
-      this.readMore = false
+    showMoreLess () {
+      this.readMore = !this.readMore
     }
   }
 }
