@@ -115,7 +115,7 @@
                     </v-icon>
                   </div>
                   <div v-show="showReports" class="sh-scrollbar mh-200-px mt-2">
-                    <div v-for="(report, index) in ip.reports" :key="index" class="justify-text">
+                    <div v-for="(report, index) in ip.reports" :key="index" class="mt-10 justify-comment">
                       <ShBodySmall neutral strong>
                         {{ report.reportedAt | date }}
                       </ShBodySmall>
@@ -168,7 +168,6 @@ export default {
 </script>
 <style scoped>
 .justify-comment{
-  margin-top: 10px;
   text-align: justify;
   text-justify: inter-word
 }
