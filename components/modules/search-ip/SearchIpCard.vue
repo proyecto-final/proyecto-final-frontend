@@ -2,7 +2,7 @@
   <v-row no-gutters>
     <v-col cols="4" lg="4" md="6" sm="8">
       <v-card
-        :color="goodReputation ? '#E4F5E5' : '#FFF0EC'"
+        :color="reputation.cardColor"
         flat
       >
         <v-card-text class="py-2">
@@ -11,15 +11,15 @@
               <ShBodySmall neutral>
                 La reputación de la IP es
               </ShBodySmall>
-              <ShBodySmall strong :class="`${goodReputation ? 'success-text' : 'error-text'}`">
+              <ShBodySmall strong :class="reputation.textClass">
                 {{ `${ip.reputation}%` }}
               </ShBodySmall>
             </div>
             <div>
               <ShHeading1>
                 {{ ip.raw }}
-                <ShBodySmall strong :class="`${goodReputation ? 'success-text' : 'error-text'}`">
-                  {{ goodReputation ? 'Sin Reportes' : 'Reportada' }}
+                <ShBodySmall strong :class="reputation.textClass">
+                  {{ reputation.text }}
                 </ShBodySmall>
               </ShHeading1>
             </div>
@@ -104,7 +104,7 @@
             </v-row>
             <v-divider />
             <div class="mt-2">
-              <div v-if="!goodReputation">
+              <div v-if="!reputation.isReported">
                 <div class="mt-2">
                   <div class="d-flex justify-space-between">
                     <ShBodySmall neutral strong>
@@ -120,7 +120,7 @@
                         {{ report.reportedAt | date }}
                       </ShBodySmall>
                       <ShShowMoreLessText
-                        :text="report.comment"
+                        :text="report.comment || 'No comments.'"
                         :characters-to-show="70"
                       />
                       <ShChip v-for="(category, index2) in report.categories" :key="index2" class="mr-2" small color="note1">
@@ -148,15 +148,15 @@ export default {
   },
   data: () => ({
     showReports: false,
-    loading: false,
-    reputation: {
-      cardColor: '',
-      textClass: ''
-    }
+    loading: false
   }),
   computed: {
-    goodReputation () {
-      return this.ip.reputation < 20
+    reputation () {
+      if (this.ip.reputation < 20) {
+        return { isReported: true, text: 'Sin Reportes', cardColor: '#E4F5E5', textClass: 'success-text' }
+      } else {
+        return { isReported: false, text: 'Reportada', cardColor: '#FFF0EC', textClass: 'error-text' }
+      }
     }
   },
   methods: {
