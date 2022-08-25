@@ -31,17 +31,12 @@
                     {{ logLine.raw }}
                   </ShBody>
                   <div>
-                    <ShChip
+                    <LogLineVulnerabilityDialog
                       v-for="(vulnerability, vulnerabilityIndex) in logLine.vulnerabilites"
                       :key="`${index}-${vulnerabilityIndex}`"
-                      class="mb-2 mx-1"
-                      color="vulnerability"
-                    >
-                      <v-icon>
-                        mdi-link
-                      </v-icon>
-                      {{ vulnerability.name }}
-                    </ShChip>
+                      show-full
+                      :vulnerability="vulnerability"
+                    />
                   </div>
                   <ShChip v-for="(tag, tagIndex) in logLine.tags" :key="`${index}-${tagIndex}`" class="mb-2 mx-1">
                     {{ tag }}
