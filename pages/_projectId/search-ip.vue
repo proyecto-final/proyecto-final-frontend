@@ -45,7 +45,7 @@ export default {
     }
   },
   created () {
-    this.$store.commit('navigation/SET_PAGE_TITLE', 'Buscar IPS')
+    this.$store.commit('navigation/SET_PAGE_TITLE', 'Buscar IPs')
     this.$store.commit('navigation/CAN_GO_BACK', false)
   },
   methods: {
