@@ -7,9 +7,9 @@ export default class Rules {
     return value => (!!value && value.trim().length !== 0) || `El campo ${field} debe poseer un caracter que no sea espacio`
   }
 
-  ipFormat () {
+  ipFormat (value) {
     const regexExp = /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/gi
-    return value => regexExp.test(value) || 'El campo debe poseer un formato válido de IP'
+    return regexExp.test(value) || 'El campo debe poseer un formato válido de IP'
   }
 
   maxLength (max) {

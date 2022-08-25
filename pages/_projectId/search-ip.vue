@@ -2,13 +2,13 @@
   <div class="mb-6 px-4">
     <v-row justify="space-between">
       <v-col cols="4">
-        <v-form @submit.prevent="search">
+        <v-form ref="form" @submit.prevent="search">
           <ShSearchField
             v-model="filter.ip"
             clearable
             placeholder="Buscar IP"
             class="mt-4"
-            :rules="[$rules.required(''), $rules.ipFormat()]"
+            :rules="[$rules.required(''), $rules.ipFormat]"
           />
         </v-form>
       </v-col>
@@ -50,6 +50,9 @@ export default {
   },
   methods: {
     search () {
+      if (!this.$refs.form.validate() || this.loading) {
+        return
+      }
       this.loading = true
       this.$searchIpService.getIp(this.projectId, this.filter.ip).then((result) => {
         this.ip = result
