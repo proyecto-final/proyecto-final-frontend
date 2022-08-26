@@ -148,7 +148,7 @@
               </div>
               <div>
                 <ShBodySmall neutral class="mb-4 mx-4">
-                  Eventos analizados
+                  Vulnerabilidades detectadas
                 </ShBodySmall>
               </div>
             </v-card-text>
@@ -161,7 +161,7 @@
             <v-card-text>
               <div class="d-flex justify-space-between align-center my-4">
                 <ShHeading2 class="mt-3 mb-4">
-                  Eventos analizados
+                  Vulnerabilidades detectadas
                 </ShHeading2>
                 <ShBodySmall neutral>
                   Usuario VS Sherlock
