@@ -31,27 +31,49 @@
         Guardar
       </ShButton>
       <TimelineGenerateDialog v-else-if="!isReadOnly" :project-id="projectId" :log-lines="logLines" />
-      <div v-else>
-        <TimelineUpdateFromLogDialog
-          :project-id="projectId"
-          :timeline-id="timelineId"
-          @update="getLinesIfExists"
-        />
-        <ShButton class="ma-4" @click="redirectToLogPage">
-          <v-icon>mdi-pencil</v-icon>
-          Editar líneas de log
-        </ShButton>
-        <ShDownloadPdfButton
-          class="mx-2"
-          :project-id="projectId"
-          :timeline-id="timelineId"
-        />
-      </div>
+      <v-menu
+        v-else
+        bottom
+        transition="scale-transition"
+        offset-y
+        nudge-bottom="10"
+      >
+        <template #activator="{on}">
+          <span class="pt-2 mr-8" v-on="on">
+            <ShButton small>
+              Opciones
+              <v-icon>
+                mdi-chevron-down
+              </v-icon>
+            </ShButton>
+          </span>
+        </template>
+        <template #default>
+          <v-card class="d-flex flex-column pa-2">
+            <TimelineUpdateFromLogDialog
+              :project-id="projectId"
+              :timeline-id="timelineId"
+              @update="getLinesIfExists"
+            />
+            <ShButton class="my-4" @click="redirectToLogPage">
+              <v-icon>mdi-pencil</v-icon>
+              Editar líneas de log
+            </ShButton>
+            <ShDownloadPdfButton
+              :project-id="projectId"
+              :timeline-id="timelineId"
+              class="mb-4"
+            />
+            <TimelineDownloadScreenAsPdfButton :timeline-id="timelineId" @switchPage="page => selectedTab = page" />
+          </v-card>
+        </template>
+      </v-menu>
     </template>
     <template #default>
       <v-row justify="center" no-gutters>
-        <v-col cols="8">
+        <v-col id="v-app-root" cols="8">
           <TimelinePreviewStats
+            :tab.sync="selectedTab"
             :lines2-show="lines2Show"
             :is-read-only="isReadOnly"
             :timeline-description="timelineDescription"
@@ -97,7 +119,8 @@ export default {
   data: () => ({
     open: false,
     isSelectedAll: true,
-    existingLines: []
+    existingLines: [],
+    selectedTab: 0
   }),
   computed: {
     lines2Show () {

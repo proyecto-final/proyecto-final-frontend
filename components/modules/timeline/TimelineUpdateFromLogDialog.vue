@@ -10,7 +10,7 @@
   >
     <template #activator="{on}">
       <slot name="activator" :on="on">
-        <ShButton class="ma-2" text :block="$vuetify.breakpoint.smAndDown" v-on="on">
+        <ShButton text :block="$vuetify.breakpoint.smAndDown" v-on="on">
           Actualizar
         </ShButton>
       </slot>

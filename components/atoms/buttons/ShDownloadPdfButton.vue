@@ -4,15 +4,9 @@
     v-on="$listeners"
     @click="downloadPdf"
   >
-    <template v-for="(_, scopedSlotName) in $scopedSlots" #[scopedSlotName]="slotData">
-      <slot :name="scopedSlotName" v-bind="slotData" />
-    </template>
-    <template v-for="(_, slotName) in $slots" #[slotName]>
-      <slot :name="slotName" />
-    </template>
     <template #default>
       <v-icon>mdi-file-pdf-box</v-icon>
-      Descargar
+      Descargar reporte extendido
     </template>
   </ShButton>
 </template>
