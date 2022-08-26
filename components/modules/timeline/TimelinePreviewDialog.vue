@@ -71,7 +71,7 @@
     </template>
     <template #default>
       <v-row justify="center" no-gutters>
-        <v-col id="v-app-root" cols="8">
+        <v-col :id="open ? 'v-app-root' : ''" cols="8">
           <TimelinePreviewStats
             :tab.sync="selectedTab"
             :lines2-show="lines2Show"
