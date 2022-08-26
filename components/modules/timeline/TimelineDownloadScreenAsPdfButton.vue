@@ -25,6 +25,8 @@ export default {
       try {
         // eslint-disable-next-line promise/param-names
         const delay = ms => new Promise(res => setTimeout(res, ms))
+        this.$emit('switchPage', 0)
+        await delay(500)
         const timelineId = this.timelineId
         const element = document.getElementById('v-app-root')
         const doc = new JsPDF('p', 'px', [element.clientHeight / 1.77, element.clientWidth / 1.77])
