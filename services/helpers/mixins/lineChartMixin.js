@@ -17,12 +17,11 @@ export default {
       type: Number,
       default: 400
     },
-    // Should be default borderWidth: 1 and tension: 0.1
     chartData: {
       type: Object,
       required: true,
       validator (chartData) {
-        const datasetAttributes = ['label', 'data', 'backgroundColor', 'borderColor', 'borderWidth', 'tension', 'pointBackgroundColor', 'pointBorderColor']
+        const datasetAttributes = ['data', 'backgroundColor', 'borderColor', 'borderWidth', 'tension', 'pointBackgroundColor', 'pointBorderColor']
         return 'labels' in chartData &&
       'datasets' in chartData &&
       Array.isArray(chartData.datasets) &&

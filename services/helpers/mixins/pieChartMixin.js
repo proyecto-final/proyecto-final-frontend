@@ -9,6 +9,10 @@ export default {
   name: 'PieChart',
   components: { Pie },
   props: {
+    colorOffset: {
+      type: Number,
+      default: 0
+    },
     width: {
       type: Number,
       default: 400
@@ -25,7 +29,7 @@ export default {
       'datasets' in chartData &&
       Array.isArray(chartData.datasets) &&
       chartData.datasets
-        .every(dataset => 'data' in dataset && 'backgroundColor' in dataset)
+        .every(dataset => 'data' in dataset)
       }
     }
   },
@@ -34,15 +38,12 @@ export default {
       return { ...this.chartData, datasets: this.datasetsWithColors }
     },
     datasetsWithColors () {
-      return this.chartData.datasets.map((dataset, idx) => {
-        return {
-          ...dataset,
-          data: [dataset.data],
-          borderWidth: 1,
-          borderColor: 'white',
-          backgroundColor: this.getColorForIndex(this.colorOffset + idx)
-        }
-      })
+      return [{
+        label: '',
+        data: this.chartData.datasets.map(dataset => dataset.data),
+        borderWidth: 1,
+        backgroundColor: this.colors
+      }]
     }
   },
   data: () => ({

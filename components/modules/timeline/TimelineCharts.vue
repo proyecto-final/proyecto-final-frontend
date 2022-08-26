@@ -69,7 +69,7 @@
         >
           <ShDoughnutChart
             :chart-data="{
-              labels: [''],
+              labels: users,
               datasets: Object.values(amountPerUser)
             }"
           />
@@ -131,7 +131,9 @@ export default {
   data: () => ({
     filter: {
       dates: []
-    }
+    },
+    users: [],
+    ips: []
   }),
   computed: {
     filteredLogLines () {
@@ -170,6 +172,7 @@ export default {
         const identifier = getIdentifier(line)
         if (!countPerEvent[identifier]) {
           countPerEvent[identifier] = { data: 0, label: identifier }
+          this.users.push(identifier)
         }
         countPerEvent[identifier].data++
         return countPerEvent
