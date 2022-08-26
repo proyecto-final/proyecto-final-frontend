@@ -1,5 +1,5 @@
 <template>
-  <v-tabs background-color="transparent">
+  <v-tabs v-model="selectedTab" background-color="transparent">
     <v-tab>
       Análisis
     </v-tab>
@@ -91,7 +91,13 @@
             </v-timeline-item>
           </v-timeline>
         </div>
-        <v-card v-if="isReadOnly" color="note1Bg" flat class="mx-2 w-100" height="50%">
+        <v-card
+          v-if="isReadOnly"
+          flat
+          color="note1Bg"
+          class="mx-2 w-100 box-shadow-none"
+          height="50%"
+        >
           <v-card-text>
             <ShHeading2 neutral>
               Descripción
@@ -107,7 +113,7 @@
     <v-tab-item>
       <v-row>
         <v-col>
-          <v-card color="analizedLines lighten-1" elevation="0" class="mt-3 w-100">
+          <v-card flat color="analizedLines lighten-1 box-shadow-none" class="mt-3 w-100">
             <v-card-text>
               <div>
                 <v-icon color="analizedLines" class="mt-3 mb-4 mx-4">
@@ -128,7 +134,7 @@
           </v-card>
         </v-col>
         <v-col>
-          <v-card color="analizedEvents lighten-1" elevation="0" class="mt-3 w-100">
+          <v-card flat color="analizedEvents lighten-1 box-shadow-none" class="mt-3 w-100">
             <v-card-text>
               <div>
                 <v-icon color="analizedEvents" class="mt-3 mb-4 mx-4">
@@ -151,7 +157,7 @@
       </v-row>
       <v-row>
         <v-col>
-          <v-card v-if="detectedEvents > 0" elevation="0" class="w-100">
+          <v-card v-if="detectedEvents > 0" flat class="w-100 box-shadow-none">
             <v-card-text>
               <div class="d-flex justify-space-between align-center my-4">
                 <ShHeading2 class="mt-3 mb-4">
@@ -255,6 +261,10 @@ export default {
     isReadOnly: {
       type: Boolean,
       default: false
+    },
+    tab: {
+      type: Number,
+      required: true
     }
   },
   data: () => ({
@@ -263,6 +273,14 @@ export default {
     newTag: ''
   }),
   computed: {
+    selectedTab: {
+      get () {
+        return this.tab
+      },
+      set (value) {
+        this.$emit('update:tab', value)
+      }
+    },
     showableLogLines () {
       const tags2Show = this.distinctTags.filter(tag => tag.isSelected).map(tag => tag.tag)
       return this.isSelectedAll
