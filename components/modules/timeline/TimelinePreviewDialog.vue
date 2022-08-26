@@ -64,7 +64,7 @@
               :timeline-id="timelineId"
               class="mb-4"
             />
-            <TimelineDownloadScreenAsPdfButton :timeline-id="timelineId" @switchPage="page => selectedTab = page" />
+            <TimelineDownloadScreenAsPdfButton v-if="open" :timeline-id="timelineId" @switchPage="page => selectedTab = page" />
           </v-card>
         </template>
       </v-menu>
