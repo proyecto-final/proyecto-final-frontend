@@ -1,6 +1,6 @@
 <template>
   <ShAsyncDialog
-    width="600"
+    width="750"
     confirm-text="Generar"
     title="Generar timeline"
     :async-confirm-function="save"
