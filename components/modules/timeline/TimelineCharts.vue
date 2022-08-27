@@ -51,13 +51,13 @@
       </v-col>
       <v-col xl="6" cols="12">
         <ShChartCard
-          title="Direcciones IP detectadas"
-          description="Representación de las direcciones IP que establecieron conexiones entrantes y salientes en los equipos analizados."
+          title="Criticidad de vulnerabilidades"
+          description="Representación del nivel de severidad e impacto que involucran las vulnerabilidades halladas en los eventos."
         >
           <ShPieChart
             :chart-data="{
               labels: [''],
-              datasets: Object.values(amountPerIp)
+              datasets: Object.values(amountPerCriticality)
             }"
           />
         </ShChartCard>
@@ -67,10 +67,36 @@
           title="Usuarios detectados"
           description="Representación de los usuarios que realizaron actividades sospechosas en los equipos analizados."
         >
+          <ShPieChart
+            :chart-data="{
+              labels: [''],
+              datasets: Object.values(amountPerUser)
+            }"
+          />
+        </ShChartCard>
+      </v-col>
+      <v-col xl="6" cols="12">
+        <ShChartCard
+          title="Direcciones IP origen detectadas"
+          description="Representación de las direcciones IP origen halladas en los equipos analizados. La dirección IP origen refleja el dispositivo en el cual se genera la conexión o envío de paquete."
+        >
           <ShDoughnutChart
             :chart-data="{
-              labels: users,
-              datasets: Object.values(amountPerUser)
+              labels: [''],
+              datasets: Object.values(amountPerSrcIp)
+            }"
+          />
+        </ShChartCard>
+      </v-col>
+      <v-col xl="6" cols="12">
+        <ShChartCard
+          title="Direcciones IP destino detectadas"
+          description="Representación de las direcciones IP destino halladas en los equipos analizados. La dirección IP destino refleja el dispositivo al cual se efectuó una conexión o envío de paquete."
+        >
+          <ShDoughnutChart
+            :chart-data="{
+              labels: [''],
+              datasets: Object.values(amountPerDstIp)
             }"
           />
         </ShChartCard>
@@ -131,9 +157,7 @@ export default {
   data: () => ({
     filter: {
       dates: []
-    },
-    users: [],
-    ips: []
+    }
   }),
   computed: {
     filteredLogLines () {
@@ -166,20 +190,40 @@ export default {
         return countPerEvent
       }, {})
     },
+    amountPerCriticality () {
+      return this.vulnerabilities.reduce((countPerEvent, vulnerability) => {
+        const identifier = vulnerability.level
+        if (!countPerEvent[identifier]) {
+          countPerEvent[identifier] = { data: 0, label: vulnerability.level }
+        }
+        countPerEvent[identifier].data++
+        return countPerEvent
+      }, {})
+    },
     amountPerUser () {
       const getIdentifier = line => line.detail?.userId || line.detail?.userName || 'Sin identificar'
       return this.filteredLogLines.reduce((countPerEvent, line) => {
         const identifier = getIdentifier(line)
         if (!countPerEvent[identifier]) {
           countPerEvent[identifier] = { data: 0, label: identifier }
-          this.users.push(identifier)
         }
         countPerEvent[identifier].data++
         return countPerEvent
       }, {})
     },
-    amountPerIp () {
-      const getIdentifier = line => line.detail?.ip || 'Sin identificar'
+    amountPerSrcIp () {
+      const getIdentifier = line => line.detail?.sourceIp || 'Sin identificar'
+      return this.filteredLogLines.reduce((countPerEvent, line) => {
+        const identifier = getIdentifier(line)
+        if (!countPerEvent[identifier]) {
+          countPerEvent[identifier] = { data: 0, label: identifier }
+        }
+        countPerEvent[identifier].data++
+        return countPerEvent
+      }, {})
+    },
+    amountPerDstIp () {
+      const getIdentifier = line => line.detail?.destinationIp || 'Sin identificar'
       return this.filteredLogLines.reduce((countPerEvent, line) => {
         const identifier = getIdentifier(line)
         if (!countPerEvent[identifier]) {

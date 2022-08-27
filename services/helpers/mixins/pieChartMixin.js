@@ -35,7 +35,7 @@ export default {
   },
   computed: {
     chartDataWithColors () {
-      return { ...this.chartData, datasets: this.datasetsWithColors }
+      return { ...this.chartData, labels: this.chartDataLabels, datasets: this.datasetsWithColors }
     },
     datasetsWithColors () {
       return [{
@@ -44,6 +44,9 @@ export default {
         borderWidth: 1,
         backgroundColor: this.colors
       }]
+    },
+    chartDataLabels () {
+      return this.chartData.datasets.map(dataset => dataset.label)
     }
   },
   data: () => ({
