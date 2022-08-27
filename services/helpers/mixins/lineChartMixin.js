@@ -25,7 +25,7 @@ export default {
       type: Object,
       required: true,
       validator (chartData) {
-        const datasetAttributes = ['data', 'backgroundColor', 'borderColor', 'borderWidth', 'tension', 'pointBackgroundColor', 'pointBorderColor']
+        const datasetAttributes = ['data']
         return 'labels' in chartData &&
       'datasets' in chartData &&
       Array.isArray(chartData.datasets) &&
