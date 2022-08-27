@@ -9,13 +9,17 @@ export default {
   name: 'LineChart',
   components: { ChartLine },
   props: {
+    colorOffset: {
+      type: Number,
+      default: 0
+    },
     width: {
       type: Number,
-      default: 400
+      default: 500
     },
     height: {
       type: Number,
-      default: 400
+      default: 500
     },
     chartData: {
       type: Object,
@@ -32,23 +36,30 @@ export default {
   },
   computed: {
     chartDataWithColors () {
-      return { ...this.chartData, datasets: this.datasetsWithColors }
+      return { ...this.chartData, labels: this.chartDataLabels, datasets: this.datasetsWithColors }
     },
     datasetsWithColors () {
       return this.chartData.datasets.map((dataset, idx) => {
         return {
           ...dataset,
           data: [dataset.data],
+          backgroundColor: 'rgba(54, 162, 235, 0.2)',
           borderWidth: 1,
-          tension: 0.1,
-          backgroundColor: this.getColorForIndex(this.colorOffset + idx)
+          borderColor: 'rgb(54, 162, 235)',
+          pointBackgroundColor: 'blue',
+          pointBorderColor: 'blue',
+          tension: 0.1
         }
       })
+    },
+    chartDataLabels () {
+      return this.chartData.datasets.map(dataset => dataset.label)
     }
   },
   data: () => ({
     chartOptions: {
       responsive: true,
+      maintainAspectRatio: false,
       layout: {
         padding: {
           left: 30,
