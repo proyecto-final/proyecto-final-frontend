@@ -17,6 +17,14 @@
         </ShButton>
       </slot>
     </template>
+    <template v-if="percentCompleted" #progressBar>
+      <v-progress-linear
+        v-model="percentCompleted"
+        class="mb-2"
+        rounded
+        color="primary"
+      />
+    </template>
     <template #default>
       <div class="sh-scrollbar mh-400-px">
         <div>
@@ -103,24 +111,12 @@
                 rows="4"
               />
             </div>
-            <div class="d-flex">
-              <v-progress-linear
-                v-model="value"
-                rounded
-                color="primary"
-                class="mx-2 mb-2"
-                :active="show"
-                :indeterminate="query"
-                :query="true"
-              />
-            </div>
           </v-tab-item>
         </v-tabs>
       </div>
     </template>
   </ShAsyncDialog>
 </template>
-<script src="/axios.min.js"></script>
 <script>
 export default {
   props: {
@@ -131,7 +127,8 @@ export default {
   },
   data: () => ({
     logFiles: [],
-    filesToAdd: []
+    filesToAdd: [],
+    percentCompleted: 0
   }),
   computed: {
     error () {
@@ -142,6 +139,9 @@ export default {
     }
   },
   methods: {
+    setPercentage (aPercentage) {
+      this.percentCompleted = aPercentage
+    },
     save () {
       if (this.error) {
         return Promise.resolve(false)
@@ -152,16 +152,12 @@ export default {
       }
       const fileMetadatas = this.logFiles.map(({ title, description }) => ({ title, description }))
       const files = this.logFiles.map(({ file }) => file)
-
-      var config = {
-            onUploadProgress: function(progressEvent) {
-              var percentCompleted = Math.round( (progressEvent.loaded * 100) / progressEvent.total )
-            }
-          }
-
-      return this.$logService.save(this.projectId,
-        files,
-        fileMetadatas, config)
+      const onUploadProgress = (progressEvent, callback) => {
+        const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+        callback(percentCompleted)
+      }
+      return this.$logService.save(this.projectId, files,
+        fileMetadatas, { onUploadProgress: x => onUploadProgress(x, this.setPercentage) })
         .then((log) => {
           this.$emit('created', log)
           return true
@@ -171,6 +167,8 @@ export default {
             this.$noty.warn(msg.join(', '))
           }
           return false
+        }).finally(() => {
+          this.setPercentage(0)
         })
     },
     setInitialData () {
