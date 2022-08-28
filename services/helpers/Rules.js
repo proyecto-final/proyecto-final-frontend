@@ -7,6 +7,11 @@ export default class Rules {
     return value => (!!value && value.trim().length !== 0) || `El campo ${field} debe poseer un caracter que no sea espacio`
   }
 
+  ipFormat (value) {
+    const regexExp = /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/gi
+    return regexExp.test(value) || 'El campo debe poseer un formato válido de IP'
+  }
+
   maxLength (max) {
     return value => value.length <= max || `El campo debe tener hasta ${max} caracteres`
   }
@@ -40,6 +45,6 @@ export default class Rules {
   }
 
   maxUploadedFilesSize (max) {
-    return files => !files || files.every(file => file.size < max) || 'El tamaño de los archivos debe ser menor a 50MB'
+    return files => !files || files.every(file => file.size < max) || 'El tamaño de los archivos debe ser menor a 5MB'
   }
 }

@@ -24,4 +24,26 @@ export default class Timeline {
   create (projectId, timeline) {
     return this.$axios.$post(`/api/project/${projectId}/timeline`, timeline)
   }
+
+  downloadPdf (projectId, timelineId) {
+    return this.$axios.$get(`/api/project/${projectId}/timeline/${timelineId}/report`, {
+      headers: {
+        accept: 'application/pdf'
+      },
+      responseType: 'blob'
+    })
+  }
+
+  updateFromLog (projectId, timelineId) {
+    return this.$axios.$post(`/api/project/${projectId}/timeline/${timelineId}/refresh`)
+  }
+
+  createTimelineInvitationToken (projectId, timelineId) {
+    return this.$axios.$post(`/api/project/${projectId}/timeline/${timelineId}/generate-token`)
+  }
+
+  getByToken (token) {
+    const dummyValue = '57'
+    return this.$axios.$get(`/api/project/${dummyValue}/timeline/external/${token}`)
+  }
 }

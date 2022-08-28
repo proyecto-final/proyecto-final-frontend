@@ -1,6 +1,6 @@
 <template>
   <ShAsyncDialog
-    width="600"
+    width="750"
     confirm-text="Generar"
     title="Generar timeline"
     :async-confirm-function="save"
@@ -38,14 +38,15 @@
             <ShSecondaryButton class="mx-2" @click="$router.push(`/${projectId}/timelines`)">
               Ir a timelines
             </ShSecondaryButton>
-            <ShButton class="mx-2">
-              <v-icon>mdi-content-copy</v-icon>
-              Copiar link
-            </ShButton>
-            <ShButton class="mx-2">
-              <v-icon>mdi-file-pdf-box</v-icon>
-              Descargar
-            </ShButton>
+            <ShDownloadPdfButton
+              class="mx-2"
+              :project-id="projectId"
+              :timeline-id="timelineId"
+            />
+            <ShShareButton
+              :share-function="getShareLink"
+              button-text="Copiar link"
+            />
           </div>
         </div>
       </template>
@@ -98,23 +99,44 @@ export default {
   },
   data: () => ({
     showSuccess: false,
-    timelineMetadata: getEmptyTimelineMetadata()
+    timelineMetadata: getEmptyTimelineMetadata(),
+    timelineId: '',
+    createdTimeline: [],
+    newTimeline: null
   }),
   methods: {
     async save () {
+      const logId = this.logLines[0].log
       const timeline = {
         ...this.timelineMetadata,
-        log: this.logLines[0].log,
+        logs: [logId],
         lines: this.logLines.map(({ _id, tags }) => ({ id: _id, tags }))
       }
       try {
-        await Promise.all([this.$timelineService.create(this.projectId, timeline), this.$logService.saveMarkedLogsLines(this.projectId, timeline.log, [])])
+        const [createdTimeline] = await Promise.all([
+          this.$timelineService.create(this.projectId, timeline),
+          this.$logService.setMarkedLines(this.projectId, logId, [])])
         this.showSuccess = true
+        this.timelineId = createdTimeline._id
+        this.newTimeline = createdTimeline
       } catch (error) {
         const msg = error.response?.data?.msg
         if (msg) { this.$noty.warn(msg.join(', ')) }
       }
       return false
+    },
+    getShareLink () {
+      return this.$timelineService.createTimelineInvitationToken(this.projectId, this.newTimeline._id)
+        .then((response) => {
+          const URLToCopy = `${window.location.origin}/report/${response.token}`
+          navigator.clipboard.writeText(URLToCopy)
+          this.$noty.success('Se ha copiado el link para compartir la timeline en el portapapeles')
+        }).catch((error) => {
+          const msg = error.response?.data?.msg
+          if (msg) {
+            this.$noty.warn(msg.join(', '))
+          }
+        })
     },
     resetDialog () {
       this.showSuccess = false

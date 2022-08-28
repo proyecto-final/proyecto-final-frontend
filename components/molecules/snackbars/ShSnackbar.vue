@@ -17,7 +17,7 @@
       data-cy="snackbar-notification"
       @click="executeSnackbarAction"
     >
-      <div class="d-flex justify-space-between">
+      <div class="d-flex justify-space-between align-center pt-1">
         <div>
           <div v-if="title">
             {{ title }}

@@ -31,6 +31,16 @@
             :key="`${line._id}-${index}`"
             :vulnerability="vulnerability"
           />
+          <ShChip
+            v-if="line.notes.length > 0"
+            color="note2"
+            class="mx-1"
+          >
+            <v-icon>
+              mdi-note-text
+            </v-icon>
+            Nota agregada
+          </ShChip>
         </div>
         <v-menu
           offset-y
@@ -62,18 +72,12 @@
                 </ShBody>
               </v-list-item-subtitle>
             </v-list-item>
-            <v-list-item>
-              <v-list-item-icon>
-                <v-icon>
-                  mdi-note-text
-                </v-icon>
-              </v-list-item-icon>
-              <v-list-item-subtitle>
-                <ShBody>
-                  Agregar una nota
-                </ShBody>
-              </v-list-item-subtitle>
-            </v-list-item>
+            <LogDialogNote
+              :project-id="projectId"
+              :log-id="logId"
+              :line="line"
+              @updated="line => $emit('update:line', line)"
+            />
             <LogLinkVulnerabilitiesDialog
               :project-id="projectId"
               :log-id="logId"
