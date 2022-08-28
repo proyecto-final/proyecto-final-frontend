@@ -39,18 +39,15 @@ export default {
       return { ...this.chartData, labels: this.chartDataLabels, datasets: this.datasetsWithColors }
     },
     datasetsWithColors () {
-      return this.chartData.datasets.map((dataset, idx) => {
-        return {
-          ...dataset,
-          data: [dataset.data],
-          backgroundColor: 'rgba(54, 162, 235, 0.2)',
-          borderWidth: 1,
-          borderColor: 'rgb(54, 162, 235)',
-          pointBackgroundColor: 'blue',
-          pointBorderColor: 'blue',
-          tension: 0.1
-        }
-      })
+      return [{
+        data: this.chartData.datasets.map(dataset => dataset.data),
+        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+        borderWidth: 1,
+        borderColor: 'rgb(54, 162, 235)',
+        pointBackgroundColor: 'blue',
+        pointBorderColor: 'blue',
+        tension: 0.1
+      }]
     },
     chartDataLabels () {
       return this.chartData.datasets.map(dataset => dataset.label)
