@@ -27,7 +27,11 @@
         para visualizar sus detalles.
       </template>
     </ShTableEmptyState>
-    <SearchIpCard v-else :ip="ip" />
+    <v-row v-else no-gutters>
+      <v-col cols="4" lg="4" md="6" sm="8">
+        <SearchIpCard :ip="ip" />
+      </v-col>
+    </v-row>
   </div>
 </template>
 <script>
