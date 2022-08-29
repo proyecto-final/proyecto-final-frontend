@@ -8,4 +8,8 @@ export default class SearchIp {
   getIp (projectId, ip) {
     return this.$axios.$post(`/api/project/${projectId}/ip-analysis/`, { ip })
   }
+
+  getLastAnalyzedIPs (projectId, params) {
+    return this.$axios.$get(`/api/project/${projectId}/ip-analysis`, { params })
+  }
 }
