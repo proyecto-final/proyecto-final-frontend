@@ -19,15 +19,20 @@
               mdi-shield-search
             </v-icon>
           </v-list-item-icon>
-          <v-list-item-subtitle>
+          <v-list-item-subtitle @click="searchIp(ipRaw)">
             <ShBody class="neutral-darken-text">
-              {{ `Analizar IP ${isSourceIp ? line.detail.sourceIp : line.detail.destinationIp}` }}
+              {{ `Analizar IP ${ipRaw}` }}
             </ShBody>
           </v-list-item-subtitle>
         </v-list-item>
       </slot>
     </template>
-    <SearchIpCard :ip="ip" class="mt-2 mb-6" />
+    <v-skeleton-loader
+      v-if="loading"
+      type="image"
+      class="mb-6 border-image"
+    />
+    <SearchIpCard v-else :ip="ip" class="mt-2 mb-6" />
   </ShAsyncDialog>
 </template>
 <script>
@@ -45,47 +50,27 @@ export default {
       type: Object,
       required: true
     },
-    isSourceIp: {
-      type: Boolean,
+    ipRaw: {
+      type: String,
       required: true
     }
   },
   data: () => ({
     selectedNote: null,
     notes: [],
-    loading: false,
-    ip: null
+    ip: {},
+    loading: true
   }),
-  mounted () {
-    this.loading = true
-    if (this.isSourceIp) {
-      this.$searchIpService.getIp(this.projectId, this.line.detail.sourceIp).then((result) => {
-        this.ip = result
-      }).catch(() => {
-        this.$noty.warn('Hubo un error al cargar la dirección IP ingresada')
-      }).finally(() => {
-        this.loading = false
-      })
-    } else {
-      this.$searchIpService.getIp(this.projectId, this.line.detail.destinationIp).then((result) => {
-        this.ip = result
-      }).catch(() => {
-        this.$noty.warn('Hubo un error al cargar la dirección IP ingresada')
-      }).finally(() => {
-        this.loading = false
-      })
-    }
-  },
   methods: {
-    searchIp () {
-      this.loading = true
-      this.$searchIpService.getIp(this.projectId, this.line.detail.sourceIp).then((result) => {
-        this.ip = result
-      }).catch(() => {
-        this.$noty.warn('Hubo un error al cargar la dirección IP ingresada')
-      }).finally(() => {
-        this.loading = false
-      })
+    searchIp (ipToSearch) {
+      this.$searchIpService.getIpFromLine(this.projectId, this.logId, this.line._id, ipToSearch)
+        .then((result) => {
+          this.ip = result
+        }).catch(() => {
+          this.$noty.warn('Hubo un error al cargar la dirección IP ingresada')
+        }).finally(() => {
+          this.loading = false
+        })
     },
     async save () {
       try {
@@ -110,3 +95,8 @@ export default {
   }
 }
 </script>
+<style scoped>
+::v-deep .v-skeleton-loader__image{
+  border-radius: 16px !important;
+}
+</style>

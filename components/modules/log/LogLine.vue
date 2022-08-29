@@ -72,7 +72,7 @@
               :project-id="projectId"
               :log-id="logId"
               :line="line"
-              is-source-ip
+              :ip-raw="line.detail.sourceIp"
               @updated="line => $emit('update:line', line)"
             />
             <SearchIpDialog
@@ -80,6 +80,7 @@
               :project-id="projectId"
               :log-id="logId"
               :line="line"
+              :ip-raw="line.detail.destinationIp"
               @updated="line => $emit('update:line', line)"
             />
           </v-list>
