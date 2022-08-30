@@ -26,8 +26,7 @@ export default {
       required: true,
       validator (chartData) {
         const datasetAttributes = ['data']
-        return 'labels' in chartData &&
-      'datasets' in chartData &&
+        return 'datasets' in chartData &&
       Array.isArray(chartData.datasets) &&
       chartData.datasets
         .every(dataset => datasetAttributes.every(attribute => attribute in dataset))

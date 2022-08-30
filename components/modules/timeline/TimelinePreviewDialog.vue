@@ -149,7 +149,7 @@
             <v-tab-item>
               <v-row>
                 <v-col>
-                  <v-card color="analizedLines lighten-1" elevation="0" class="mt-3 w-100">
+                  <v-card color="analizedLines lighten-1" flat class="mt-3 w-100">
                     <v-card-text>
                       <div>
                         <v-icon color="analizedLines" class="mt-3 mb-4 mx-4">
@@ -170,7 +170,7 @@
                   </v-card>
                 </v-col>
                 <v-col>
-                  <v-card color="analizedEvents lighten-1" elevation="0" class="mt-3 w-100">
+                  <v-card color="analizedEvents lighten-1" flat class="mt-3 w-100">
                     <v-card-text>
                       <div>
                         <v-icon color="analizedEvents" class="mt-3 mb-4 mx-4">
@@ -194,7 +194,7 @@
               <TimelineCharts :log-lines="lines2Show" />
               <v-row>
                 <v-col>
-                  <v-card v-if="detectedEvents > 0" elevation="0" class="w-100">
+                  <v-card v-if="detectedEvents > 0" flat class="w-100">
                     <v-card-text>
                       <div class="d-flex justify-space-between align-center my-4">
                         <ShHeading2 class="mt-3 mb-4">
@@ -254,20 +254,18 @@
                         />
                       </div>
                       <div class="d-flex justify-center">
-                        <div>
-                          <v-icon color="userDetectedEvents">
-                            mdi-circle
-                          </v-icon>
-                          <ShBodySmall neutral class="mx-3">
-                            Usuario
-                          </ShBodySmall>
-                          <v-icon color="sherlockDetectedEvents">
-                            mdi-circle
-                          </v-icon>
-                          <ShBodySmall neutral class="mx-3">
-                            Sherlock
-                          </ShBodySmall>
-                        </div>
+                        <v-icon color="userDetectedEvents">
+                          mdi-circle
+                        </v-icon>
+                        <ShBodySmall neutral class="mx-3">
+                          Usuario
+                        </ShBodySmall>
+                        <v-icon color="sherlockDetectedEvents">
+                          mdi-circle
+                        </v-icon>
+                        <ShBodySmall neutral class="mx-3">
+                          Sherlock
+                        </ShBodySmall>
                       </div>
                     </v-card-text>
                   </v-card>

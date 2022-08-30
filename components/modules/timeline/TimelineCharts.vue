@@ -29,7 +29,6 @@
         >
           <ShVerticalBarChart
             :chart-data="{
-              labels: [''],
               datasets: Object.values(amountPerEvent)
             }"
           />
@@ -43,7 +42,6 @@
           <ShHorizontalBarChart
             :color-offset="6"
             :chart-data="{
-              labels: [''],
               datasets: Object.values(amountPerVulnerability)
             }"
           />
@@ -56,7 +54,6 @@
         >
           <ShPieChart
             :chart-data="{
-              labels: [''],
               datasets: Object.values(amountPerCriticality)
             }"
           />
@@ -69,7 +66,6 @@
         >
           <ShPieChart
             :chart-data="{
-              labels: [''],
               datasets: Object.values(amountPerUser)
             }"
           />
@@ -82,7 +78,6 @@
         >
           <ShDoughnutChart
             :chart-data="{
-              labels: [''],
               datasets: Object.values(amountPerSrcIp)
             }"
           />
@@ -95,7 +90,6 @@
         >
           <ShDoughnutChart
             :chart-data="{
-              labels: [''],
               datasets: Object.values(amountPerDstIp)
             }"
           />
@@ -108,7 +102,6 @@
         >
           <ShLineChart
             :chart-data="{
-              labels: [''],
               datasets: Object.values(amountPerInterval)
             }"
           />
@@ -138,14 +131,7 @@ export default {
     amountPerEvent () {
       // TODO: definir que hacer con eventos de .logs
       const getIdentifier = line => line.detail?.eventId?.toString()
-      return this.filteredLogLines.reduce((countPerEvent, line) => {
-        const identifier = getIdentifier(line)
-        if (!countPerEvent[identifier]) {
-          countPerEvent[identifier] = { data: 0, label: identifier }
-        }
-        countPerEvent[identifier].data++
-        return countPerEvent
-      }, {})
+      return this.countEvents(this.filteredLogLines, getIdentifier)
     },
     vulnerabilities () {
       return this.logLines.map(line => line.vulnerabilites).flat()
@@ -173,36 +159,15 @@ export default {
     },
     amountPerUser () {
       const getIdentifier = line => line.detail?.userId || line.detail?.userName || 'Sin identificar'
-      return this.filteredLogLines.reduce((countPerEvent, line) => {
-        const identifier = getIdentifier(line)
-        if (!countPerEvent[identifier]) {
-          countPerEvent[identifier] = { data: 0, label: identifier }
-        }
-        countPerEvent[identifier].data++
-        return countPerEvent
-      }, {})
+      return this.countEvents(this.filteredLogLines, getIdentifier)
     },
     amountPerSrcIp () {
       const getIdentifier = line => line.detail?.sourceIp || 'Sin identificar'
-      return this.filteredLogLines.reduce((countPerEvent, line) => {
-        const identifier = getIdentifier(line)
-        if (!countPerEvent[identifier]) {
-          countPerEvent[identifier] = { data: 0, label: identifier }
-        }
-        countPerEvent[identifier].data++
-        return countPerEvent
-      }, {})
+      return this.countEvents(this.filteredLogLines, getIdentifier)
     },
     amountPerDstIp () {
       const getIdentifier = line => line.detail?.destinationIp || 'Sin identificar'
-      return this.filteredLogLines.reduce((countPerEvent, line) => {
-        const identifier = getIdentifier(line)
-        if (!countPerEvent[identifier]) {
-          countPerEvent[identifier] = { data: 0, label: identifier }
-        }
-        countPerEvent[identifier].data++
-        return countPerEvent
-      }, {})
+      return this.countEvents(this.filteredLogLines, getIdentifier)
     },
     amountPerInterval () {
       // TODO: en base a filtros cambiar intervalo
@@ -213,6 +178,18 @@ export default {
           countPerEvent[interval] = { data: 0, label: interval }
         }
         countPerEvent[interval].data++
+        return countPerEvent
+      }, {})
+    }
+  },
+  methods: {
+    countEvents (list, getIdentifierFunc) {
+      return list.reduce((countPerEvent, line) => {
+        const identifier = getIdentifierFunc(line)
+        if (!countPerEvent[identifier]) {
+          countPerEvent[identifier] = { data: 0, label: identifier }
+        }
+        countPerEvent[identifier].data++
         return countPerEvent
       }, {})
     }

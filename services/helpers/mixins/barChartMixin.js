@@ -25,8 +25,7 @@ export default {
       type: Object,
       required: true,
       validator (chartData) {
-        return 'labels' in chartData &&
-      'datasets' in chartData &&
+        return 'datasets' in chartData &&
       Array.isArray(chartData.datasets) &&
       chartData.datasets
         .every(dataset => 'label' in dataset && 'data' in dataset)
@@ -35,7 +34,7 @@ export default {
   },
   computed: {
     chartDataWithColors () {
-      return { ...this.chartData, datasets: this.datasetsWithColors }
+      return { ...this.chartData, labels: [''], datasets: this.datasetsWithColors }
     },
     datasetsWithColors () {
       return this.chartData.datasets.map((dataset, idx) => {

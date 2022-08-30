@@ -25,8 +25,7 @@ export default {
       type: Object,
       required: true,
       validator (chartData) {
-        return 'labels' in chartData &&
-      'datasets' in chartData &&
+        return 'datasets' in chartData &&
       Array.isArray(chartData.datasets) &&
       chartData.datasets
         .every(dataset => 'data' in dataset)
