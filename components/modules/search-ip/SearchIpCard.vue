@@ -113,7 +113,11 @@
                 </v-icon>
               </div>
               <div v-show="showReports" class="sh-scrollbar mh-200-px mt-2">
-                <div v-for="(report, index) in ip.reports" :key="index" class="mt-10 justify-comment">
+                <div
+                  v-for="(report, reportIndex) in ip.reports"
+                  :key="reportIndex"
+                  class="mt-1 justify-comment"
+                >
                   <ShBodySmall neutral strong>
                     {{ report.reportedAt | date }}
                   </ShBodySmall>
@@ -121,7 +125,13 @@
                     :text="report.comment || 'No comments.'"
                     :characters-to-show="70"
                   />
-                  <ShChip v-for="(category, index2) in report.categories" :key="index2" class="mr-2" small color="note1">
+                  <ShChip
+                    v-for="(category, categoryIndex) in report.categories"
+                    :key="categoryIndex"
+                    class="mr-2"
+                    small
+                    color="note1"
+                  >
                     {{ category }}
                   </ShChip>
                   <v-divider class="my-2" />
