@@ -95,7 +95,7 @@
           >
             <template #activator="{ on, attrs }">
               <ShChip v-bind="attrs" color="vulnerability" v-on="on">
-                {{ `+ ${line.vulnerabilites.length - 2}` }}
+                {{ `+ ${line.vulnerabilites.length - maxVulnerabilities2Show}` }}
               </ShChip>
             </template>
             <v-list color="#F4E6F4" nav class="sh-scrollbar mh-200-px">
@@ -132,7 +132,6 @@
   </v-row>
 </template>
 <script>
-import { cloneDeep } from 'lodash'
 export default {
   props: {
     line: {
@@ -140,6 +139,9 @@ export default {
       required: true
     }
   },
+  data: () => ({
+    maxVulnerabilities2Show: 2
+  }),
   computed: {
     projectId () {
       return this.$route.params.projectId
@@ -148,13 +150,12 @@ export default {
       return this.$route.params.logId
     },
     getHiddenVulnerabilities () {
-      const hideVulnerabilities = cloneDeep(this.line.vulnerabilites)
-      hideVulnerabilities.splice(0, 2)
+      const hideVulnerabilities = [...this.line.vulnerabilites]
+      hideVulnerabilities.splice(0, this.maxVulnerabilities2Show)
       return hideVulnerabilities
     },
     getShowableVulnerabilities () {
-      const showableVulnerabilities = cloneDeep(this.line.vulnerabilites)
-      return showableVulnerabilities.splice(0, 2)
+      return [...this.line.vulnerabilites].splice(0, this.maxVulnerabilities2Show)
     }
   }
 }
