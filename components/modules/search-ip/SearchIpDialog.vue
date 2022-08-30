@@ -7,6 +7,7 @@
     :async-confirm-function="save"
     :submit-on-enter="false"
     v-on="$listeners"
+    @open="searchIp(ipRaw)"
   >
     <template #activator="{on}">
       <slot name="activator" :on="on">
@@ -18,7 +19,7 @@
               mdi-shield-search
             </v-icon>
           </v-list-item-icon>
-          <v-list-item-subtitle @click="searchIp(ipRaw)">
+          <v-list-item-subtitle>
             <ShBody class="neutral-darken-text">
               {{ `Analizar IP ${ipRaw}` }}
             </ShBody>
@@ -26,12 +27,15 @@
         </v-list-item>
       </slot>
     </template>
-    <v-skeleton-loader
-      v-if="loading"
-      type="image"
-      class="mb-6 border-image"
-    />
-    <SearchIpCard v-else :ip="searchedIP" class="mt-2 mb-6" />
+    <div v-if="loading">
+      <v-skeleton-loader
+        type="image"
+        class="mb-6 border-image"
+      />
+    </div>
+    <div v-else>
+      <SearchIpCard :ip="searchedIP" class="mt-2 mb-6" />
+    </div>
   </ShAsyncDialog>
 </template>
 <script>
@@ -67,7 +71,6 @@ export default {
         this.$emit('update:line', { ...this.line, ips })
         const updatedLine = await this.$logService.updateLine(this.projectId, this.logId, this.line._id, { ips })
         this.$emit('updated', updatedLine)
-        this.loading = true
         return true
       } catch (error) {
         const msg = error.response?.data?.msg
