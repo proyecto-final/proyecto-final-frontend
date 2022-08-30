@@ -7,7 +7,6 @@
     :async-confirm-function="save"
     :submit-on-enter="false"
     v-on="$listeners"
-    @open="setInitialData"
   >
     <template #activator="{on}">
       <slot name="activator" :on="on">
@@ -32,7 +31,7 @@
       type="image"
       class="mb-6 border-image"
     />
-    <SearchIpCard v-else :ip="ip" class="mt-2 mb-6" />
+    <SearchIpCard v-else :ip="searchedIP" class="mt-2 mb-6" />
   </ShAsyncDialog>
 </template>
 <script>
@@ -57,28 +56,18 @@ export default {
   },
   data: () => ({
     selectedNote: null,
-    notes: [],
-    ip: {},
+    IPs: [],
+    searchedIP: {},
     loading: true
   }),
   methods: {
-    searchIp (ipToSearch) {
-      this.$searchIpService.getIpFromLine(this.projectId, this.logId, this.line._id, ipToSearch)
-        .then((result) => {
-          this.ip = result
-        }).catch(() => {
-          this.$noty.warn('Hubo un error al cargar la dirección IP ingresada')
-        }).finally(() => {
-          this.loading = false
-        })
-    },
     async save () {
       try {
-        this.notes = this.notes.filter(note => note.text.trim().length !== 0)
-        const notes = this.notes.map(note => note.text)
-        this.$emit('update:line', { ...this.line, notes })
-        const updatedLine = await this.$logService.updateLine(this.projectId, this.logId, this.line._id, { notes })
+        const ips = this.IPs
+        this.$emit('update:line', { ...this.line, ips })
+        const updatedLine = await this.$logService.updateLine(this.projectId, this.logId, this.line._id, { ips })
         this.$emit('updated', updatedLine)
+        this.loading = true
         return true
       } catch (error) {
         const msg = error.response?.data?.msg
@@ -88,9 +77,16 @@ export default {
         return false
       }
     },
-    setInitialData () {
-      this.notes = this.line.notes.map(note => ({ text: note }))
-      this.selectedNote = this.notes[0]
+    searchIp (ipToSearch) {
+      this.$searchIpService.getIpFromLine(this.projectId, this.logId, this.line._id, ipToSearch)
+        .then((result) => {
+          this.searchedIP = result
+          this.IPs.push(result)
+        }).catch(() => {
+          this.$noty.warn('Hubo un error al cargar la dirección IP ingresada')
+        }).finally(() => {
+          this.loading = false
+        })
     }
   }
 }
