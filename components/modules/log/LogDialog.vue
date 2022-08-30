@@ -139,9 +139,6 @@ export default {
     }
   },
   methods: {
-    setPercentage (aPercentage) {
-      this.percentCompleted = aPercentage
-    },
     save () {
       if (this.error) {
         return Promise.resolve(false)
@@ -157,7 +154,10 @@ export default {
         callback(percentCompleted)
       }
       return this.$logService.save(this.projectId, files,
-        fileMetadatas, { onUploadProgress: x => onUploadProgress(x, this.setPercentage) })
+        fileMetadatas, {
+          onUploadProgress: aProgressEvent =>
+            onUploadProgress(aProgressEvent, (aPercentage) => { this.percentCompleted = aPercentage })
+        })
         .then((log) => {
           this.$emit('created', log)
           return true
@@ -168,7 +168,7 @@ export default {
           }
           return false
         }).finally(() => {
-          this.setPercentage(0)
+          this.percentCompleted = 0
         })
     },
     setInitialData () {
