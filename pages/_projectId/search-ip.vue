@@ -13,7 +13,15 @@
         </v-form>
       </v-col>
     </v-row>
-    <v-progress-linear v-if="loading" indeterminate color="primary" />
+    <span v-for="(ipToShow, index) in analyzedIPs" :key="index" @click="loadIp(ipToShow)">
+      <ShChip
+        color="#666665"
+        class="mr-2 mb-6 clickable"
+      >
+        {{ ipToShow.raw }}
+      </ShChip>
+    </span>
+    <v-progress-linear v-if="loading && noConsultingAnIp" indeterminate color="primary" />
     <ShTableEmptyState
       v-if="!ip"
       class="my-10"
@@ -35,14 +43,27 @@
   </div>
 </template>
 <script>
+import { debounce } from 'lodash'
 export default {
   data: () => ({
     loading: false,
+    noConsultingAnIp: false,
     filter: {
       ip: null
     },
-    ip: null
+    ip: null,
+    analyzedIPs: []
   }),
+  fetch () {
+    this.loading = true
+    this.$searchIpService.getLastAnalyzedIPs(this.projectId, {
+      offset: 0,
+      limit: 4
+    }).then((result) => {
+      this.analyzedIPs = result.rows
+    }).catch(() => { this.$noty.warn('Hubo un error al cargar las IPs') })
+      .finally(() => { this.loading = false })
+  },
   computed: {
     projectId () {
       return this.$route.params.projectId
@@ -60,11 +81,19 @@ export default {
       this.loading = true
       this.$searchIpService.getIp(this.projectId, this.filter.ip).then((result) => {
         this.ip = result
+        this.fetchDebounced()
       }).catch(() => {
         this.$noty.warn('Hubo un error al cargar la dirección IP ingresada')
       }).finally(() => {
         this.loading = false
       })
+    },
+    fetchDebounced: debounce(function () {
+      this.$fetch()
+    }, 500),
+    loadIp (anIpAddress) {
+      this.ip = anIpAddress
+      this.noConsultingAnIp = true
     }
   }
 }

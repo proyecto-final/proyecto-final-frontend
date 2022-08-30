@@ -12,4 +12,8 @@ export default class SearchIp {
   getIpFromLine (projectId, logId, lineId, ip) {
     return this.$axios.$post(`/api/project/${projectId}/ip-analysis/log/${logId}/line/${lineId}`, { ip })
   }
+
+  getLastAnalyzedIPs (projectId, params) {
+    return this.$axios.$get(`/api/project/${projectId}/ip-analysis`, { params })
+  }
 }
