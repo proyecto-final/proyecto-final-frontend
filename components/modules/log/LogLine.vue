@@ -83,7 +83,7 @@
         </v-menu>
       </div>
       <div class="d-flex align-center">
-        <div v-if="line.vulnerabilites.length > 2">
+        <div v-if="line.vulnerabilites.length > maxVulnerabilities2Show">
           <LogLineVulnerabilityDialog
             v-for="(vulnerability, index) in getShowableVulnerabilities"
             :key="`${line._id}-${index}`"
@@ -150,9 +150,7 @@ export default {
       return this.$route.params.logId
     },
     getHiddenVulnerabilities () {
-      const hideVulnerabilities = [...this.line.vulnerabilites]
-      hideVulnerabilities.splice(0, this.maxVulnerabilities2Show)
-      return hideVulnerabilities
+      return [...this.line.vulnerabilites].splice(this.maxVulnerabilities2Show, this.line.vulnerabilites.length)
     },
     getShowableVulnerabilities () {
       return [...this.line.vulnerabilites].splice(0, this.maxVulnerabilities2Show)
