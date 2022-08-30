@@ -6,7 +6,7 @@
           <span v-on="on" @click="dialogOn.click">
             <ShChip
               class="mx-1 clickable"
-              :color="ip.reputation < 20 ? 'success' : 'error'"
+              :color="ip.reputation < reputationLimit ? 'success' : 'error'"
             >
               <v-icon>
                 mdi-shield-search
@@ -34,7 +34,8 @@ export default {
     }
   },
   data: () => ({
-    show: false
+    show: false,
+    reputationLimit: 20
   }),
   methods: {
     getColorFromLevel (level) {

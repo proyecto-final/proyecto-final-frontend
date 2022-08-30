@@ -144,11 +144,12 @@ export default {
   },
   data: () => ({
     showReports: false,
-    loading: false
+    loading: false,
+    reputationLimit: 20
   }),
   computed: {
     reputation () {
-      if (this.ip.reputation < 20) {
+      if (this.ip.reputation < this.reputationLimit) {
         return { isReported: true, text: 'Sin Reportes', cardColor: '#E4F5E5', textClass: 'success-text' }
       } else {
         return { isReported: false, text: 'Reportada', cardColor: '#FFF0EC', textClass: 'error-text' }
