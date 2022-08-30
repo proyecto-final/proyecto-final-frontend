@@ -14,12 +14,10 @@
         </v-col>
         <v-col cols="12" md="4" lg="3">
           <div class="d-flex justify-end">
-            <ShButton :loading="gettingLink" @click="copyRegisterLinkToClipboard">
-              <v-icon color="white">
-                mdi-content-copy
-              </v-icon>
-              Copiar link de registro
-            </ShButton>
+            <ShShareButton
+              :share-function="getShareLink"
+              button-text="Copiar el link de registro"
+            />
           </div>
         </v-col>
       </v-row>
@@ -207,9 +205,11 @@ export default {
     fetchDebounced: debounce(function () {
       this.$fetch()
     }, 500),
-    copyRegisterLinkToClipboard () {
-      this.gettingLink = true
-      this.$organizationService.getInvitationToken(this.organizationId)
+    setUser (user, updatedUser) {
+      Object.assign(user, updatedUser)
+    },
+    getShareLink () {
+      return this.$organizationService.getInvitationToken(this.organizationId)
         .then((response) => {
           const registerURL = `${window.location.origin}/register?token=${response.invitationToken}`
           navigator.clipboard.writeText(registerURL)
@@ -219,10 +219,7 @@ export default {
           if (msg) {
             this.$noty.warn(msg.join(', '))
           }
-        }).finally(() => { this.gettingLink = false })
-    },
-    setUser (user, updatedUser) {
-      Object.assign(user, updatedUser)
+        })
     }
   }
 }

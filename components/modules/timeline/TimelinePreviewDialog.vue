@@ -13,9 +13,15 @@
       <ShButton v-if="!isReadOnly" :disabled="logLines.length == 0" :block="$vuetify.breakpoint.smAndDown" v-on="on">
         Previsualizar timeline
       </ShButton>
-      <ShButton v-else text v-on="on">
-        Ver Reporte
-      </ShButton>
+      <div v-else class="d-flex">
+        <ShButton text v-on="on">
+          Ver Reporte
+        </ShButton>
+        <ShShareButton
+          :share-function="getShareLink"
+          button-text="Copiar link"
+        />
+      </div>
     </template>
     <template #prepend-title="{close}">
       <ShIconButton color="neutral" icon="mdi-close" title="Cerrar" @click="close()" />
@@ -25,9 +31,43 @@
         Guardar
       </ShButton>
       <TimelineGenerateDialog v-else-if="!isReadOnly" :project-id="projectId" :log-lines="logLines" />
-      <ShButton v-else class="ma-4" @click="redirectToLogPage">
-        Editar líneas de log
-      </ShButton>
+      <v-menu
+        v-else
+        bottom
+        transition="scale-transition"
+        offset-y
+        nudge-bottom="10"
+      >
+        <template #activator="{on}">
+          <span class="pt-2 mr-8" v-on="on">
+            <ShButton small>
+              Opciones
+              <v-icon>
+                mdi-chevron-down
+              </v-icon>
+            </ShButton>
+          </span>
+        </template>
+        <template #default>
+          <v-card class="d-flex flex-column pa-2">
+            <TimelineUpdateFromLogDialog
+              :project-id="projectId"
+              :timeline-id="timelineId"
+              @update="getLinesIfExists"
+            />
+            <ShButton class="my-4" @click="redirectToLogPage">
+              <v-icon>mdi-pencil</v-icon>
+              Editar líneas de log
+            </ShButton>
+            <ShDownloadPdfButton
+              :project-id="projectId"
+              :timeline-id="timelineId"
+              class="mb-4"
+            />
+            <TimelineDownloadScreenAsPdfButton v-if="open" :timeline-id="timelineId" @switchPage="page => selectedTab = page" />
+          </v-card>
+        </template>
+      </v-menu>
     </template>
     <template #default>
       <v-row justify="center" no-gutters>
@@ -273,6 +313,18 @@
               </v-row>
             </v-tab-item>
           </v-tabs>
+        <v-col :id="open ? 'v-app-root' : ''" cols="8">
+          <TimelinePreviewStats
+            :tab.sync="selectedTab"
+            :lines2-show="lines2Show"
+            :is-read-only="isReadOnly"
+            :timeline-description="timelineDescription"
+            :log-lines-count="logLinesCount"
+            :vulnerabilites="vulnerabilites"
+            @addTagInALine="addTagInALine"
+            @updateLogLines="updateLogLines"
+            @closeDialog="closeDialog"
+          />
         </v-col>
       </v-row>
     </template>
@@ -285,9 +337,9 @@ export default {
       type: Array,
       required: true
     },
-    logId: {
-      type: String,
-      default: ''
+    timeline: {
+      type: Object,
+      default: null
     },
     timelineId: {
       type: String,
@@ -308,38 +360,19 @@ export default {
   },
   data: () => ({
     open: false,
-    distinctTags: [],
     isSelectedAll: true,
-    newTag: '',
-    existingLines: []
+    existingLines: [],
+    selectedTab: 0
   }),
   computed: {
     lines2Show () {
       return this.timelineId && !this.isEditing ? this.existingLines : this.logLines
     },
-    showableLogLines () {
-      const tags2Show = this.distinctTags.filter(tag => tag.isSelected).map(tag => tag.tag)
-      return this.isSelectedAll
-        ? this.lines2Show
-        : this.lines2Show.filter(line => line.tags.some(tag => tags2Show.includes(tag)))
-    },
-    logLinesCount () {
-      return this.lines2Show.length
-    },
-    detectedEvents () {
-      return this.vulnerabilites.length
-    },
     vulnerabilites () {
       return this.lines2Show.map(line => line.vulnerabilites).flat()
     },
-    userDetectedEvents () {
-      return this.vulnerabilites.filter(vulnerability => vulnerability.isCustom).length
-    },
-    systemDetectedEvents () {
-      return this.vulnerabilites.filter(vulnerability => !vulnerability.isCustom).length
-    },
-    userDetectedEventsPercentage () {
-      return this.detectedEvents === 0 ? 0 : (this.userDetectedEvents / this.detectedEvents) * 100
+    logLinesCount () {
+      return this.lines2Show.length
     },
     projectId () {
       return this.$route.params.projectId
@@ -364,48 +397,41 @@ export default {
         })
       }
     },
-    selectTag (tag) {
-      tag.isSelected = !tag.isSelected
-      if (tag.isSelected) {
-        this.isSelectedAll = false
-      } else if (this.distinctTags.every(tag => !tag.isSelected)) {
-        this.isSelectedAll = true
-      }
-    },
-    selectAll () {
-      this.isSelectedAll = true
-      this.distinctTags.forEach((tag) => {
-        tag.isSelected = false
-      })
-    },
-    removeLine (logLine) {
-      const remainingLines = this.logLines.filter(line => line !== logLine)
-      this.$emit('update:logLines', remainingLines)
-      const remainingTags = Array.from(new Set(remainingLines.map(line => line.tags).flat()))
-      this.distinctTags = this.distinctTags.filter(tag => remainingTags.includes(tag.tag))
-      this.$nextTick(() => {
-        if (this.logLines.length === 0) {
-          this.open = false
-        }
-      })
-    },
-    addTag (logLine) {
-      if (!logLine.tags.includes(this.newTag)) {
-        this.$emit('update:logLine', {
-          logLine,
-          tags: [...logLine.tags, this.newTag]
+    getShareLink () {
+      return this.$timelineService.createTimelineInvitationToken(this.projectId, this.timelineId)
+        .then((response) => {
+          const URLToCopy = `${window.location.origin}/report/${response.token}`
+          navigator.clipboard.writeText(URLToCopy)
+          this.$noty.success('Se ha copiado el link para compartir la timeline en el portapapeles')
+        }).catch((error) => {
+          const msg = error.response?.data?.msg
+          if (msg) {
+            this.$noty.warn(msg.join(', '))
+          }
         })
-        if (!this.distinctTags.map(tag => tag.tag).includes(this.newTag)) {
-          this.distinctTags.push({ tag: this.newTag, isSelected: false })
-        }
-      }
-      this.resetTag()
     },
-    resetTag () {
-      this.newTag = ''
+    updateLogLines ({ remainingLines }) {
+      this.$emit('update:logLines', remainingLines)
+    },
+    closeDialog () {
+      this.open = false
+    },
+    addTagInALine ({ logLine, newTag }) {
+      this.$emit('update:logLine', {
+        logLine,
+        tags: [...logLine.tags, newTag]
+      })
     },
     redirectToLogPage () {
-      this.$router.push(`/${this.projectId}/logs/${this.logId}?timelineId=${this.timelineId}`)
+      const logId = this.timeline.logs[0]
+      this.$logService.getLines(this.projectId, logId, {
+        offset: 0,
+        limit: 1
+      }).then(() => {
+        this.$router.push(`/${this.projectId}/logs/${logId}?timelineId=${this.timelineId}`)
+      }).catch(() => {
+        this.$noty.warn('Imposible editar la timeline, el log de esta timeline ha sido eliminado')
+      })
     },
     redirectToTimelinePage () {
       this.$router.push(`/${this.projectId}/timelines`)
@@ -432,8 +458,3 @@ export default {
   }
 }
 </script>
-<style scoped>
-.no-uppercase {
-     text-transform: unset !important;
-}
-</style>

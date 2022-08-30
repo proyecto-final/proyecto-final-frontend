@@ -1,0 +1,11 @@
+export default class SearchIp {
+  constructor ({ $axios, store, router }) {
+    this.$axios = $axios
+    this.store = store
+    this.router = router
+  }
+
+  getIp (projectId, ip) {
+    return this.$axios.$post(`/api/project/${projectId}/ip-analysis/`, { ip })
+  }
+}

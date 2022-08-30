@@ -156,7 +156,13 @@ export default {
           const vulnerability = isCustom
             ? { name: vulnerabilityToAdd, isCustom, isNew: true, level: 'none' }
             : vulnerabilityToAdd
-          this.lineVulnerabilities.push(cloneDeep(vulnerability))
+          const existsWithDifferentCase = this.lineVulnerabilities.some(lineVulnerability => lineVulnerability.name.toLowerCase() === vulnerability.name.toLowerCase())
+          if (existsWithDifferentCase) {
+            this.$noty.warn('El evento ya existe')
+            return
+          } else {
+            this.lineVulnerabilities.push(cloneDeep(vulnerability))
+          }
           this.vulnerabilityToAdd = null
         })
         this.filter.name = ''

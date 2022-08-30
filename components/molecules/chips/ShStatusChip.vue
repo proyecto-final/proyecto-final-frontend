@@ -1,6 +1,8 @@
 <template>
-  <ShChip :color="status === 'loaded' ? 'success' : 'warning'">
-    {{ status === 'loaded' ? 'Cargado' : 'Procesando...' }}
+  <ShChip
+    :color="status === 'processed' ? 'success' : (status === 'processing' ? 'warning' : 'error')"
+  >
+    {{ status === 'processed' ? 'Cargado' : (status === 'processing' ? 'Procesando...' : 'Error' ) }}
   </ShChip>
 </template>
 <script>
