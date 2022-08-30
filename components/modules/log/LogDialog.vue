@@ -149,14 +149,14 @@ export default {
       }
       const fileMetadatas = this.logFiles.map(({ title, description }) => ({ title, description }))
       const files = this.logFiles.map(({ file }) => file)
-      const onUploadProgress = (progressEvent, callback) => {
+      const uploadProgress = (progressEvent, callback) => {
         const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
         callback(percentCompleted)
       }
       return this.$logService.save(this.projectId, files,
         fileMetadatas, {
           onUploadProgress: aProgressEvent =>
-            onUploadProgress(aProgressEvent, (aPercentage) => { this.percentCompleted = aPercentage })
+            uploadProgress(aProgressEvent, (aPercentage) => { this.percentCompleted = aPercentage })
         })
         .then((log) => {
           this.$emit('created', log)
