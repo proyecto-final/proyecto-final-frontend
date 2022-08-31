@@ -106,13 +106,6 @@
               />
             </v-list-item>
           </template>
-          <template #allChips>
-            <LogLineVulnerabilityDialog
-              v-for="(vulnerability, index) in line.vulnerabilites"
-              :key="`${line._id}-${index}`"
-              :vulnerability="vulnerability"
-            />
-          </template>
         </ShChipList>
         <ShChip
           v-if="line.notes.length > 0"
