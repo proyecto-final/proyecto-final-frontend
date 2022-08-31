@@ -41,7 +41,7 @@
                   <div>
                     <LogLineSearchIpDialog
                       v-for="(ip, ipIndex) in logLine.ips"
-                      :key="`${logLine._id}-${ipIndex}`"
+                      :key="`${index}-${ipIndex}`"
                       :ip="ip"
                     />
                   </div>
