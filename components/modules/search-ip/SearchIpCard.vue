@@ -108,8 +108,8 @@
                 Puertos abiertos
               </ShBodySmall>
               <br>
-              <ShBodySmall v-if="ip.ports.length === 0" neutral strong>
-                No
+              <ShBodySmall v-if="ip.ports.length === 0" neutral>
+                No posee
               </ShBodySmall>
               <ShChip
                 v-for="(port, portIndex) in ip.ports"
