@@ -8,9 +8,11 @@
     <template #activator="props">
       <slot name="activator" v-bind="props" />
     </template>
-    <template #default>
-      <v-progress-linear v-if="loadingFunction" indeterminate color="primary" />
+    <template #default="props">
       <v-card class="pa-6">
+        <slot name="progressBar" v-bind="props">
+          <v-progress-linear v-if="loadingFunction" indeterminate color="primary" />
+        </slot>
         <div class="d-flex justify-space-between align-center">
           <ShHeading3 v-if="!hideTitle" neutral>
             {{ title }}
