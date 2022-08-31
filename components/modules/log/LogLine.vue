@@ -5,13 +5,13 @@
   >
     <v-col cols="auto" class="clickable" @click="$emit('select:line', line)">
       <div class="mr-6 my-3 d-flex">
-        <div v-if="line.isSelected" class="px-1">
+        <div v-if="line.isSelected" class="mt-1 px-1">
           <v-icon x-small color="primary">
             mdi-circle
           </v-icon>
         </div>
         <div v-else class="pl-3 pr-2" />
-        <div class="text-align-center">
+        <div class="mt-1 text-align-center">
           <ShCode>
             {{ line.index }}
           </ShCode>
@@ -21,9 +21,20 @@
     <v-col>
       <div class="d-flex align-center">
         <div class="mr-5 my-3 max-lines-3">
-          <ShCode>
-            {{ line.raw }}
-          </ShCode>
+          <div class="d-flex">
+            <div>
+              <v-icon class="my-1" @click="showMoreDetails">
+                {{ moreInformation ? 'mdi-chevron-down' : 'mdi-chevron-right' }}
+              </v-icon>
+            </div>
+            <div>
+              <ShAttributeText attribute-text="timestamp" :value-text="line.timestamp" />
+              <ShAttributeText attribute-text="event" :value-text="`${line.detail.eventId}`" />
+              <ShAttributeText attribute-text="source-ip" :value-text="line.detail.sourceIp" />
+              <ShAttributeText attribute-text="destination-ip" :value-text="line.detail.destinationIp" />
+              <ShAttributeText attribute-text="user" :value-text="line.detail.computer" />
+            </div>
+          </div>
         </div>
         <div>
           <LogLineVulnerabilityDialog
@@ -99,6 +110,7 @@
           </v-list>
         </v-menu>
       </div>
+      <LogLineMoreDetails v-if="moreInformation" :line="line" />
     </v-col>
   </v-row>
 </template>
@@ -110,12 +122,20 @@ export default {
       required: true
     }
   },
+  data: () => ({
+    moreInformation: false
+  }),
   computed: {
     projectId () {
       return this.$route.params.projectId
     },
     logId () {
       return this.$route.params.logId
+    }
+  },
+  methods: {
+    showMoreDetails () {
+      this.moreInformation = !this.moreInformation
     }
   }
 }
