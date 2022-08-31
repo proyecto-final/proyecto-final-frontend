@@ -4,14 +4,16 @@
       <slot name="defaultCase" />
     </div>
     <div v-if="anArray.length > maxElements2Show">
-      <ShChip
-        v-for="(showableElement, indexShowableElement) in getShowableElements"
-        :key="indexShowableElement"
-        :color="chipColor"
-        class="mr-1"
-      >
-        {{ showableElement }}
-      </ShChip>
+      <slot name="showableChips" v-bind="props">
+        <ShChip
+          v-for="(showableElement, indexShowableElement) in getShowableElements"
+          :key="indexShowableElement"
+          :color="chipColor"
+          class="mr-1"
+        >
+          {{ showableElement }}
+        </ShChip>
+      </slot>
       <v-menu
         offset-x
         close-on-content-click
@@ -22,26 +24,30 @@
           </ShChip>
         </template>
         <v-list :color="listColor" nav class="sh-scrollbar mh-200-px">
-          <v-list-item
-            v-for="(hiddenElement, indexHiddenElement) in getHiddenElements"
-            :key="indexHiddenElement"
-          >
-            <ShChip :color="chipColor">
-              {{ hiddenElement }}
-            </ShChip>
-          </v-list-item>
+          <slot name="hiddenChips" v-bind="props">
+            <v-list-item
+              v-for="(hiddenElement, indexHiddenElement) in getHiddenElements"
+              :key="indexHiddenElement"
+            >
+              <ShChip :color="chipColor">
+                {{ hiddenElement }}
+              </ShChip>
+            </v-list-item>
+          </slot>
         </v-list>
       </v-menu>
     </div>
     <div v-else>
-      <ShChip
-        v-for="(element, index) in anArray"
-        :key="index"
-        :color="chipColor"
-        class="mr-1"
-      >
-        {{ element }}
-      </ShChip>
+      <slot name="allChips" v-bind="props">
+        <ShChip
+          v-for="(element, index) in anArray"
+          :key="index"
+          :color="chipColor"
+          class="mr-1"
+        >
+          {{ element }}
+        </ShChip>
+      </slot>
     </div>
   </div>
 </template>
