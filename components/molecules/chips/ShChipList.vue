@@ -1,12 +1,12 @@
 <template>
   <div>
-    <div v-if="anArray.length === 0">
-      <slot name="defaultCase" />
+    <div v-if="items.length === 0">
+      <slot name="default" />
     </div>
-    <div v-if="anArray.length > maxElements2Show">
+    <div v-if="items.length > maxElements2Show">
       <slot name="showableChips" v-bind="props">
         <ShChip
-          v-for="(showableElement, indexShowableElement) in getShowableElements"
+          v-for="(showableElement, indexShowableElement) in showableElements"
           :key="indexShowableElement"
           :color="chipColor"
           class="mr-1"
@@ -20,13 +20,13 @@
       >
         <template #activator="{ on, attrs }">
           <ShChip v-bind="attrs" :color="chipColor" v-on="on">
-            {{ `+ ${anArray.length - maxElements2Show}` }}
+            {{ `+ ${items.length - maxElements2Show}` }}
           </ShChip>
         </template>
         <v-list :color="listColor" nav class="sh-scrollbar mh-200-px">
           <slot name="hiddenChips" v-bind="props">
             <v-list-item
-              v-for="(hiddenElement, indexHiddenElement) in getHiddenElements"
+              v-for="(hiddenElement, indexHiddenElement) in hiddenElements"
               :key="indexHiddenElement"
             >
               <ShChip :color="chipColor">
@@ -40,7 +40,7 @@
     <div v-else>
       <slot name="allChips" v-bind="props">
         <ShChip
-          v-for="(element, index) in anArray"
+          v-for="(element, index) in items"
           :key="index"
           :color="chipColor"
           class="mr-1"
@@ -54,29 +54,29 @@
 <script>
 export default {
   props: {
-    anArray: {
+    items: {
       type: Array,
       required: true
     },
     maxElements2Show: {
       type: Number,
-      required: true
+      default: 2
     },
     chipColor: {
       type: String,
-      required: true
+      default: 'note1'
     },
     listColor: {
       type: String,
-      required: true
+      default: 'note1'
     }
   },
   computed: {
-    getHiddenElements () {
-      return [...this.anArray].splice(this.maxElements2Show, this.anArray.length)
+    hiddenElements () {
+      return this.items.slice(this.maxElements2Show, this.items.length + 1)
     },
-    getShowableElements () {
-      return [...this.anArray].splice(0, this.maxElements2Show)
+    showableElements () {
+      return this.items.slice(0, this.maxElements2Show)
     }
   }
 }

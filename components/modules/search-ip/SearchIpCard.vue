@@ -108,18 +108,18 @@
                 Puertos abiertos
               </ShBodySmall>
               <br>
-              <ShHideChip
-                :an-array="ip.ports"
+              <ShChipList
+                :items="ip.ports"
                 :max-elements2-show="4"
                 chip-color="note1"
                 :list-color="reputation.cardColor"
               >
-                <template #defaultCase>
+                <template #default>
                   <ShBodySmall neutral>
                     No posee
                   </ShBodySmall>
                 </template>
-              </ShHideChip>
+              </ShChipList>
             </div>
             <v-divider />
             <div class="mt-2">

@@ -83,22 +83,22 @@
         </v-menu>
       </div>
       <div class="d-flex align-center">
-        <ShHideChip
-          :an-array="line.vulnerabilites"
+        <ShChipList
+          :items="line.vulnerabilites"
           :max-elements2-show="maxVulnerabilities2Show"
           chip-color="vulnerability"
-          list-color="#F4E6F4"
+          list-color="avatar1Bg"
         >
           <template #showableChips>
             <LogLineVulnerabilityDialog
-              v-for="(showableVulnerability, indexshowableVulnerability) in getShowableVulnerabilities"
+              v-for="(showableVulnerability, indexshowableVulnerability) in showableVulnerabilities"
               :key="`${line._id}-${indexshowableVulnerability}`"
               :vulnerability="showableVulnerability"
             />
           </template>
           <template #hiddenChips>
             <v-list-item
-              v-for="(hiddenVulnerability, indexhiddenVulnerability) in getHiddenVulnerabilities"
+              v-for="(hiddenVulnerability, indexhiddenVulnerability) in hiddenVulnerabilities"
               :key="`${line._id}-${indexhiddenVulnerability}`"
             >
               <LogLineVulnerabilityDialog
@@ -113,7 +113,7 @@
               :vulnerability="vulnerability"
             />
           </template>
-        </ShHideChip>
+        </ShChipList>
         <ShChip
           v-if="line.notes.length > 0"
           color="note2"
@@ -146,11 +146,11 @@ export default {
     logId () {
       return this.$route.params.logId
     },
-    getHiddenVulnerabilities () {
-      return [...this.line.vulnerabilites].splice(this.maxVulnerabilities2Show, this.line.vulnerabilites.length)
+    hiddenVulnerabilities () {
+      return this.line.vulnerabilites.slice(this.maxVulnerabilities2Show, this.line.vulnerabilites.length + 1)
     },
-    getShowableVulnerabilities () {
-      return [...this.line.vulnerabilites].splice(0, this.maxVulnerabilities2Show)
+    showableVulnerabilities () {
+      return this.line.vulnerabilites.slice(0, this.maxVulnerabilities2Show)
     }
   }
 }
