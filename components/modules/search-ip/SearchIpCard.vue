@@ -103,6 +103,26 @@
               </v-col>
             </v-row>
             <v-divider />
+            <div class="my-2">
+              <ShBodySmall neutral strong>
+                Puertos abiertos
+              </ShBodySmall>
+              <br>
+              <ShBodySmall v-if="ip.ports.length === 0" neutral strong>
+                No
+              </ShBodySmall>
+              <ShChip
+                v-for="(port, portIndex) in ip.ports"
+                v-else
+                :key="portIndex"
+                class="my-1 mr-1"
+                small
+                color="note1"
+              >
+                {{ port }}
+              </ShChip>
+            </div>
+            <v-divider />
             <div class="mt-2">
               <div v-if="!reputation.isReported">
                 <div class="mt-2">
