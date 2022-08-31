@@ -140,7 +140,6 @@
           Nota agregada
         </ShChip>
       </div>
-      >>>>>>> origin/develop
     </v-col>
   </v-row>
 </template>
