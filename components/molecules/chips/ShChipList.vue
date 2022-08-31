@@ -3,7 +3,7 @@
     <div v-if="items.length === 0">
       <slot name="default" />
     </div>
-    <div v-if="items.length > maxElements2Show">
+    <div>
       <slot name="showableChips" v-bind="props">
         <ShChip
           v-for="(showableElement, indexShowableElement) in showableElements"
@@ -15,6 +15,7 @@
         </ShChip>
       </slot>
       <v-menu
+        v-if="items.length > maxElements2Show"
         offset-x
         close-on-content-click
       >
@@ -36,18 +37,6 @@
           </slot>
         </v-list>
       </v-menu>
-    </div>
-    <div v-else>
-      <slot name="allChips" v-bind="props">
-        <ShChip
-          v-for="(element, index) in items"
-          :key="index"
-          :color="chipColor"
-          class="mr-1"
-        >
-          {{ element }}
-        </ShChip>
-      </slot>
     </div>
   </div>
 </template>
