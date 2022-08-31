@@ -108,19 +108,18 @@
                 Puertos abiertos
               </ShBodySmall>
               <br>
-              <ShBodySmall v-if="ip.ports.length === 0" neutral>
-                No posee
-              </ShBodySmall>
-              <ShChip
-                v-for="(port, portIndex) in ip.ports"
-                v-else
-                :key="portIndex"
-                class="my-1 mr-1"
-                small
-                color="note1"
+              <ShHideChip
+                :an-array="ip.ports"
+                :max-elements2-show="4"
+                chip-color="note1"
+                :list-color="reputation.cardColor"
               >
-                {{ port }}
-              </ShChip>
+                <template #defaultCase>
+                  <ShBodySmall neutral>
+                    No posee
+                  </ShBodySmall>
+                </template>
+              </ShHideChip>
             </div>
             <v-divider />
             <div class="mt-2">
