@@ -46,7 +46,7 @@ export default class Log {
     return this.$axios.$post(`/api/project/${projectId}/correlate/vulnerability`, vulnerability)
   }
 
-  setMarkedLines (projectId, logId, lineIds) {
+  saveMarkedLogsLines (projectId, logId, lineIds) {
     return this.$axios.$post(`/api/project/${projectId}/correlate/log/${logId}/markAsSelected`, { lineIds })
   }
 }
