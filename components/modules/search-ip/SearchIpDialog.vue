@@ -7,7 +7,7 @@
     :async-confirm-function="save"
     :submit-on-enter="false"
     v-on="$listeners"
-    @open="searchIp(ipRaw)"
+    @open="setInitialData"
   >
     <template #activator="{on}">
       <slot name="activator" :on="on">
@@ -21,24 +21,49 @@
           </v-list-item-icon>
           <v-list-item-subtitle>
             <ShBody class="neutral-darken-text">
-              {{ `Analizar IP ${ipRaw}` }}
+              Analizar IP
             </ShBody>
           </v-list-item-subtitle>
         </v-list-item>
       </slot>
     </template>
-    <div v-if="loading">
-      <v-skeleton-loader
-        type="image"
-        class="mb-6 border-image"
-      />
-    </div>
-    <div v-else>
-      <SearchIpCard :ip="searchedIP" class="mt-2 mb-6" />
-    </div>
+    <template #progressBar>
+      <div />
+    </template>
+    <template #default>
+      <div class="mb-4">
+        <ShCombobox
+          v-model="filter.ip"
+          hide-details
+          clearable
+          filled
+          background-color="neutral darken-1"
+          :items="availableIPs"
+          item-text="description"
+          return-object
+          :loading="loading"
+          placeholder="Dirección de la IP"
+          no-data-text=""
+        >
+          <template #no-data>
+            <v-list-item>
+              <v-list-item-content>
+                <ShSpecialLabel>
+                  La IP ingresada no existe, para analizarla presione la tecla <strong>Enter</strong>
+                </ShSpecialLabel>
+              </v-list-item-content>
+            </v-list-item>
+          </template>
+        </ShCombobox>
+      </div>
+      <div v-if="!loading && filter.ip!==''" class="px-4">
+        <SearchIpCard :ip="searchedIP" class="mt-2 mb-6" />
+      </div>
+    </template>
   </ShAsyncDialog>
 </template>
 <script>
+import { cloneDeep } from 'lodash'
 export default {
   props: {
     projectId: {
@@ -52,50 +77,105 @@ export default {
     line: {
       type: Object,
       required: true
-    },
-    ipRaw: {
-      type: String,
-      required: true
     }
   },
   data: () => ({
+    lineIPs: [],
+    availableIPs: [],
     selectedNote: null,
     IPs: [],
+    filter: {
+      ip: ''
+    },
     searchedIP: {},
-    loading: true
+    loading: false
   }),
+  watch: {
+    'filter.ip' (val) {
+      if (val && val !== '') {
+        this.loading = true
+        this.addIP(val)
+      }
+    }
+  },
   methods: {
     async save () {
       try {
-        const ips = this.IPs
-        this.$emit('update:line', { ...this.line, ips })
-        const updatedLine = await this.$logService.updateLine(this.projectId, this.logId, this.line._id, { ips })
-        this.$emit('updated', updatedLine)
+        this.loading = true
+        if (!this.hasAlreadyBeAnalyzed(this.filter.ip) && this.validIpAddress(this.filter.ip)) {
+          await this.$searchIpService.getIpFromLine(this.projectId, this.logId, this.line._id, this.filter.ip)
+            .then(async (result) => {
+              this.lineIPs.push(result)
+              const ips = this.lineIPs
+              this.$emit('update:line', { ...this.line, ips })
+              const updatedLine = await this.$logService.updateLine(this.projectId, this.logId, this.line._id, { ips })
+              this.$emit('updated', updatedLine)
+            }).catch(() => {
+              this.$noty.warn('Hubo un error al cargar la dirección IP ingresada')
+            }).finally(() => {
+              this.filter.ip = ''
+              this.loading = false
+            })
+        } else {
+          this.$noty.warn('La dirección IP ingresada ya ha sido analizada o su formato no es válido')
+          this.filter.ip = ''
+          this.loading = false
+        }
         return true
       } catch (error) {
         const msg = error.response?.data?.msg
         if (msg) {
           this.$noty.warn(msg.join(', '))
+          this.filter.ip = ''
+          this.loading = false
         }
         return false
       }
     },
     searchIp (ipToSearch) {
-      this.$searchIpService.getIpFromLine(this.projectId, this.logId, this.line._id, ipToSearch)
-        .then((result) => {
-          this.searchedIP = result
-          this.IPs.push(result)
-        }).catch(() => {
-          this.$noty.warn('Hubo un error al cargar la dirección IP ingresada')
-        }).finally(() => {
-          this.loading = false
+      this.loading = true
+      if (!this.hasAlreadyBeAnalyzed(ipToSearch)) {
+        this.$searchIpService.getIp(this.projectId, ipToSearch)
+          .then((result) => {
+            this.searchedIP = result
+          }).catch(() => {
+            this.$noty.warn('Hubo un error al cargar la dirección IP ingresada')
+          }).finally(() => {
+            this.loading = false
+          })
+      } else {
+        this.searchedIP = this.line.ips.find(ip => ip.raw === ipToSearch)
+        this.loading = false
+      }
+    },
+    addIP (ipToAdd) {
+      if (ipToAdd) {
+        if (!this.validIpAddress(ipToAdd)) {
+          this.$noty.warn('La dirección ingresada debe poseer un formato válido de IP')
+          return
+        }
+        this.$nextTick(() => {
+          this.searchIp(ipToAdd)
         })
+      }
+    },
+    setInitialData () {
+      this.lineIPs = cloneDeep(this.line.ips)
+      if (this.line.detail.sourceIp !== '-') { this.availableIPs.push(this.line.detail?.sourceIp) }
+      if (this.line.detail.destinationIp !== '-') { this.availableIPs.push(this.line.detail?.destinationIp) }
+      const ipsOtherThanSourceDest = cloneDeep(this.line.ips).map(ip => ip.raw).filter(this.checkIp)
+      ipsOtherThanSourceDest.forEach(ip => this.availableIPs.push(ip))
+    },
+    checkIp (anIp) {
+      return anIp !== this.line.detail.sourceIp && anIp !== this.line.detail.destinationIp
+    },
+    validIpAddress (anIp) {
+      const regexExp = /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/gi
+      return regexExp.test(anIp)
+    },
+    hasAlreadyBeAnalyzed (anIp) {
+      return this.line.ips.map(ip => ip.raw).includes(anIp)
     }
   }
 }
 </script>
-<style scoped>
-::v-deep .v-skeleton-loader__image{
-  border-radius: 16px !important;
-}
-</style>
