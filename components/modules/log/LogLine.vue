@@ -21,7 +21,7 @@
     <v-col>
       <div class="d-flex align-center">
         <div class="mr-5 my-3 max-lines-3">
-          <div v-if="formatFile==='evtx'" class="d-flex">
+          <div v-if="isEvtx" class="d-flex">
             <div>
               <v-icon class="my-1" @click="toggleMoreDetails">
                 {{ showMoreInformation ? 'mdi-chevron-down' : 'mdi-chevron-right' }}
@@ -29,7 +29,7 @@
             </div>
             <div>
               <ShAttributeText attribute="timestamp" :value="line.timestamp" />
-              <ShAttributeText attribute="event" :value="`${line.detail.eventId}`" />
+              <ShAttributeText attribute="event" :value="line.detail.eventId" />
               <ShAttributeText attribute="source-ip" :value="line.detail.sourceIp" />
               <ShAttributeText attribute="destination-ip" :value="line.detail.destinationIp" />
               <ShAttributeText attribute="user" :value="line.detail.computer" />
@@ -98,9 +98,9 @@
           </v-list>
         </v-menu>
       </div>
-      <LogLineMoreDetails v-if="showMoreInformation && formatFile==='evtx'" :line="line" class="mb-2" />
+      <LogLineMoreDetails v-if="showMoreInformation && isEvtx" :line="line" class="mb-2" />
       <div class="d-flex">
-        <div v-if="formatFile==='evtx'" class="ml-4" />
+        <div v-if="isEvtx" class="ml-4" />
         <div class="d-flex align-center">
           <div v-if="line.vulnerabilites.length > maxVulnerabilities2Show">
             <LogLineVulnerabilityDialog
@@ -170,8 +170,8 @@ export default {
     logId () {
       return this.$route.params.logId
     },
-    formatFile () {
-      return this.$route.query.format
+    isEvtx () {
+      return this.$route.query.format === 'evtx'
     },
     getHiddenVulnerabilities () {
       return [...this.line.vulnerabilites].splice(this.maxVulnerabilities2Show, this.line.vulnerabilites.length)
