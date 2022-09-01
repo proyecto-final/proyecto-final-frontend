@@ -2,22 +2,22 @@
   <span>
     <span class="border-span my-1">
       <ShCode strong>
-        {{ `${attributeText}:` }}
+        {{ `${attribute}:` }}
       </ShCode>
     </span>
     <ShCode class="ml-2">
-      {{ valueText }}
+      {{ value }}
     </ShCode>
   </span>
 </template>
 <script>
 export default ({
   props: {
-    attributeText: {
+    attribute: {
       type: String,
       required: true
     },
-    valueText: {
+    value: {
       type: String,
       default: '-'
     }

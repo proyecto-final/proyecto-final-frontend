@@ -28,11 +28,11 @@
               </v-icon>
             </div>
             <div>
-              <ShAttributeText attribute-text="timestamp" :value-text="line.timestamp" />
-              <ShAttributeText attribute-text="event" :value-text="`${line.detail.eventId}`" />
-              <ShAttributeText attribute-text="source-ip" :value-text="line.detail.sourceIp" />
-              <ShAttributeText attribute-text="destination-ip" :value-text="line.detail.destinationIp" />
-              <ShAttributeText attribute-text="user" :value-text="line.detail.computer" />
+              <ShAttributeText attribute="timestamp" :value="line.timestamp" />
+              <ShAttributeText attribute="event" :value="`${line.detail.eventId}`" />
+              <ShAttributeText attribute="source-ip" :value="line.detail.sourceIp" />
+              <ShAttributeText attribute="destination-ip" :value="line.detail.destinationIp" />
+              <ShAttributeText attribute="user" :value="line.detail.computer" />
             </div>
           </div>
         </div>
