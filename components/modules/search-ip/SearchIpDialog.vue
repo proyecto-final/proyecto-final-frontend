@@ -36,7 +36,7 @@
           clearable
           filled
           background-color="neutral darken-1"
-          :items="IPs"
+          :items="availableIPs"
           item-text="description"
           return-object
           placeholder="Dirección de la IP"
@@ -79,6 +79,7 @@ export default {
   },
   data: () => ({
     lineIPs: [],
+    availableIPs: [],
     ipToAdd: null,
     selectedNote: null,
     IPs: [],
@@ -158,6 +159,8 @@ export default {
     setInitialData () {
       this.$fetch()
       this.lineIPs = cloneDeep(this.line.ips)
+      this.availableIPs.push(this.line.detail?.sourceIp)
+      this.availableIPs.push(this.line.detail?.destinationIp)
     },
     fetchDebounced: debounce(function () {
       this.$fetch()
