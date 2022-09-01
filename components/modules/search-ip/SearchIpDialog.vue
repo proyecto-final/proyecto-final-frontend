@@ -52,14 +52,14 @@
           </template>
         </ShCombobox>
       </div>
-      <div v-if="!loading" class="px-4">
+      <div v-if="!loading && filter.ip!==''" class="px-4">
         <SearchIpCard :ip="searchedIP" class="mt-2 mb-6" />
       </div>
     </template>
   </ShAsyncDialog>
 </template>
 <script>
-import { debounce, cloneDeep } from 'lodash'
+import { cloneDeep } from 'lodash'
 export default {
   props: {
     projectId: {
@@ -87,16 +87,6 @@ export default {
     searchedIP: {},
     loading: true
   }),
-  fetch () {
-    /* this.loading = true
-    this.$searchIpService.getAnalizedIPsFromLine(this.projectId, {
-      offset: 0,
-      limit: 10,
-      ...this.filter
-    }).then((result) => {
-      this.IPs = result.rows
-    }).finally(() => { this.loading = false }) */
-  },
   watch: {
     'filter.ip' (val) {
       this.addIP(val)
@@ -108,8 +98,8 @@ export default {
         if (!this.line.ips.map(ip => ip.raw).includes(this.filter.ip)) {
           await this.$searchIpService.getIpFromLine(this.projectId, this.logId, this.line._id, this.filter.ip)
             .then(async (result) => {
-              this.IPs.push(result)
-              const ips = this.IPs
+              this.lineIPs.push(result)
+              const ips = this.lineIPs
               this.$emit('update:line', { ...this.line, ips })
               const updatedLine = await this.$logService.updateLine(this.projectId, this.logId, this.line._id, { ips })
               this.$emit('updated', updatedLine)
@@ -117,6 +107,7 @@ export default {
               this.$noty.warn('Hubo un error al cargar la dirección IP ingresada')
             }).finally(() => {
               this.loading = false
+              this.filter.ip = ''
             })
         } else {
           this.$noty.warn('La dirección IP ingresada ya ha sido analizada')
@@ -153,8 +144,7 @@ export default {
           return
         }
         this.$nextTick(() => {
-          const ip = this.searchIp(ipToAdd)
-          this.lineIPs.push(cloneDeep(ip))
+          this.searchIp(ipToAdd)
           this.ipToAdd = null
           // Falta validar si la IP ya fue analizada, de ser así, le tendría que dar al usuario dos opciones
           // 1) Pisar la IP ya analizada con un nuevo análisis
@@ -163,19 +153,15 @@ export default {
       }
     },
     setInitialData () {
-      this.$fetch()
       this.lineIPs = cloneDeep(this.line.ips)
       this.availableIPs.push(this.line.detail?.sourceIp)
       this.availableIPs.push(this.line.detail?.destinationIp)
+      const ipsOtherThanSourceDest = cloneDeep(this.line.ips).map(ip => ip.raw).filter(this.checkIp)
+      ipsOtherThanSourceDest.forEach(ip => this.availableIPs.push(ip))
     },
-    fetchDebounced: debounce(function () {
-      this.$fetch()
-    }, 500)
+    checkIp (anIp) {
+      return anIp !== this.line.detail.sourceIp && anIp !== this.line.detail.destinationIp
+    }
   }
 }
 </script>
-<style scoped>
-::v-deep .v-skeleton-loader__image{
-  border-radius: 16px !important;
-}
-</style>
