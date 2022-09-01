@@ -17,6 +17,14 @@
         </ShButton>
       </slot>
     </template>
+    <template v-if="percentCompleted" #progressBar>
+      <v-progress-linear
+        v-model="percentCompleted"
+        class="mb-2"
+        rounded
+        color="primary"
+      />
+    </template>
     <template #default>
       <div class="sh-scrollbar mh-400-px">
         <div>
@@ -119,7 +127,8 @@ export default {
   },
   data: () => ({
     logFiles: [],
-    filesToAdd: []
+    filesToAdd: [],
+    percentCompleted: 0
   }),
   computed: {
     error () {
@@ -140,9 +149,15 @@ export default {
       }
       const fileMetadatas = this.logFiles.map(({ title, description }) => ({ title, description }))
       const files = this.logFiles.map(({ file }) => file)
-      return this.$logService.save(this.projectId,
-        files,
-        fileMetadatas)
+      const uploadProgress = (progressEvent, callback) => {
+        const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+        callback(percentCompleted)
+      }
+      return this.$logService.save(this.projectId, files,
+        fileMetadatas, {
+          onUploadProgress: aProgressEvent =>
+            uploadProgress(aProgressEvent, (aPercentage) => { this.percentCompleted = aPercentage })
+        })
         .then((log) => {
           this.$emit('created', log)
           return true
@@ -152,6 +167,8 @@ export default {
             this.$noty.warn(msg.join(', '))
           }
           return false
+        }).finally(() => {
+          this.percentCompleted = 0
         })
     },
     setInitialData () {
