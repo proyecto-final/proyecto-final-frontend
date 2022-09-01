@@ -118,10 +118,10 @@ export default {
             }).finally(() => {
               this.loading = false
             })
-          return true
         } else {
           this.$noty.warn('La dirección IP ingresada ya ha sido analizada')
         }
+        return true
       } catch (error) {
         const msg = error.response?.data?.msg
         if (msg) {
