@@ -21,11 +21,14 @@
           </v-list-item-icon>
           <v-list-item-subtitle>
             <ShBody class="neutral-darken-text">
-              Analizar IPs
+              Analizar IP
             </ShBody>
           </v-list-item-subtitle>
         </v-list-item>
       </slot>
+    </template>
+    <template #progressBar>
+      <div />
     </template>
     <template #default>
       <div class="mb-4">
@@ -38,6 +41,7 @@
           :items="availableIPs"
           item-text="description"
           return-object
+          :loading="loading"
           placeholder="Dirección de la IP"
           no-data-text=""
         >
@@ -78,23 +82,26 @@ export default {
   data: () => ({
     lineIPs: [],
     availableIPs: [],
-    ipToAdd: null,
     selectedNote: null,
     IPs: [],
     filter: {
-      ip: null
+      ip: ''
     },
     searchedIP: {},
-    loading: true
+    loading: false
   }),
   watch: {
     'filter.ip' (val) {
-      this.addIP(val)
+      if (val) {
+        this.loading = true
+        this.addIP(val)
+      }
     }
   },
   methods: {
     async save () {
       try {
+        this.loading = true
         if (!this.line.ips.map(ip => ip.raw).includes(this.filter.ip)) {
           await this.$searchIpService.getIpFromLine(this.projectId, this.logId, this.line._id, this.filter.ip)
             .then(async (result) => {
@@ -122,6 +129,7 @@ export default {
       }
     },
     searchIp (ipToSearch) {
+      this.loading = true
       if (!this.line.ips.map(ip => ip.raw).includes(ipToSearch)) {
         this.$searchIpService.getIp(this.projectId, ipToSearch)
           .then((result) => {
@@ -145,17 +153,13 @@ export default {
         }
         this.$nextTick(() => {
           this.searchIp(ipToAdd)
-          this.ipToAdd = null
-          // Falta validar si la IP ya fue analizada, de ser así, le tendría que dar al usuario dos opciones
-          // 1) Pisar la IP ya analizada con un nuevo análisis
-          // 2) Mostrar el análisis ya hecho
         })
       }
     },
     setInitialData () {
       this.lineIPs = cloneDeep(this.line.ips)
-      this.availableIPs.push(this.line.detail?.sourceIp)
-      this.availableIPs.push(this.line.detail?.destinationIp)
+      if (this.line.detail.sourceIp !== '-') { this.availableIPs.push(this.line.detail?.sourceIp) }
+      if (this.line.detail.destinationIp !== '-') { this.availableIPs.push(this.line.detail?.destinationIp) }
       const ipsOtherThanSourceDest = cloneDeep(this.line.ips).map(ip => ip.raw).filter(this.checkIp)
       ipsOtherThanSourceDest.forEach(ip => this.availableIPs.push(ip))
     },
