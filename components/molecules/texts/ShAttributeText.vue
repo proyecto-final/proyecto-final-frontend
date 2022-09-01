@@ -26,8 +26,8 @@ export default ({
 </script>
 <style scoped>
 .border-span{
-  border: solid #dfe2f5;
-  background-color: #dfe2f5;
+  border: solid var(--v-neutral-darken1);
+  background-color: var(--v-neutral-darken1);
   display: inline-flex;
 }
 </style>

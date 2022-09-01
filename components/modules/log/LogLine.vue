@@ -24,7 +24,7 @@
           <div class="d-flex">
             <div>
               <v-icon class="my-1" @click="toggleMoreDetails">
-                {{ moreInformation ? 'mdi-chevron-down' : 'mdi-chevron-right' }}
+                {{ showMoreInformation ? 'mdi-chevron-down' : 'mdi-chevron-right' }}
               </v-icon>
             </div>
             <div>
@@ -93,8 +93,8 @@
           </v-list>
         </v-menu>
       </div>
-      <LogLineMoreDetails v-if="moreInformation" :line="line" />
-      <div class="d-flex align-center">
+      <LogLineMoreDetails v-if="showMoreInformation" :line="line" class="mb-2" />
+      <div class="d-flex align-center ml-4">
         <div v-if="line.vulnerabilites.length > maxVulnerabilities2Show">
           <LogLineVulnerabilityDialog
             v-for="(vulnerability, index) in getShowableVulnerabilities"
@@ -152,7 +152,7 @@ export default {
     }
   },
   data: () => ({
-    moreInformation: false,
+    showMoreInformation: false,
     maxVulnerabilities2Show: 2
   }),
   computed: {
@@ -171,7 +171,7 @@ export default {
   },
   methods: {
     toggleMoreDetails () {
-      this.moreInformation = !this.moreInformation
+      this.showMoreInformation = !this.showMoreInformation
     }
   }
 }
