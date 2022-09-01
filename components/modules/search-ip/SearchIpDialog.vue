@@ -30,8 +30,7 @@
     <template #default>
       <div class="mb-4">
         <ShCombobox
-          v-model="ipToAdd"
-          :search-input.sync="filter.raw"
+          v-model="filter.ip"
           hide-details
           clearable
           filled
@@ -40,7 +39,6 @@
           item-text="description"
           return-object
           placeholder="Dirección de la IP"
-          :loading="loading"
           no-data-text=""
         >
           <template #no-data>
@@ -84,7 +82,7 @@ export default {
     selectedNote: null,
     IPs: [],
     filter: {
-      raw: null
+      ip: null
     },
     searchedIP: {},
     loading: true
@@ -100,24 +98,30 @@ export default {
     }).finally(() => { this.loading = false }) */
   },
   watch: {
-    'filter.raw' (val) {
-      if (val) {
-        this.loading = true
-        this.fetchDebounced()
-      }
-    },
-    ipToAdd (val) {
+    'filter.ip' (val) {
       this.addIP(val)
     }
   },
   methods: {
     async save () {
       try {
-        const ips = this.IPs
-        this.$emit('update:line', { ...this.line, ips })
-        const updatedLine = await this.$logService.updateLine(this.projectId, this.logId, this.line._id, { ips })
-        this.$emit('updated', updatedLine)
-        return true
+        if (!this.line.ips.map(ip => ip.raw).includes(this.filter.ip)) {
+          await this.$searchIpService.getIpFromLine(this.projectId, this.logId, this.line._id, this.filter.ip)
+            .then(async (result) => {
+              this.IPs.push(result)
+              const ips = this.IPs
+              this.$emit('update:line', { ...this.line, ips })
+              const updatedLine = await this.$logService.updateLine(this.projectId, this.logId, this.line._id, { ips })
+              this.$emit('updated', updatedLine)
+            }).catch(() => {
+              this.$noty.warn('Hubo un error al cargar la dirección IP ingresada')
+            }).finally(() => {
+              this.loading = false
+            })
+          return true
+        } else {
+          this.$noty.warn('La dirección IP ingresada ya ha sido analizada')
+        }
       } catch (error) {
         const msg = error.response?.data?.msg
         if (msg) {
@@ -127,15 +131,19 @@ export default {
       }
     },
     searchIp (ipToSearch) {
-      this.$searchIpService.getIpFromLine(this.projectId, this.logId, this.line._id, ipToSearch)
-        .then((result) => {
-          this.searchedIP = result
-          this.IPs.push(result)
-        }).catch(() => {
-          this.$noty.warn('Hubo un error al cargar la dirección IP ingresada')
-        }).finally(() => {
-          this.loading = false
-        })
+      if (!this.line.ips.map(ip => ip.raw).includes(ipToSearch)) {
+        this.$searchIpService.getIp(this.projectId, ipToSearch)
+          .then((result) => {
+            this.searchedIP = result
+          }).catch(() => {
+            this.$noty.warn('Hubo un error al cargar la dirección IP ingresada')
+          }).finally(() => {
+            this.loading = false
+          })
+      } else {
+        this.searchedIP = this.line.ips.find(ip => ip.raw === ipToSearch)
+        this.loading = false
+      }
     },
     addIP (ipToAdd) {
       if (ipToAdd) {
@@ -146,13 +154,12 @@ export default {
         }
         this.$nextTick(() => {
           const ip = this.searchIp(ipToAdd)
+          this.lineIPs.push(cloneDeep(ip))
+          this.ipToAdd = null
           // Falta validar si la IP ya fue analizada, de ser así, le tendría que dar al usuario dos opciones
           // 1) Pisar la IP ya analizada con un nuevo análisis
           // 2) Mostrar el análisis ya hecho
-          this.lineIPs.push(cloneDeep(ip))
-          this.ipToAdd = null
         })
-        this.filter.raw = ''
       }
     },
     setInitialData () {
