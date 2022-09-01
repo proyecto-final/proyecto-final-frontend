@@ -21,7 +21,7 @@
     <v-col>
       <div class="d-flex align-center">
         <div class="mr-5 my-3 max-lines-3">
-          <div class="d-flex">
+          <div v-if="formatFile==='evtx'" class="d-flex">
             <div>
               <v-icon class="my-1" @click="toggleMoreDetails">
                 {{ showMoreInformation ? 'mdi-chevron-down' : 'mdi-chevron-right' }}
@@ -34,6 +34,11 @@
               <ShAttributeText attribute="destination-ip" :value="line.detail.destinationIp" />
               <ShAttributeText attribute="user" :value="line.detail.computer" />
             </div>
+          </div>
+          <div v-else>
+            <ShCode>
+              {{ line.raw }}
+            </ShCode>
           </div>
         </div>
         <v-menu
@@ -93,52 +98,55 @@
           </v-list>
         </v-menu>
       </div>
-      <LogLineMoreDetails v-if="showMoreInformation" :line="line" class="mb-2" />
-      <div class="d-flex align-center ml-4">
-        <div v-if="line.vulnerabilites.length > maxVulnerabilities2Show">
-          <LogLineVulnerabilityDialog
-            v-for="(vulnerability, index) in getShowableVulnerabilities"
-            :key="`${line._id}-${index}`"
-            :vulnerability="vulnerability"
-          />
-          <v-menu
-            offset-y
-            close-on-content-click
+      <LogLineMoreDetails v-if="showMoreInformation && formatFile==='evtx'" :line="line" class="mb-2" />
+      <div class="d-flex">
+        <div v-if="formatFile==='evtx'" class="ml-4" />
+        <div class="d-flex align-center">
+          <div v-if="line.vulnerabilites.length > maxVulnerabilities2Show">
+            <LogLineVulnerabilityDialog
+              v-for="(vulnerability, index) in getShowableVulnerabilities"
+              :key="`${line._id}-${index}`"
+              :vulnerability="vulnerability"
+            />
+            <v-menu
+              offset-y
+              close-on-content-click
+            >
+              <template #activator="{ on, attrs }">
+                <ShChip v-bind="attrs" color="vulnerability" v-on="on">
+                  {{ `+ ${line.vulnerabilites.length - maxVulnerabilities2Show}` }}
+                </ShChip>
+              </template>
+              <v-list color="#F4E6F4" nav class="sh-scrollbar mh-200-px">
+                <v-list-item
+                  v-for="(vulnerability, index) in getHiddenVulnerabilities"
+                  :key="`${line._id}-${index}`"
+                >
+                  <LogLineVulnerabilityDialog
+                    :vulnerability="vulnerability"
+                  />
+                </v-list-item>
+              </v-list>
+            </v-menu>
+          </div>
+          <div v-else>
+            <LogLineVulnerabilityDialog
+              v-for="(vulnerability, index) in line.vulnerabilites"
+              :key="`${line._id}-${index}`"
+              :vulnerability="vulnerability"
+            />
+          </div>
+          <ShChip
+            v-if="line.notes.length > 0"
+            color="note2"
+            class="mx-1"
           >
-            <template #activator="{ on, attrs }">
-              <ShChip v-bind="attrs" color="vulnerability" v-on="on">
-                {{ `+ ${line.vulnerabilites.length - maxVulnerabilities2Show}` }}
-              </ShChip>
-            </template>
-            <v-list color="#F4E6F4" nav class="sh-scrollbar mh-200-px">
-              <v-list-item
-                v-for="(vulnerability, index) in getHiddenVulnerabilities"
-                :key="`${line._id}-${index}`"
-              >
-                <LogLineVulnerabilityDialog
-                  :vulnerability="vulnerability"
-                />
-              </v-list-item>
-            </v-list>
-          </v-menu>
+            <v-icon>
+              mdi-note-text
+            </v-icon>
+            Nota agregada
+          </ShChip>
         </div>
-        <div v-else>
-          <LogLineVulnerabilityDialog
-            v-for="(vulnerability, index) in line.vulnerabilites"
-            :key="`${line._id}-${index}`"
-            :vulnerability="vulnerability"
-          />
-        </div>
-        <ShChip
-          v-if="line.notes.length > 0"
-          color="note2"
-          class="mx-1"
-        >
-          <v-icon>
-            mdi-note-text
-          </v-icon>
-          Nota agregada
-        </ShChip>
       </div>
     </v-col>
   </v-row>
@@ -161,6 +169,9 @@ export default {
     },
     logId () {
       return this.$route.params.logId
+    },
+    formatFile () {
+      return this.$route.query.format
     },
     getHiddenVulnerabilities () {
       return [...this.line.vulnerabilites].splice(this.maxVulnerabilities2Show, this.line.vulnerabilites.length)
