@@ -92,7 +92,7 @@ export default {
   }),
   watch: {
     'filter.ip' (val) {
-      if (val) {
+      if (val && val !== '') {
         this.loading = true
         this.addIP(val)
       }
@@ -102,7 +102,7 @@ export default {
     async save () {
       try {
         this.loading = true
-        if (!this.line.ips.map(ip => ip.raw).includes(this.filter.ip)) {
+        if (!this.hasAlreadyBeAnalyzed(this.filter.ip) && this.validIpAddress(this.filter.ip)) {
           await this.$searchIpService.getIpFromLine(this.projectId, this.logId, this.line._id, this.filter.ip)
             .then(async (result) => {
               this.lineIPs.push(result)
@@ -113,24 +113,28 @@ export default {
             }).catch(() => {
               this.$noty.warn('Hubo un error al cargar la dirección IP ingresada')
             }).finally(() => {
-              this.loading = false
               this.filter.ip = ''
+              this.loading = false
             })
         } else {
-          this.$noty.warn('La dirección IP ingresada ya ha sido analizada')
+          this.$noty.warn('La dirección IP ingresada ya ha sido analizada o su formato no es válido')
+          this.filter.ip = ''
+          this.loading = false
         }
         return true
       } catch (error) {
         const msg = error.response?.data?.msg
         if (msg) {
           this.$noty.warn(msg.join(', '))
+          this.filter.ip = ''
+          this.loading = false
         }
         return false
       }
     },
     searchIp (ipToSearch) {
       this.loading = true
-      if (!this.line.ips.map(ip => ip.raw).includes(ipToSearch)) {
+      if (!this.hasAlreadyBeAnalyzed(ipToSearch)) {
         this.$searchIpService.getIp(this.projectId, ipToSearch)
           .then((result) => {
             this.searchedIP = result
@@ -146,8 +150,7 @@ export default {
     },
     addIP (ipToAdd) {
       if (ipToAdd) {
-        const regexExp = /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/gi
-        if (!(regexExp.test(ipToAdd))) {
+        if (!this.validIpAddress(ipToAdd)) {
           this.$noty.warn('La dirección ingresada debe poseer un formato válido de IP')
           return
         }
@@ -165,6 +168,13 @@ export default {
     },
     checkIp (anIp) {
       return anIp !== this.line.detail.sourceIp && anIp !== this.line.detail.destinationIp
+    },
+    validIpAddress (anIp) {
+      const regexExp = /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/gi
+      return regexExp.test(anIp)
+    },
+    hasAlreadyBeAnalyzed (anIp) {
+      return this.line.ips.map(ip => ip.raw).includes(anIp)
     }
   }
 }
