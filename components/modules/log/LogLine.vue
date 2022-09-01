@@ -68,19 +68,9 @@
               @updated="line => $emit('update:line', line)"
             />
             <SearchIpDialog
-              v-if="line.detail.sourceIp && line.detail.sourceIp!=='-'"
               :project-id="projectId"
               :log-id="logId"
               :line="line"
-              :ip-raw="line.detail.sourceIp"
-              @updated="line => $emit('update:line', line)"
-            />
-            <SearchIpDialog
-              v-if="line.detail.destinationIp && line.detail.destinationIp!=='-'"
-              :project-id="projectId"
-              :log-id="logId"
-              :line="line"
-              :ip-raw="line.detail.destinationIp"
               @updated="line => $emit('update:line', line)"
             />
           </v-list>

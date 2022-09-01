@@ -7,7 +7,7 @@
     :async-confirm-function="save"
     :submit-on-enter="false"
     v-on="$listeners"
-    @open="searchIp(ipRaw)"
+    @open="setInitialData"
   >
     <template #activator="{on}">
       <slot name="activator" :on="on">
@@ -21,24 +21,47 @@
           </v-list-item-icon>
           <v-list-item-subtitle>
             <ShBody class="neutral-darken-text">
-              {{ `Analizar IP ${ipRaw}` }}
+              Analizar IPs
             </ShBody>
           </v-list-item-subtitle>
         </v-list-item>
       </slot>
     </template>
-    <div v-if="loading">
-      <v-skeleton-loader
-        type="image"
-        class="mb-6 border-image"
-      />
-    </div>
-    <div v-else>
-      <SearchIpCard :ip="searchedIP" class="mt-2 mb-6" />
-    </div>
+    <template #default>
+      <div class="mb-4">
+        <ShCombobox
+          v-model="ipToAdd"
+          :search-input.sync="filter.raw"
+          hide-details
+          clearable
+          filled
+          background-color="neutral darken-1"
+          :items="IPs"
+          item-text="description"
+          return-object
+          placeholder="Dirección de la IP"
+          :loading="loading"
+          no-data-text=""
+        >
+          <template #no-data>
+            <v-list-item>
+              <v-list-item-content>
+                <ShSpecialLabel>
+                  La IP ingresada no existe, para analizarla presione la tecla <strong>Enter</strong>
+                </ShSpecialLabel>
+              </v-list-item-content>
+            </v-list-item>
+          </template>
+        </ShCombobox>
+      </div>
+      <div v-if="!loading" class="px-4">
+        <SearchIpCard :ip="searchedIP" class="mt-2 mb-6" />
+      </div>
+    </template>
   </ShAsyncDialog>
 </template>
 <script>
+import { debounce, cloneDeep } from 'lodash'
 export default {
   props: {
     projectId: {
@@ -52,18 +75,40 @@ export default {
     line: {
       type: Object,
       required: true
-    },
-    ipRaw: {
-      type: String,
-      required: true
     }
   },
   data: () => ({
+    lineIPs: [],
+    ipToAdd: null,
     selectedNote: null,
     IPs: [],
+    filter: {
+      raw: null
+    },
     searchedIP: {},
     loading: true
   }),
+  fetch () {
+    /* this.loading = true
+    this.$searchIpService.getAnalizedIPsFromLine(this.projectId, {
+      offset: 0,
+      limit: 10,
+      ...this.filter
+    }).then((result) => {
+      this.IPs = result.rows
+    }).finally(() => { this.loading = false }) */
+  },
+  watch: {
+    'filter.raw' (val) {
+      if (val) {
+        this.loading = true
+        this.fetchDebounced()
+      }
+    },
+    ipToAdd (val) {
+      this.addIP(val)
+    }
+  },
   methods: {
     async save () {
       try {
@@ -90,7 +135,33 @@ export default {
         }).finally(() => {
           this.loading = false
         })
-    }
+    },
+    addIP (ipToAdd) {
+      if (ipToAdd) {
+        const isCustom = typeof ipToAdd === 'string' || ipToAdd instanceof String
+        const regexExp = /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/gi
+        if (isCustom && !(regexExp.test(isCustom))) {
+          this.$noty.warn('La dirección ingresada debe poseer un formato válido de IP')
+          return
+        }
+        this.$nextTick(() => {
+          const ip = isCustom
+            ? this.searchIp(ipToAdd)
+            : ipToAdd
+
+          this.lineIPs.push(cloneDeep(ip))
+          this.ipToAdd = null
+        })
+        this.filter.raw = ''
+      }
+    },
+    setInitialData () {
+      this.$fetch()
+      this.lineIPs = cloneDeep(this.line.ips)
+    },
+    fetchDebounced: debounce(function () {
+      this.$fetch()
+    }, 500)
   }
 }
 </script>
