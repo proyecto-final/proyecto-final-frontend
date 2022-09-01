@@ -139,17 +139,16 @@ export default {
     },
     addIP (ipToAdd) {
       if (ipToAdd) {
-        const isCustom = typeof ipToAdd === 'string' || ipToAdd instanceof String
         const regexExp = /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/gi
-        if (isCustom && !(regexExp.test(isCustom))) {
+        if (!(regexExp.test(ipToAdd))) {
           this.$noty.warn('La dirección ingresada debe poseer un formato válido de IP')
           return
         }
         this.$nextTick(() => {
-          const ip = isCustom
-            ? this.searchIp(ipToAdd)
-            : ipToAdd
-
+          const ip = this.searchIp(ipToAdd)
+          // Falta validar si la IP ya fue analizada, de ser así, le tendría que dar al usuario dos opciones
+          // 1) Pisar la IP ya analizada con un nuevo análisis
+          // 2) Mostrar el análisis ya hecho
           this.lineIPs.push(cloneDeep(ip))
           this.ipToAdd = null
         })
