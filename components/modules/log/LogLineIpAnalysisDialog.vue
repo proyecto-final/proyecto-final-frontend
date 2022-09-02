@@ -16,7 +16,7 @@
           </span>
         </template>
         <template #default>
-          {{ ip.raw }}
+          Clickeá acá para ver el análisis.
         </template>
       </v-tooltip>
     </template>
