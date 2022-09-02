@@ -56,7 +56,7 @@
           </template>
         </ShCombobox>
       </div>
-      <div v-if="!loading && filter.ip!==''" class="px-4">
+      <div v-if="!loading && filter.ip" class="px-4">
         <SearchIpCard :ip="searchedIP" class="mt-2 mb-6" />
       </div>
     </template>
