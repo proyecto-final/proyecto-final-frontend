@@ -157,6 +157,10 @@ export default {
     line: {
       type: Object,
       required: true
+    },
+    log: {
+      type: Object,
+      required: true
     }
   },
   data: () => ({
@@ -171,7 +175,7 @@ export default {
       return this.$route.params.logId
     },
     isEvtx () {
-      return this.$route.query.format === 'evtx'
+      return this.log.extension === 'evtx'
     },
     getHiddenVulnerabilities () {
       return [...this.line.vulnerabilites].splice(this.maxVulnerabilities2Show, this.line.vulnerabilites.length)

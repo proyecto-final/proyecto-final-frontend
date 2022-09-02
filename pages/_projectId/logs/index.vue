@@ -75,7 +75,7 @@
         </template>
         <template #[`item.actions`]="{ item }">
           <div class="d-flex">
-            <ShButton :disabled="item.state === 'processing' || item.state === 'error' " text @click="redirectToLogPage(item)">
+            <ShButton :disabled="item.state === 'processing' || item.state === 'error' " text @click="redirectToLogPage(item._id)">
               Ver log
             </ShButton>
             <v-menu v-model="display[item._id]" offset-y close-on-content-click>
@@ -183,8 +183,8 @@ export default {
       this.loading = true
       this.fetchDebounced()
     },
-    redirectToLogPage (item) {
-      this.$router.push(`/${this.projectId}/logs/${item._id}/?format=${item.extension}`)
+    redirectToLogPage (logId) {
+      this.$router.push(`/${this.projectId}/logs/${logId}`)
     },
     fetchDebounced: debounce(function () {
       this.$fetch()
