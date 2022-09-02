@@ -49,7 +49,7 @@
             <v-list-item>
               <v-list-item-content>
                 <ShSpecialLabel>
-                  La IP ingresada no existe, para analizarla presione la tecla <strong>Enter</strong>
+                  No hay análisis para la ip ingresada, para analizarla presione <strong>Enter</strong>
                 </ShSpecialLabel>
               </v-list-item-content>
             </v-list-item>

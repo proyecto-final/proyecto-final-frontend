@@ -111,7 +111,7 @@
           </v-icon>
           Nota agregada
         </ShChip>
-        <LogLineSearchIpDialog
+        <LogLineIpAnalysisDialog
           v-for="(ip, index) in line.ips"
           :key="`${line._id}-${index}`"
           :ip="ip"
