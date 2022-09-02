@@ -1,11 +1,10 @@
 <template>
   <ShAsyncDialog
+    ref="asyncDialog"
     width="500"
-    confirm-text="Guardar"
+    hide-primary-button
     title="Analizar IP"
-    hide-secondary-button
-    :async-confirm-function="save"
-    :submit-on-enter="false"
+    :async-confirm-function="analyze"
     v-on="$listeners"
     @open="setInitialData"
   >
@@ -27,13 +26,10 @@
         </v-list-item>
       </slot>
     </template>
-    <template #progressBar>
-      <div />
-    </template>
     <template #default>
       <div>
         <ShCombobox
-          v-model="ipToAdd"
+          v-model="ipToAnalyze"
           clearable
           filled
           :rules="[$rules.ipFormat]"
@@ -41,9 +37,8 @@
           :items="availableIPs"
           item-text="description"
           return-object
-          :loading="loading"
           placeholder="Dirección de la IP"
-          no-data-text=""
+          @change="submitAnalyze"
         >
           <template #no-data>
             <v-list-item>
@@ -57,7 +52,7 @@
         </ShCombobox>
       </div>
       <div class="mb-6">
-        <div v-if="!loading && searchedIP">
+        <div v-if="searchedIP">
           <SearchIpCard :ip="searchedIP" />
         </div>
         <div v-else>
@@ -84,73 +79,45 @@ export default {
     }
   },
   data: () => ({
-    existingAnalysis: [],
     availableIPs: [],
-    selectedNote: null,
-    IPs: [],
-    ipToAdd: null,
-    searchedIP: null,
-    loading: false
+    ipToAnalyze: null,
+    searchedIP: null
   }),
-  watch: {
-    ipToAdd (val) {
-      if (val) {
-        this.loading = true
-        this.searchIp(val)
-      }
+  computed: {
+    existingAnalysis () {
+      return this.line.ips
     }
   },
   methods: {
-    async save () {
+    async submitAnalyze (ipToAnalyze) {
+      this.ipToAnalyze = ipToAnalyze
+      await this.$nextTick()
+      await this.$nextTick()
+      this.$refs.asyncDialog.confirm()
+    },
+    async analyze () {
       try {
-        this.loading = true
-        if (!this.hasAlreadyBeAnalyzed(this.searchedIP.raw)) {
-          await this.$searchIpService.getIpFromLine(this.projectId, this.logId, this.line._id, this.searchedIP.raw)
-            .then(async (result) => {
-              this.existingAnalysis.push(result)
-              const ips = this.existingAnalysis
-              this.$emit('update:line', { ...this.line, ips })
-              const updatedLine = await this.$logService.updateLine(this.projectId, this.logId, this.line._id, { ips })
-              this.$emit('updated', updatedLine)
-            }).catch(() => {
-              this.$noty.warn('Hubo un error al cargar la dirección IP ingresada')
-            })
-        } else {
-          this.$noty.warn('La dirección IP ingresada ya ha sido analizada o su formato no es válido')
+        if (!this.ipToAnalyze) {
+          return
         }
-        this.loading = false
-        return true
+        let ipAnalysis = this.line.ips.find(ip => ip.raw === this.ipToAnalyze)
+        if (!ipAnalysis) {
+          ipAnalysis = await this.$searchIpService
+            .getIpFromLine(this.projectId, this.logId, this.line._id, this.ipToAnalyze)
+          this.$emit('updated', { ...this.line, ips: [...this.existingAnalysis, ipAnalysis] })
+        }
+        this.searchedIP = ipAnalysis
       } catch (error) {
         const msg = error.response?.data?.msg
         if (msg) {
           this.$noty.warn(msg.join(', '))
-          this.loading = false
         }
-        return false
       }
-    },
-    searchIp (anIpAddress) {
-      if (!this.hasAlreadyBeAnalyzed(anIpAddress)) {
-        this.$searchIpService.getIp(this.projectId, anIpAddress)
-          .then((result) => {
-            this.searchedIP = result
-          }).catch(() => {
-            this.$noty.warn('Hubo un error al cargar la dirección IP ingresada')
-          }).finally(() => {
-            this.loading = false
-          })
-      } else {
-        this.searchedIP = this.line.ips.find(ip => ip.raw === anIpAddress)
-        this.loading = false
-      }
+      return false
     },
     setInitialData () {
-      this.existingAnalysis = this.line.ips
       const detailIPs = [this.line.detail?.sourceIp, this.line.detail?.destinationIp].filter(ip => ip !== '-' && ip)
       this.availableIPs = Array.from(new Set([...detailIPs, ...this.existingAnalysis.map(ip => ip.raw)]))
-    },
-    hasAlreadyBeAnalyzed (anIpAddress) {
-      return this.line.ips.some(ip => ip.raw === anIpAddress)
     }
   }
 }
