@@ -173,9 +173,9 @@ export default {
       await this.getTimelineLines()
       await this.markLogLines()
     }
+    await this.getLog()
     await this.getSelectedLines()
     await this.getLines()
-    await this.getLog()
   },
   methods: {
     setLogLineTags ({ logLine, tags }) {
