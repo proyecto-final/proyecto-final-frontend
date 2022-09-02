@@ -47,6 +47,7 @@
             v-for="(line, index) in lines"
             :key="index"
             :line="line"
+            :log="log"
             :is-selected="line.isSelected"
             @update:line="updatedLine => setLine(line, updatedLine)"
             @select:line="toggleLine(line)"
@@ -125,6 +126,7 @@ export default {
       page: 1,
       itemsPerPage: 20
     },
+    log: {},
     lineIds: [],
     filter: {
       raw: '',
@@ -171,6 +173,7 @@ export default {
       await this.getTimelineLines()
       await this.markLogLines()
     }
+    await this.getLog()
     await this.getSelectedLines()
     await this.getLines()
   },
@@ -259,6 +262,14 @@ export default {
         this.options.page++
         this.getLines()
       }
+    },
+    getLog () {
+      this.loading = true
+      this.$logService.getSpecificLog(this.projectId, this.logId)
+        .then((result) => {
+          this.log = result
+        }).catch(() => { this.$noty.warn('Hubo un error al cargar el log') })
+        .finally(() => { this.loading = false })
     }
   }
 }
