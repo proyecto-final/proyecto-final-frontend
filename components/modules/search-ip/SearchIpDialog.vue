@@ -55,8 +55,18 @@
         <div v-if="searchedIP">
           <SearchIpCard :ip="searchedIP" />
         </div>
-        <div v-else>
-          <v-skeleton-loader type="image" />
+        <div v-else class="d-block my-11">
+          <ShTableEmptyState
+            img-src="/empty-state/search-ip.svg"
+          >
+            <template #heading>
+              Buscá la IP que necesites
+            </template>
+            <template #body>
+              Ingresá la dirección IP en el buscador<br>
+              para visualizar sus detalles.
+            </template>
+          </ShTableEmptyState>
         </div>
       </div>
     </template>
