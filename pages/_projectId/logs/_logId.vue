@@ -26,10 +26,12 @@
           </v-col>
           <v-col cols="12" md="6" lg="4">
             <ShAutocomplete
-              v-model="filter.eventId"
+              v-model="filter.events"
               hide-details
               clearable
-              :items="[{ text: '4624', value: '4624' }, { text: '24', value: '24' }]"
+              multiple
+              :disabled="loading"
+              :items="events"
               placeholder="Filtrar por evento"
             />
           </v-col>
@@ -129,10 +131,11 @@ export default {
     filter: {
       raw: '',
       dates: [],
-      eventId: null
+      events: []
     },
     lines: [],
     timelineLines: [],
+    events: [],
     serverItemsLength: 0,
     loading: false
   }),
@@ -161,6 +164,11 @@ export default {
         }
       },
       deep: true
+    },
+    'filter.events': {
+      handler (events) {
+        this.fetchDebounced()
+      }
     }
   },
   async created () {
@@ -171,6 +179,7 @@ export default {
       await this.getTimelineLines()
       await this.markLogLines()
     }
+    await this.getDifferentEvents()
     await this.getSelectedLines()
     await this.getLines()
   },
@@ -228,6 +237,7 @@ export default {
         offset: (this.options.page - 1) * this.options.itemsPerPage,
         limit: this.options.itemsPerPage,
         raw: this.filter.raw,
+        events: this.filter.events,
         ...filter
       }).then((result) => {
         this.lines.push(...result.rows.map(line => ({ ...line, tags: [] })))
@@ -237,6 +247,11 @@ export default {
       }).finally(() => {
         this.loading = false
       })
+    },
+    getDifferentEvents () {
+      return this.$logService.getLog(this.projectId, this.logId)
+        .then((result) => { this.events = result.differentEvents })
+        .catch(() => { this.$noty.warn('Hubo un error al cargar los eventos diferentes del log') })
     },
     toggleLine (line) {
       line.isSelected = !line.isSelected

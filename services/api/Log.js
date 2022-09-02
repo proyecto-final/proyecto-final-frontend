@@ -9,6 +9,11 @@ export default class Log {
     return this.$axios.$get(`/api/project/${projectId}/correlate/log`, { params })
   }
 
+  getLog (projectId, logId) {
+    // return this.$axios.$get(`/api/project/${projectId}/correlate/log/${logId}`)
+    return Promise.resolve({ differentEvents: [1, 5145] })
+  }
+
   deleteLog (projectId, logId) {
     return this.$axios.$delete(`/api/project/${projectId}/correlate/log/${logId}`)
   }
@@ -31,7 +36,13 @@ export default class Log {
   }
 
   getLines (projectId, logId, params) {
-    return this.$axios.$get(`/api/project/${projectId}/correlate/log/${logId}/line`, { params })
+    const qs = require('qs')
+    return this.$axios.$get(`/api/project/${projectId}/correlate/log/${logId}/line`, {
+      params,
+      paramsSerializer (params) {
+        return qs.stringify(params, { arrayFormat: 'comma' })
+      }
+    })
   }
 
   updateLine (projectId, logId, lineId, line) {
