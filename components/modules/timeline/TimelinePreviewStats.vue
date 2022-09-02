@@ -30,7 +30,7 @@
                   <ShBody strong class="mb-4">
                     {{ logLine.raw }}
                   </ShBody>
-                  <div>
+                  <div class="my-1">
                     <LogLineVulnerabilityDialog
                       v-for="(vulnerability, vulnerabilityIndex) in logLine.vulnerabilites"
                       :key="`${index}-${vulnerabilityIndex}`"
@@ -38,8 +38,8 @@
                       :vulnerability="vulnerability"
                     />
                   </div>
-                  <div>
-                    <LogLineSearchIpDialog
+                  <div class="my-1">
+                    <LogLineIpAnalysisDialog
                       v-for="(ip, ipIndex) in logLine.ips"
                       :key="`${logLine._id}`-`${ipIndex}`"
                       :ip="ip"
