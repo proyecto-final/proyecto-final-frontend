@@ -112,15 +112,12 @@ export default {
               this.$emit('updated', updatedLine)
             }).catch(() => {
               this.$noty.warn('Hubo un error al cargar la dirección IP ingresada')
-            }).finally(() => {
-              this.filter.ip = ''
-              this.loading = false
             })
         } else {
           this.$noty.warn('La dirección IP ingresada ya ha sido analizada o su formato no es válido')
-          this.filter.ip = ''
-          this.loading = false
         }
+        this.filter.ip = ''
+        this.loading = false
         return true
       } catch (error) {
         const msg = error.response?.data?.msg
@@ -174,7 +171,7 @@ export default {
       return regexExp.test(anIp)
     },
     hasAlreadyBeAnalyzed (anIp) {
-      return this.line.ips.map(ip => ip.raw).includes(anIp)
+      return this.line.ips.some(ip => ip.raw === anIp)
     }
   }
 }
