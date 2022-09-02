@@ -58,7 +58,7 @@
               </v-icon>
             </v-btn>
           </template>
-          <v-list color="neutral darken-1" nav>
+          <v-list color="neutral darken-1" nav class="sh-scrollbar mh-200-px">
             <v-list-item @click="$emit('select:line', line)">
               <v-list-item-icon>
                 <v-icon>
@@ -83,18 +83,12 @@
               :line="line"
               @updated="line => $emit('update:line', line)"
             />
-            <v-list-item>
-              <v-list-item-icon>
-                <v-icon>
-                  mdi-shield-search
-                </v-icon>
-              </v-list-item-icon>
-              <v-list-item-subtitle>
-                <ShBody>
-                  Analizar IP
-                </ShBody>
-              </v-list-item-subtitle>
-            </v-list-item>
+            <SearchIpDialog
+              :project-id="projectId"
+              :log-id="logId"
+              :line="line"
+              @updated="line => $emit('update:line', line)"
+            />
           </v-list>
         </v-menu>
       </div>
@@ -136,6 +130,11 @@
             </v-icon>
             Nota agregada
           </ShChip>
+          <LogLineIpAnalysisDialog
+            v-for="(ip, index) in line.ips"
+            :key="`${line._id}-${index}`"
+            :ip="ip"
+          />
         </div>
       </div>
     </v-col>

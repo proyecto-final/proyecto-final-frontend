@@ -38,6 +38,13 @@
                       :vulnerability="vulnerability"
                     />
                   </div>
+                  <div>
+                    <LogLineSearchIpDialog
+                      v-for="(ip, ipIndex) in logLine.ips"
+                      :key="`${logLine._id}`-`${ipIndex}`"
+                      :ip="ip"
+                    />
+                  </div>
                   <ShChip v-for="(tag, tagIndex) in logLine.tags" :key="`${index}-${tagIndex}`" class="mb-2 mx-1">
                     {{ tag }}
                   </ShChip>
