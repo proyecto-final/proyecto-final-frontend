@@ -9,22 +9,22 @@ export default class Log {
     return this.$axios.$get(`/api/project/${projectId}/correlate/log`, { params })
   }
 
-  getLog (projectId, logId) {
-    // return this.$axios.$get(`/api/project/${projectId}/correlate/log/${logId}`)
-    return Promise.resolve({ differentEvents: [1, 5145] })
+  getSpecificLog (projectId, logId) {
+    return this.$axios.$get(`/api/project/${projectId}/correlate/log/${logId}`)
   }
 
   deleteLog (projectId, logId) {
     return this.$axios.$delete(`/api/project/${projectId}/correlate/log/${logId}`)
   }
 
-  save (projectId, files, metadatas) {
+  save (projectId, files, metadatas, config) {
     const formData = new FormData()
     files.forEach((file) => {
       formData.append('files', file, file.name)
     })
     formData.append('metadata', JSON.stringify(metadatas))
     return this.$axios.$post(`/api/project/${projectId}/correlate/log`, formData, {
+      ...config,
       headers: {
         'Content-Type': 'multipart/form-data'
       }

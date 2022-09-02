@@ -183,8 +183,8 @@ export default {
       this.loading = true
       this.fetchDebounced()
     },
-    redirectToLogPage (itemId) {
-      this.$router.push(`/${this.projectId}/logs/${itemId}`)
+    redirectToLogPage (logId) {
+      this.$router.push(`/${this.projectId}/logs/${logId}`)
     },
     fetchDebounced: debounce(function () {
       this.$fetch()
