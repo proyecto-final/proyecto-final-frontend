@@ -33,10 +33,10 @@
     <template #default>
       <div class="mb-4">
         <ShCombobox
-          v-model="filter.ip"
-          hide-details
+          v-model="ipToAdd"
           clearable
           filled
+          :rules="[$rules.ipFormat]"
           background-color="neutral darken-1"
           :items="availableIPs"
           item-text="description"
@@ -56,14 +56,13 @@
           </template>
         </ShCombobox>
       </div>
-      <div v-if="!loading && filter.ip" class="px-4">
+      <div v-if="!loading && searchedIP" class="px-4">
         <SearchIpCard :ip="searchedIP" class="mt-2 mb-6" />
       </div>
     </template>
   </ShAsyncDialog>
 </template>
 <script>
-import { cloneDeep } from 'lodash'
 export default {
   props: {
     projectId: {
@@ -80,21 +79,19 @@ export default {
     }
   },
   data: () => ({
-    lineIPs: [],
+    existingAnalysis: [],
     availableIPs: [],
     selectedNote: null,
     IPs: [],
-    filter: {
-      ip: ''
-    },
-    searchedIP: {},
+    ipToAdd: null,
+    searchedIP: null,
     loading: false
   }),
   watch: {
-    'filter.ip' (val) {
-      if (val && val !== '') {
+    ipToAdd (val) {
+      if (val) {
         this.loading = true
-        this.addIP(val)
+        this.searchIp(val)
       }
     }
   },
@@ -102,11 +99,11 @@ export default {
     async save () {
       try {
         this.loading = true
-        if (!this.hasAlreadyBeAnalyzed(this.filter.ip) && this.validIpAddress(this.filter.ip)) {
-          await this.$searchIpService.getIpFromLine(this.projectId, this.logId, this.line._id, this.filter.ip)
+        if (!this.hasAlreadyBeAnalyzed(this.searchedIP.raw)) {
+          await this.$searchIpService.getIpFromLine(this.projectId, this.logId, this.line._id, this.searchedIP.raw)
             .then(async (result) => {
-              this.lineIPs.push(result)
-              const ips = this.lineIPs
+              this.existingAnalysis.push(result)
+              const ips = this.existingAnalysis
               this.$emit('update:line', { ...this.line, ips })
               const updatedLine = await this.$logService.updateLine(this.projectId, this.logId, this.line._id, { ips })
               this.$emit('updated', updatedLine)
@@ -116,23 +113,20 @@ export default {
         } else {
           this.$noty.warn('La dirección IP ingresada ya ha sido analizada o su formato no es válido')
         }
-        this.filter.ip = ''
         this.loading = false
         return true
       } catch (error) {
         const msg = error.response?.data?.msg
         if (msg) {
           this.$noty.warn(msg.join(', '))
-          this.filter.ip = ''
           this.loading = false
         }
         return false
       }
     },
-    searchIp (ipToSearch) {
-      this.loading = true
-      if (!this.hasAlreadyBeAnalyzed(ipToSearch)) {
-        this.$searchIpService.getIp(this.projectId, ipToSearch)
+    searchIp (anIpAddress) {
+      if (!this.hasAlreadyBeAnalyzed(anIpAddress)) {
+        this.$searchIpService.getIp(this.projectId, anIpAddress)
           .then((result) => {
             this.searchedIP = result
           }).catch(() => {
@@ -141,37 +135,17 @@ export default {
             this.loading = false
           })
       } else {
-        this.searchedIP = this.line.ips.find(ip => ip.raw === ipToSearch)
+        this.searchedIP = this.line.ips.find(ip => ip.raw === anIpAddress)
         this.loading = false
       }
     },
-    addIP (ipToAdd) {
-      if (ipToAdd) {
-        if (!this.validIpAddress(ipToAdd)) {
-          this.$noty.warn('La dirección ingresada debe poseer un formato válido de IP')
-          return
-        }
-        this.$nextTick(() => {
-          this.searchIp(ipToAdd)
-        })
-      }
-    },
     setInitialData () {
-      this.lineIPs = cloneDeep(this.line.ips)
-      if (this.line.detail.sourceIp !== '-') { this.availableIPs.push(this.line.detail?.sourceIp) }
-      if (this.line.detail.destinationIp !== '-') { this.availableIPs.push(this.line.detail?.destinationIp) }
-      const ipsOtherThanSourceDest = cloneDeep(this.line.ips).map(ip => ip.raw).filter(this.checkIp)
-      ipsOtherThanSourceDest.forEach(ip => this.availableIPs.push(ip))
+      this.existingAnalysis = this.line.ips
+      const detailIPs = [this.line.detail?.sourceIp, this.line.detail?.destinationIp].filter(ip => ip !== '-' && ip)
+      this.availableIPs = Array.from(new Set([...detailIPs, ...this.existingAnalysis.map(ip => ip.raw)]))
     },
-    checkIp (anIp) {
-      return anIp !== this.line.detail.sourceIp && anIp !== this.line.detail.destinationIp
-    },
-    validIpAddress (anIp) {
-      const regexExp = /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/gi
-      return regexExp.test(anIp)
-    },
-    hasAlreadyBeAnalyzed (anIp) {
-      return this.line.ips.some(ip => ip.raw === anIp)
+    hasAlreadyBeAnalyzed (anIpAddress) {
+      return this.line.ips.some(ip => ip.raw === anIpAddress)
     }
   }
 }
