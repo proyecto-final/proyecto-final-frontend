@@ -103,6 +103,25 @@
               </v-col>
             </v-row>
             <v-divider />
+            <div class="my-2">
+              <ShBodySmall neutral strong>
+                Puertos abiertos
+              </ShBodySmall>
+              <br>
+              <ShChipList
+                :items="ip.ports"
+                :max-elements2-show="4"
+                chip-color="note1"
+                :list-color="reputation.cardColor"
+              >
+                <template #default>
+                  <ShBodySmall neutral>
+                    No posee
+                  </ShBodySmall>
+                </template>
+              </ShChipList>
+            </div>
+            <v-divider />
             <div class="mt-2">
               <div v-if="!reputation.isReported">
                 <div class="mt-2">
