@@ -31,7 +31,7 @@
       <div />
     </template>
     <template #default>
-      <div class="mb-4">
+      <div>
         <ShCombobox
           v-model="ipToAdd"
           clearable
@@ -56,8 +56,13 @@
           </template>
         </ShCombobox>
       </div>
-      <div v-if="!loading && searchedIP" class="px-4">
-        <SearchIpCard :ip="searchedIP" class="mt-2 mb-6" />
+      <div class="mb-6">
+        <div v-if="!loading && searchedIP">
+          <SearchIpCard :ip="searchedIP" />
+        </div>
+        <div v-else>
+          <v-skeleton-loader type="image" />
+        </div>
       </div>
     </template>
   </ShAsyncDialog>
