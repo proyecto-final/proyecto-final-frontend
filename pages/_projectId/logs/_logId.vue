@@ -140,6 +140,11 @@ export default {
     serverItemsLength: 0,
     loading: false
   }),
+  fetch () {
+    this.lines = []
+    this.options.page = 1
+    this.getLines()
+  },
   computed: {
     projectId () {
       return this.$route.params.projectId
@@ -168,7 +173,7 @@ export default {
     },
     'filter.events': {
       handler (events) {
-        this.fetchDebounced()
+        this.$fetch()
       }
     }
   },
@@ -196,9 +201,7 @@ export default {
       })
     },
     fetchDebounced: debounce(function () {
-      this.lines = []
-      this.options.page = 1
-      this.getLines()
+      this.$fetch()
     }, 500),
     getSelectedLines () {
       return this.$logService.getLines(this.projectId, this.logId, {
