@@ -26,10 +26,12 @@
           </v-col>
           <v-col cols="12" md="6" lg="4">
             <ShAutocomplete
-              v-model="filter.eventId"
+              v-model="filter.events"
               hide-details
               clearable
-              :items="[{ text: '4624', value: '4624' }, { text: '24', value: '24' }]"
+              multiple
+              :disabled="loading"
+              :items="log.differentEvents"
               placeholder="Filtrar por evento"
             />
           </v-col>
@@ -131,13 +133,18 @@ export default {
     filter: {
       raw: '',
       dates: [],
-      eventId: null
+      events: []
     },
     lines: [],
     timelineLines: [],
     serverItemsLength: 0,
     loading: false
   }),
+  fetch () {
+    this.lines = []
+    this.options.page = 1
+    this.getLines()
+  },
   computed: {
     projectId () {
       return this.$route.params.projectId
@@ -163,6 +170,11 @@ export default {
         }
       },
       deep: true
+    },
+    'filter.events': {
+      handler (events) {
+        this.$fetch()
+      }
     }
   },
   async created () {
@@ -189,9 +201,7 @@ export default {
       })
     },
     fetchDebounced: debounce(function () {
-      this.lines = []
-      this.options.page = 1
-      this.getLines()
+      this.$fetch()
     }, 500),
     getSelectedLines () {
       return this.$logService.getLines(this.projectId, this.logId, {
@@ -226,6 +236,9 @@ export default {
         const biggerDate = this.filter.dates[0] > this.filter.dates[1] ? this.filter.dates[0] : this.filter.dates[1]
         filter.dateFrom = smallerDate
         filter.dateTo = biggerDate
+      }
+      if (this.filter.events.length) {
+        filter.events = this.filter.events.join(',')
       }
       return this.$logService.getLines(this.projectId, this.logId, {
         offset: (this.options.page - 1) * this.options.itemsPerPage,
