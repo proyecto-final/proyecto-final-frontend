@@ -36,13 +36,7 @@ export default class Log {
   }
 
   getLines (projectId, logId, params) {
-    const qs = require('qs')
-    return this.$axios.$get(`/api/project/${projectId}/correlate/log/${logId}/line`, {
-      params,
-      paramsSerializer (params) {
-        return qs.stringify(params, { arrayFormat: 'comma' })
-      }
-    })
+    return this.$axios.$get(`/api/project/${projectId}/correlate/log/${logId}/line`, { params })
   }
 
   updateLine (projectId, logId, lineId, line) {

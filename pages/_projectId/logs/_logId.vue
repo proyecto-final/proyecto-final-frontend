@@ -234,11 +234,13 @@ export default {
         filter.dateFrom = smallerDate
         filter.dateTo = biggerDate
       }
+      if (this.filter.events.length) {
+        filter.events = this.filter.events.join(',')
+      }
       return this.$logService.getLines(this.projectId, this.logId, {
         offset: (this.options.page - 1) * this.options.itemsPerPage,
         limit: this.options.itemsPerPage,
         raw: this.filter.raw,
-        events: this.filter.events,
         ...filter
       }).then((result) => {
         this.lines.push(...result.rows.map(line => ({ ...line, tags: [] })))
