@@ -5,7 +5,7 @@
         <template #activator="{on}">
           <span v-on="on" @click="dialogOn.click">
             <ShChip
-              class="mx-1 clickable"
+              class="ma-1 clickable"
               :color="ip.reputation < reputationLimit ? 'success' : 'error'"
             >
               <v-icon>
