@@ -2,7 +2,7 @@
   <ShAsyncDialog
     width="500"
     :confirm-text="isEditing ? 'Guardar' : 'Crear'"
-    :title="isEditing ? 'Actualizar organizacion' : 'Crear organización'"
+    :title="isEditing ? 'Actualizar organización' : 'Crear organización'"
     :async-confirm-function="save"
     v-on="$listeners"
     @open="setOrganization"

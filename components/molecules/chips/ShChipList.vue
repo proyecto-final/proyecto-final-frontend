@@ -4,7 +4,7 @@
       <slot name="default" />
     </div>
     <div>
-      <slot name="showableChips" v-bind="props">
+      <slot name="showableChips">
         <ShChip
           v-for="(showableElement, indexShowableElement) in showableElements"
           :key="indexShowableElement"
@@ -25,7 +25,7 @@
           </ShChip>
         </template>
         <v-list :color="listColor" nav class="sh-scrollbar mh-200-px">
-          <slot name="hiddenChips" v-bind="props">
+          <slot name="hiddenChips">
             <v-list-item
               v-for="(hiddenElement, indexHiddenElement) in hiddenElements"
               :key="indexHiddenElement"
