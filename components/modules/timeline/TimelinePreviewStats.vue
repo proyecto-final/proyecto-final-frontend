@@ -157,6 +157,7 @@
           </v-card>
         </v-col>
       </v-row>
+      <TimelineCharts :log-lines="lines2Show" />
       <v-row>
         <v-col>
           <v-card v-if="detectedEvents > 0" flat class="w-100 box-shadow-none">
