@@ -171,7 +171,7 @@ export default {
       return this.countEvents(this.filteredLogLines, getIdentifier)
     },
     amountPerInterval () {
-      const getIntervalValue = date => `${new Date(date).toDateString()}`
+      const getIntervalValue = date => `${new Date(date).toLocaleDateString()}`
       return this.filteredLogLines.reduce((countPerEvent, line) => {
         const interval = getIntervalValue(line.timestamp)
         if (!countPerEvent[interval]) {
