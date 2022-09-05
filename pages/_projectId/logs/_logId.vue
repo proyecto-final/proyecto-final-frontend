@@ -3,7 +3,7 @@
     <v-col cols="12" md="7" lg="8" class="pt-3">
       <div class="pl-3">
         <v-row>
-          <v-col cols="12" lg="8">
+          <v-col cols="12" lg="10">
             <ShSearchField
               v-model="filter.raw"
               hide-details
@@ -24,7 +24,7 @@
               placeholder="Filtrar por fecha"
             />
           </v-col>
-          <v-col cols="12" md="6" lg="4">
+          <v-col cols="12" md="6" lg="6">
             <ShAutocomplete
               v-model="filter.events"
               hide-details
@@ -33,7 +33,13 @@
               :disabled="loading"
               :items="log.differentEvents"
               placeholder="Filtrar por evento"
-            />
+            >
+              <template #selection="{item, index}">
+                <span>
+                  {{ index > 3 ? (index === 4 ? '...' : '') : item }}<template v-if="index < 3 && filter.events.length > index + 1">,</template>
+                </span>
+              </template>
+            </ShAutocomplete>
           </v-col>
         </v-row>
       </div>

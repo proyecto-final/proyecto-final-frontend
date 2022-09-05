@@ -1,5 +1,5 @@
 <template>
-  <div class="ml-6">
+  <div class="ml-9">
     <v-row no-gutters>
       <v-col>
         <ShCode strong>

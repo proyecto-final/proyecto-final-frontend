@@ -22,12 +22,12 @@
       <div class="d-flex align-center">
         <div class="mr-5 my-3 max-lines-3">
           <div v-if="isEvtx" class="d-flex">
-            <div>
+            <div class="px-1">
               <v-icon class="my-1" @click="toggleMoreDetails">
                 {{ showMoreInformation ? 'mdi-chevron-down' : 'mdi-chevron-right' }}
               </v-icon>
             </div>
-            <div>
+            <div class="mx-1">
               <ShAttributeText attribute="timestamp" :value="line.timestamp" />
               <ShAttributeText attribute="event" :value="line.detail.eventId" />
               <ShAttributeText attribute="source-ip" :value="line.detail.sourceIp" />

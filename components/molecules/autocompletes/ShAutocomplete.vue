@@ -1,9 +1,9 @@
 <template>
   <v-autocomplete
+    v-bind="$attrs"
     outlined
     dense
     class="sh-autocomplete"
-    v-bind="$attrs"
     height="40"
     rounded
     append-icon="mdi-chevron-down"
@@ -14,6 +14,12 @@
         {{ label }}
       </ShSpecialLabel>
     </template>
+    <template v-for="(_, scopedSlotName) in $scopedSlots" #[scopedSlotName]="slotData">
+      <slot :name="scopedSlotName" v-bind="slotData" />
+    </template>
+    <template v-for="(_, slotName) in $slots" #[slotName]>
+      <slot :name="slotName" />
+    </template>
   </v-autocomplete>
 </template>
 <script>
@@ -22,6 +28,11 @@ export default {
     label: {
       type: String,
       default: ''
+    }
+  },
+  methods: {
+    cutTo (str, length) {
+      return str.length > length ? `${str.substr(0, length - 3)}...` : str
     }
   }
 }
