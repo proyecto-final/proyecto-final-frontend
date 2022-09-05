@@ -1,5 +1,5 @@
 <template>
-  <v-card class="w-100 pa-4" flat outlined>
+  <v-card class="w-100 pa-4" flat>
     <template #default>
       <div>
         <ShHeading2>
