@@ -125,8 +125,9 @@ export default {
   }),
   computed: {
     filteredLogLines () {
-      // TODO: make the filters work here
-      return this.logLines
+      const dateFrom = this.filter.dates[0] < this.filter.dates[1] ? this.filter.dates[0] : this.filter.dates[1]
+      const dateTo = this.filter.dates[0] > this.filter.dates[1] ? this.filter.dates[0] : this.filter.dates[1]
+      return this.logLines.filter(logLine => (!dateFrom || logLine.timestamp >= dateFrom) && (!dateTo || logLine.timestamp <= dateTo))
     },
     amountPerEvent () {
       // TODO: definir que hacer con eventos de .logs
@@ -134,7 +135,7 @@ export default {
       return this.countEvents(this.filteredLogLines, getIdentifier)
     },
     vulnerabilities () {
-      return this.logLines.map(line => line.vulnerabilites).flat()
+      return this.filteredLogLines.map(line => line.vulnerabilites).flat()
     },
     amountPerVulnerability () {
       const getIdentifier = vulnerability => vulnerability._id
