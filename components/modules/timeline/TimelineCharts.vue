@@ -171,8 +171,7 @@ export default {
       return this.countEvents(this.filteredLogLines, getIdentifier)
     },
     amountPerInterval () {
-      // TODO: en base a filtros cambiar intervalo
-      const getIntervalValue = date => `${new Date(date).toDateString()} - Hora:${new Date(date).getHours()}`
+      const getIntervalValue = date => `${new Date(date).toDateString()}`
       return this.filteredLogLines.reduce((countPerEvent, line) => {
         const interval = getIntervalValue(line.timestamp)
         if (!countPerEvent[interval]) {
