@@ -10,7 +10,7 @@
         </ShBodySmall>
       </div>
       <v-row class="mt-2">
-        <v-col cols="12" md="4" lg="3">
+        <v-col cols="12">
           <ShDatePicker
             v-model="filter.dates"
             hide-details
@@ -22,7 +22,7 @@
       </v-row>
     </v-card>
     <v-row>
-      <v-col xl="3" cols="6">
+      <v-col cols="6">
         <ShChartCard
           title="ID de eventos detectados"
           description="Cantidad de eventos independientes detectados en la evidencia analizada. Dichos eventos representan las acciones de los usuarios dentro de los equipos involucrados en la investigación."
@@ -34,7 +34,7 @@
           />
         </ShChartCard>
       </v-col>
-      <v-col xl="3" cols="6">
+      <v-col cols="6">
         <ShChartCard
           title="Vulnerabilidades detectadas"
           description="Potenciales intentos de explotación de vulnerabilidades asociadas a distintos patrones de ataque reconocidos por la plataforma de inteligencia MITRE ATT&CK."
@@ -47,7 +47,7 @@
           />
         </ShChartCard>
       </v-col>
-      <v-col xl="3" cols="6">
+      <v-col cols="6">
         <ShChartCard
           title="Criticidad de vulnerabilidades"
           description="Representación del nivel de severidad e impacto que involucran las vulnerabilidades halladas en los eventos."
@@ -59,7 +59,7 @@
           />
         </ShChartCard>
       </v-col>
-      <v-col xl="3" cols="6">
+      <v-col cols="6">
         <ShChartCard
           title="Usuarios detectados"
           description="Representación de los usuarios que realizaron actividades sospechosas en los equipos analizados."
@@ -71,7 +71,7 @@
           />
         </ShChartCard>
       </v-col>
-      <v-col xl="3" cols="6">
+      <v-col cols="6">
         <ShChartCard
           title="Direcciones IP origen detectadas"
           description="Representación de las direcciones IP origen halladas en los equipos analizados. La dirección IP origen refleja el dispositivo en el cual se genera la conexión o envío de paquete."
@@ -83,7 +83,7 @@
           />
         </ShChartCard>
       </v-col>
-      <v-col xl="3" cols="6">
+      <v-col cols="6">
         <ShChartCard
           title="Direcciones IP destino detectadas"
           description="Representación de las direcciones IP destino halladas en los equipos analizados. La dirección IP destino refleja el dispositivo al cual se efectuó una conexión o envío de paquete."
@@ -95,7 +95,7 @@
           />
         </ShChartCard>
       </v-col>
-      <v-col xl="3" cols="12">
+      <v-col cols="12">
         <ShChartCard
           title="Cronología de eventos"
           description="Representación de los eventos analizados a lo largo del tiempo."
