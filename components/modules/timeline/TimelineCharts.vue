@@ -141,7 +141,8 @@ export default {
       return this.vulnerabilities.reduce((countPerEvent, vulnerability) => {
         const identifier = getIdentifier(vulnerability)
         if (!countPerEvent[identifier]) {
-          countPerEvent[identifier] = { data: 0, label: vulnerability.name }
+          const vulnerabilityName = this.cutTo(vulnerability.name, 45)
+          countPerEvent[identifier] = { data: 0, label: vulnerabilityName }
         }
         countPerEvent[identifier].data++
         return countPerEvent
@@ -192,6 +193,9 @@ export default {
         countPerEvent[identifier].data++
         return countPerEvent
       }, {})
+    },
+    cutTo (str, length) {
+      return str.length > length ? `${str.substr(0, length - 3)}...` : str
     }
   }
 }
