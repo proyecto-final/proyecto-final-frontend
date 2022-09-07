@@ -14,7 +14,7 @@
             />
           </v-col>
         </v-row>
-        <v-row class="mb-6 pr-2">
+        <v-row class="pr-2">
           <v-col cols="12" md="6" lg="4">
             <ShDatePicker
               v-model="filter.dates"
@@ -37,6 +37,27 @@
               <template #selection="{item, index}">
                 <span>
                   {{ index > 3 ? (index === 4 ? '...' : '') : item }}<template v-if="index < 3 && filter.events.length > index + 1">,</template>
+                </span>
+              </template>
+            </ShAutocomplete>
+          </v-col>
+        </v-row>
+        <v-row class="mb-6 pr-2">
+          <v-col cols="12" lg="10">
+            <ShAutocomplete
+              v-model="filter.vulnerabilites"
+              hide-details
+              clearable
+              multiple
+              item-text="name"
+              item-value="_id"
+              :disabled="loading"
+              :items="vulnerabilites"
+              placeholder="Filtrar por vulnerabilidad"
+            >
+              <template #selection="{item, index}">
+                <span>
+                  {{ index > 2 ? (index === 3 ? '...' : '') : cutTo(item.name, 20) }}<template v-if="index < 2 && filter.vulnerabilites.length > index + 1">,</template>
                 </span>
               </template>
             </ShAutocomplete>
@@ -139,16 +160,25 @@ export default {
     filter: {
       raw: '',
       dates: [],
-      events: []
+      events: [],
+      vulnerabilites: []
     },
+    vulnerabilites: [],
     lines: [],
     timelineLines: [],
     serverItemsLength: 0,
     loading: false
   }),
   fetch () {
+    this.loading = true
     this.lines = []
     this.options.page = 1
+    this.$logService.getVulnerabilities(this.projectId, {
+      offset: 0,
+      limit: 10
+    }).then((result) => {
+      this.vulnerabilites = result.rows
+    }).finally(() => { this.loading = false })
     this.getLines()
   },
   computed: {
@@ -181,6 +211,11 @@ export default {
       handler (events) {
         this.$fetch()
       }
+    },
+    'filter.vulnerabilites': {
+      handler (events) {
+        this.$fetch()
+      }
     }
   },
   async created () {
@@ -198,6 +233,9 @@ export default {
   methods: {
     setLogLineTags ({ logLine, tags }) {
       logLine.tags = tags
+    },
+    cutTo (str, length) {
+      return str.length > length ? `${str.substr(0, length - 3)}...` : str
     },
     setTimelineLines (timelineLines) {
       this.timelineLines = timelineLines
@@ -245,6 +283,9 @@ export default {
       }
       if (this.filter.events.length) {
         filter.events = this.filter.events.join(',')
+      }
+      if (this.filter.vulnerabilites.length) {
+        filter.vulnerabilites = this.filter.vulnerabilites.join(',')
       }
       return this.$logService.getLines(this.projectId, this.logId, {
         offset: (this.options.page - 1) * this.options.itemsPerPage,
