@@ -25,7 +25,7 @@
             hide-details
             clearable
             multiple
-            :items="availableItems(amountPerIp)"
+            :items="availableIps"
             placeholder="Filtrar por IPs"
           />
         </v-col>
@@ -35,7 +35,7 @@
             hide-details
             clearable
             multiple
-            :items="availableItems(amountPerUser)"
+            :items="availableUsers"
             placeholder="Filtrar por usuarios"
           />
         </v-col>
@@ -195,10 +195,6 @@ export default {
       const getIdentifier = line => line.detail?.destinationIp || 'Sin identificar'
       return this.countEvents(this.filteredLogLines, getIdentifier)
     },
-    amountPerIp () {
-      const getIdentifier = line => line.detail?.destinationIp || line.detail?.sourceIp || 'Sin identificar'
-      return this.countEvents(this.filteredLogLines, getIdentifier)
-    },
     amountPerInterval () {
       const getIntervalValue = date => `${new Date(date).toLocaleDateString()}`
       return this.filteredLogLines.reduce((countPerEvent, line) => {
@@ -209,6 +205,12 @@ export default {
         countPerEvent[interval].data++
         return countPerEvent
       }, {})
+    },
+    availableIps () {
+      return Array.from(new Set(this.logLines.map(line => [line.detail?.sourceIp, line.detail?.destinationIp]).flat().filter(v => v)))
+    },
+    availableUsers () {
+      return Array.from(new Set(this.logLines.map(line => [line.detail?.userName, line.detail?.userId]).flat().filter(v => v)))
     }
   },
   methods: {
@@ -221,11 +223,6 @@ export default {
         countPerEvent[identifier].data++
         return countPerEvent
       }, {})
-    },
-    availableItems (object) {
-      return Object.values(object).map((element) => {
-        return element.label
-      })
     }
   }
 }
