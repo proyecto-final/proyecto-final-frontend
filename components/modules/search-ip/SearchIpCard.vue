@@ -83,7 +83,7 @@
             </div>
             <div>
               <ShBodySmall neutral strong>
-                {{ ip.isTor ? 'Si' : 'No' }}
+                {{ ip.isTor ? 'Sí' : 'No' }}
               </ShBodySmall>
             </div>
           </v-col>
@@ -95,7 +95,7 @@
             </div>
             <div>
               <ShBodySmall neutral strong>
-                {{ ip.VPN ? 'Si' : 'No' }}
+                {{ ip.VPN ? 'Sí' : 'No' }}
               </ShBodySmall>
             </div>
           </v-col>
