@@ -46,18 +46,18 @@
           <v-col cols="12" lg="10">
             <ShAutocomplete
               v-model="filter.vulnerabilites"
+              :search-input.sync="filter.name"
               hide-details
               clearable
               multiple
               item-text="name"
               item-value="_id"
-              :disabled="loading"
               :items="vulnerabilites"
               placeholder="Filtrar por vulnerabilidad"
             >
               <template #selection="{item, index}">
                 <span>
-                  {{ index > 2 ? (index === 3 ? '...' : '') : cutTo(item.name, 20) }}<template v-if="index < 2 && filter.vulnerabilites.length > index + 1">,</template>
+                  {{ index > 2 ? (index === 3 ? '...' : '') : cutTo(item.name, 16) }}<template v-if="index < 2 && filter.vulnerabilites.length > index + 1">,</template>
                 </span>
               </template>
             </ShAutocomplete>
@@ -159,6 +159,7 @@ export default {
     lineIds: [],
     filter: {
       raw: '',
+      name: null,
       dates: [],
       events: [],
       vulnerabilites: []
@@ -175,7 +176,8 @@ export default {
     this.options.page = 1
     this.$logService.getVulnerabilities(this.projectId, {
       offset: 0,
-      limit: 10
+      limit: 10,
+      ...this.filter
     }).then((result) => {
       this.vulnerabilites = result.rows
     }).finally(() => { this.loading = false })
@@ -215,6 +217,12 @@ export default {
     'filter.vulnerabilites': {
       handler (events) {
         this.$fetch()
+      }
+    },
+    'filter.name' (val) {
+      if (val) {
+        this.loading = true
+        this.fetchDebounced()
       }
     }
   },
