@@ -19,6 +19,26 @@
             placeholder="Filtrar por fecha"
           />
         </v-col>
+        <v-col cols="12" md="4" lg="3">
+          <ShAutocomplete
+            v-model="filter.ips"
+            hide-details
+            clearable
+            multiple
+            :items="availableItems(amountPerIp)"
+            placeholder="Filtrar por IPs"
+          />
+        </v-col>
+        <v-col cols="12" md="4" lg="3">
+          <ShAutocomplete
+            v-model="filter.users"
+            hide-details
+            clearable
+            multiple
+            :items="availableItems(amountPerUser)"
+            placeholder="Filtrar por usuarios"
+          />
+        </v-col>
       </v-row>
     </v-card>
     <v-row>
@@ -120,14 +140,19 @@ export default {
   },
   data: () => ({
     filter: {
-      dates: []
+      dates: [],
+      ips: [],
+      users: []
     }
   }),
   computed: {
     filteredLogLines () {
       const dateFrom = this.filter.dates[0] < this.filter.dates[1] ? this.filter.dates[0] : this.filter.dates[1]
       const dateTo = this.filter.dates[0] > this.filter.dates[1] ? this.filter.dates[0] : this.filter.dates[1]
-      return this.logLines.filter(logLine => (!dateFrom || logLine.timestamp >= dateFrom) && (!dateTo || logLine.timestamp <= dateTo))
+      return this.logLines
+        .filter(logLine => (!dateFrom || logLine.timestamp >= dateFrom) && (!dateTo || logLine.timestamp <= dateTo))
+        .filter(logLine => (!this.filter.users.length || this.filter.users.includes(logLine.detail?.userName) || this.filter.users.includes(logLine.detail?.userId)))
+        .filter(logLine => (!this.filter.ips.length || this.filter.ips.includes(logLine.detail?.sourceIp) || this.filter.ips.includes(logLine.detail?.destinationIp)))
     },
     amountPerEvent () {
       // TODO: definir que hacer con eventos de .logs
@@ -170,6 +195,10 @@ export default {
       const getIdentifier = line => line.detail?.destinationIp || 'Sin identificar'
       return this.countEvents(this.filteredLogLines, getIdentifier)
     },
+    amountPerIp () {
+      const getIdentifier = line => line.detail?.destinationIp || line.detail?.sourceIp || 'Sin identificar'
+      return this.countEvents(this.filteredLogLines, getIdentifier)
+    },
     amountPerInterval () {
       const getIntervalValue = date => `${new Date(date).toLocaleDateString()}`
       return this.filteredLogLines.reduce((countPerEvent, line) => {
@@ -192,6 +221,11 @@ export default {
         countPerEvent[identifier].data++
         return countPerEvent
       }, {})
+    },
+    availableItems (object) {
+      return Object.values(object).map((element) => {
+        return element.label
+      })
     }
   }
 }
