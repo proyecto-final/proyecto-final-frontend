@@ -5,7 +5,7 @@ export default {
   }),
   methods: {
     getColorForIndex (index) {
-      return this.colors[index % this.colors.length]
+      return this.colors[(index * 23) % this.colors.length]
     }
   }
 }

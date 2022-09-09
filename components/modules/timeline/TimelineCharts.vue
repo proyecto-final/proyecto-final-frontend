@@ -120,6 +120,43 @@
           title="Cronología de eventos"
           description="Representación de los eventos analizados a lo largo del tiempo."
         >
+          <div class="d-flex">
+            <ShBodySmall class="d-flex align-center mr-3" neutral>
+              Agrupar eventos según:
+            </ShBodySmall>
+            <v-radio-group v-model="selectedInterval" class="small-radio" row>
+              <v-radio
+                :ripple="false"
+                value="day"
+              >
+                <template #label>
+                  <ShBodySmall neutral>
+                    Día
+                  </ShBodySmall>
+                </template>
+              </v-radio>
+              <v-radio
+                :ripple="false"
+                value="hour"
+              >
+                <template #label>
+                  <ShBodySmall neutral>
+                    Hora
+                  </ShBodySmall>
+                </template>
+              </v-radio>
+              <v-radio
+                :ripple="false"
+                value="minute"
+              >
+                <template #label>
+                  <ShBodySmall neutral>
+                    Minuto
+                  </ShBodySmall>
+                </template>
+              </v-radio>
+            </v-radio-group>
+          </div>
           <ShLineChart
             :chart-data="{
               datasets: Object.values(amountPerInterval)
@@ -143,7 +180,8 @@ export default {
       dates: [],
       ips: [],
       users: []
-    }
+    },
+    selectedInterval: 'day'
   }),
   computed: {
     filteredLogLines () {
@@ -151,7 +189,7 @@ export default {
       const dateTo = this.filter.dates[0] > this.filter.dates[1] ? this.filter.dates[0] : this.filter.dates[1]
       return this.logLines
         .filter(logLine => (!dateFrom || logLine.timestamp >= dateFrom) && (!dateTo || logLine.timestamp <= dateTo))
-        .filter(logLine => (!this.filter.users.length || this.filter.users.includes(logLine.detail?.userName) || this.filter.users.includes(logLine.detail?.userId)))
+        .filter(logLine => (!this.filter.users.length || this.filter.users.includes(logLine.detail?.userName)))
         .filter(logLine => (!this.filter.ips.length || this.filter.ips.includes(logLine.detail?.sourceIp) || this.filter.ips.includes(logLine.detail?.destinationIp)))
     },
     amountPerEvent () {
@@ -197,9 +235,13 @@ export default {
       return this.countEvents(this.filteredLogLines, getIdentifier)
     },
     amountPerInterval () {
-      const getIntervalValue = date => `${new Date(date).toLocaleDateString()}`
+      const getIntervalFunction = {
+        hour: date => `${new Date(date).toLocaleDateString()} - ${new Date(date).getHours()}`,
+        minute: date => `${new Date(date).toLocaleDateString()} - ${new Date(date).getHours()}:${new Date(date).getMinutes()}`,
+        day: date => `${new Date(date).toLocaleDateString()}`
+      }
       return this.filteredLogLines.reduce((countPerEvent, line) => {
-        const interval = getIntervalValue(line.timestamp)
+        const interval = getIntervalFunction[this.selectedInterval](line.timestamp)
         if (!countPerEvent[interval]) {
           countPerEvent[interval] = { data: 0, label: interval }
         }
@@ -211,7 +253,7 @@ export default {
       return Array.from(new Set(this.logLines.map(line => [line.detail?.sourceIp, line.detail?.destinationIp]).flat().filter(v => v)))
     },
     availableUsers () {
-      return Array.from(new Set(this.logLines.map(line => [line.detail?.userName, line.detail?.userId]).flat().filter(v => v)))
+      return Array.from(new Set(this.logLines.map(line => [line.detail?.userName]).flat().filter(v => v)))
     }
   },
   methods: {
@@ -231,3 +273,8 @@ export default {
   }
 }
 </script>
+<style scoped>
+::v-deep .small-radio i {
+  font-size: 19px;
+}
+</style>
