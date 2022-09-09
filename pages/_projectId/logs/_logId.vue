@@ -57,7 +57,7 @@
             >
               <template #selection="{index}">
                 <span v-if="index === 0">
-                  {{ cutTo(filter.vulnerabilites.map(vuln => vuln.name).join(','), 50) }}
+                  {{ cutTo(filter.vulnerabilites.map(vuln => vuln.name).join(', '), 50) }}
                 </span>
               </template>
             </ShAutocomplete>
