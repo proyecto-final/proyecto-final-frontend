@@ -42,22 +42,22 @@
             </ShAutocomplete>
           </v-col>
         </v-row>
-        <v-row class="mb-6 pr-2">
+        <v-row class="mb-2 pr-2">
           <v-col cols="12" lg="10">
             <ShAutocomplete
               v-model="filter.vulnerabilites"
-              :search-input.sync="filter.name"
+              :search-input.sync="vulnerabilityText"
               hide-details
               clearable
               multiple
               item-text="name"
-              item-value="_id"
+              return-object
               :items="vulnerabilites"
               placeholder="Filtrar por vulnerabilidad"
             >
-              <template #selection="{item, index}">
-                <span>
-                  {{ index > 2 ? (index === 3 ? '...' : '') : cutTo(item.name, 16) }}<template v-if="index < 2 && filter.vulnerabilites.length > index + 1">,</template>
+              <template #selection="{index}">
+                <span v-if="index === 0">
+                  {{ cutTo(filter.vulnerabilites.map(vuln => vuln.name).join(','), 50) }}
                 </span>
               </template>
             </ShAutocomplete>
@@ -159,11 +159,11 @@ export default {
     lineIds: [],
     filter: {
       raw: '',
-      name: null,
       dates: [],
       events: [],
       vulnerabilites: []
     },
+    vulnerabilityText: null,
     vulnerabilites: [],
     lines: [],
     timelineLines: [],
@@ -174,13 +174,6 @@ export default {
     this.loading = true
     this.lines = []
     this.options.page = 1
-    this.$logService.getVulnerabilities(this.projectId, {
-      offset: 0,
-      limit: 10,
-      ...this.filter
-    }).then((result) => {
-      this.vulnerabilites = result.rows
-    }).finally(() => { this.loading = false })
     this.getLines()
   },
   computed: {
@@ -219,10 +212,9 @@ export default {
         this.$fetch()
       }
     },
-    'filter.name' (val) {
+    vulnerabilityText (val) {
       if (val) {
-        this.loading = true
-        this.fetchDebounced()
+        this.getVulnerabilitiesDebounce()
       }
     }
   },
@@ -230,6 +222,7 @@ export default {
     this.$store.commit('navigation/SET_PAGE_TITLE', `Log - ${this.logId}`)
     this.$store.commit('navigation/CAN_GO_BACK', true)
     this.loading = true
+    this.getVulnerabilities()
     if (this.timelineId) {
       await this.getTimelineLines()
       await this.markLogLines()
@@ -239,6 +232,18 @@ export default {
     await this.getLines()
   },
   methods: {
+    getVulnerabilities () {
+      this.$logService.getVulnerabilities(this.projectId, {
+        offset: 0,
+        limit: 10,
+        name: this.vulnerabilityText
+      }).then((result) => {
+        this.vulnerabilites = result.rows
+      })
+    },
+    getVulnerabilitiesDebounce: debounce(function () {
+      this.getVulnerabilities()
+    }, 500),
     setLogLineTags ({ logLine, tags }) {
       logLine.tags = tags
     },
@@ -293,7 +298,7 @@ export default {
         filter.events = this.filter.events.join(',')
       }
       if (this.filter.vulnerabilites.length) {
-        filter.vulnerabilites = this.filter.vulnerabilites.join(',')
+        filter.vulnerabilites = this.filter.vulnerabilites.map(vuln => vuln._id).join(',')
       }
       return this.$logService.getLines(this.projectId, this.logId, {
         offset: (this.options.page - 1) * this.options.itemsPerPage,
@@ -350,8 +355,8 @@ export default {
   border-left: 1px solid var(--v-background-base) !important;
 }
 .user-viewport-height-lines {
-  max-height: calc(100vh - 220px);
-  min-height: calc(100vh - 220px);
+  max-height: calc(100vh - 270px);
+  min-height: calc(100vh - 270px);
 }
 .user-viewport-height-timeline {
   max-height: calc(100vh - 116px);
