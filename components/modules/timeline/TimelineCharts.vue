@@ -60,10 +60,12 @@
           description="Cantidad de eventos independientes detectados en la evidencia analizada. Dichos eventos representan las acciones de los usuarios dentro de los equipos involucrados en la investigación."
         >
           <ShVerticalBarChart
+            v-if="hasDataLabel(amountPerEvent)"
             :chart-data="{
               datasets: Object.values(amountPerEvent)
             }"
           />
+          <ShEmptyStateChart v-else />
         </ShChartCard>
       </v-col>
       <v-col cols="6">
@@ -72,11 +74,13 @@
           description="Potenciales intentos de explotación de vulnerabilidades asociadas a distintos patrones de ataque reconocidos por la plataforma de inteligencia MITRE ATT&CK."
         >
           <ShHorizontalBarChart
+            v-if="hasDataLength(amountPerVulnerability)"
             :color-offset="6"
             :chart-data="{
               datasets: Object.values(amountPerVulnerability)
             }"
           />
+          <ShEmptyStateChart v-else />
         </ShChartCard>
       </v-col>
       <v-col cols="6">
@@ -85,10 +89,12 @@
           description="Representación del nivel de severidad e impacto que involucran las vulnerabilidades halladas en los eventos."
         >
           <ShPieChart
+            v-if="hasDataLength(amountPerCriticality)"
             :chart-data="{
               datasets: Object.values(amountPerCriticality)
             }"
           />
+          <ShEmptyStateChart v-else />
         </ShChartCard>
       </v-col>
       <v-col cols="6">
@@ -97,10 +103,12 @@
           description="Representación de los usuarios que realizaron actividades sospechosas en los equipos analizados."
         >
           <ShPieChart
+            v-if="!hasData(amountPerUser, 'Sin identificar')"
             :chart-data="{
               datasets: Object.values(amountPerUser)
             }"
           />
+          <ShEmptyStateChart v-else />
         </ShChartCard>
       </v-col>
       <v-col cols="6">
@@ -109,10 +117,12 @@
           description="Representación de las direcciones IP origen halladas en los equipos analizados. La dirección IP origen refleja el dispositivo en el cual se genera la conexión o envío de paquete."
         >
           <ShDoughnutChart
+            v-if="!hasData(amountPerSrcIp, 'Sin identificar')"
             :chart-data="{
               datasets: Object.values(amountPerSrcIp)
             }"
           />
+          <ShEmptyStateChart v-else />
         </ShChartCard>
       </v-col>
       <v-col cols="6">
@@ -121,10 +131,12 @@
           description="Representación de las direcciones IP destino halladas en los equipos analizados. La dirección IP destino refleja el dispositivo al cual se efectuó una conexión o envío de paquete."
         >
           <ShDoughnutChart
+            v-if="!hasData(amountPerDstIp, 'Sin identificar')"
             :chart-data="{
               datasets: Object.values(amountPerDstIp)
             }"
           />
+          <ShEmptyStateChart v-else />
         </ShChartCard>
       </v-col>
       <v-col cols="12">
@@ -132,48 +144,51 @@
           title="Cronología de eventos"
           description="Representación de los eventos analizados a lo largo del tiempo."
         >
-          <div class="d-flex">
-            <ShBodySmall class="d-flex align-center mr-3" neutral>
-              Agrupar eventos según:
-            </ShBodySmall>
-            <v-radio-group v-model="selectedInterval" class="small-radio" row>
-              <v-radio
-                :ripple="false"
-                value="day"
-              >
-                <template #label>
-                  <ShBodySmall neutral>
-                    Día
-                  </ShBodySmall>
-                </template>
-              </v-radio>
-              <v-radio
-                :ripple="false"
-                value="hour"
-              >
-                <template #label>
-                  <ShBodySmall neutral>
-                    Hora
-                  </ShBodySmall>
-                </template>
-              </v-radio>
-              <v-radio
-                :ripple="false"
-                value="minute"
-              >
-                <template #label>
-                  <ShBodySmall neutral>
-                    Minuto
-                  </ShBodySmall>
-                </template>
-              </v-radio>
-            </v-radio-group>
+          <div v-if="!hasData(amountPerInterval, '31/12/1969')">
+            <div class="d-flex">
+              <ShBodySmall class="d-flex align-center mr-3" neutral>
+                Agrupar eventos según:
+              </ShBodySmall>
+              <v-radio-group v-model="selectedInterval" class="small-radio" row>
+                <v-radio
+                  :ripple="false"
+                  value="day"
+                >
+                  <template #label>
+                    <ShBodySmall neutral>
+                      Día
+                    </ShBodySmall>
+                  </template>
+                </v-radio>
+                <v-radio
+                  :ripple="false"
+                  value="hour"
+                >
+                  <template #label>
+                    <ShBodySmall neutral>
+                      Hora
+                    </ShBodySmall>
+                  </template>
+                </v-radio>
+                <v-radio
+                  :ripple="false"
+                  value="minute"
+                >
+                  <template #label>
+                    <ShBodySmall neutral>
+                      Minuto
+                    </ShBodySmall>
+                  </template>
+                </v-radio>
+              </v-radio-group>
+            </div>
+            <ShLineChart
+              :chart-data="{
+                datasets: Object.values(amountPerInterval)
+              }"
+            />
           </div>
-          <ShLineChart
-            :chart-data="{
-              datasets: Object.values(amountPerInterval)
-            }"
-          />
+          <ShEmptyStateChart v-else />
         </ShChartCard>
       </v-col>
     </v-row>
@@ -205,7 +220,6 @@ export default {
         .filter(logLine => (!this.filter.ips.length || this.filter.ips.includes(logLine.detail?.sourceIp) || this.filter.ips.includes(logLine.detail?.destinationIp)))
     },
     amountPerEvent () {
-      // TODO: definir que hacer con eventos de .logs
       const getIdentifier = line => line.detail?.eventId?.toString()
       return this.countEvents(this.filteredLogLines, getIdentifier)
     },
@@ -269,6 +283,16 @@ export default {
     }
   },
   methods: {
+    hasData (countPerEvent, aString) {
+      return (Object.values(countPerEvent)[0]?.label === aString && Object.values(countPerEvent)?.length === 1) ||
+                !this.hasDataLength(countPerEvent)
+    },
+    hasDataLength (countPerEvent) {
+      return Object.values(countPerEvent)?.length
+    },
+    hasDataLabel (countPerEvent) {
+      return Object.values(countPerEvent)[0]?.label
+    },
     countEvents (list, getIdentifierFunc) {
       return list.reduce((countPerEvent, line) => {
         const identifier = getIdentifierFunc(line)
