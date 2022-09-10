@@ -10,7 +10,7 @@
         </ShBodySmall>
       </div>
       <v-row class="mt-2">
-        <v-col cols="12" md="4" lg="3">
+        <v-col cols="4">
           <ShDatePicker
             v-model="filter.dates"
             hide-details
@@ -19,7 +19,7 @@
             placeholder="Filtrar por fecha"
           />
         </v-col>
-        <v-col cols="12" md="4" lg="3">
+        <v-col cols="4">
           <ShAutocomplete
             v-model="filter.ips"
             hide-details
@@ -27,9 +27,15 @@
             multiple
             :items="availableIps"
             placeholder="Filtrar por IPs"
-          />
+          >
+            <template #selection="{index}">
+              <span v-if="index === 0">
+                {{ cutTo(filter.ips.join(', '), 16) }}
+              </span>
+            </template>
+          </ShAutocomplete>
         </v-col>
-        <v-col cols="12" md="4" lg="3">
+        <v-col cols="4">
           <ShAutocomplete
             v-model="filter.users"
             hide-details
@@ -37,7 +43,13 @@
             multiple
             :items="availableUsers"
             placeholder="Filtrar por usuarios"
-          />
+          >
+            <template #selection="{index}">
+              <span v-if="index === 0">
+                {{ cutTo(filter.users.join(', '), 13) }}
+              </span>
+            </template>
+          </ShAutocomplete>
         </v-col>
       </v-row>
     </v-card>
