@@ -30,13 +30,15 @@ export default {
         await delay(300)
         const timelineId = this.timelineId
         const linesPage = document.getElementById('v-app-root')
-        const doc = new JsPDF('p', 'pt', [linesPage.offsetWidth, linesPage.offsetHeight])
+        const doc = new JsPDF('p', 'pt', [linesPage.offsetHeight, linesPage.offsetWidth])
+        doc.internal.pageSize.setWidth(linesPage.offsetWidth)
+        doc.internal.pageSize.setHeight(linesPage.offsetHeight)
         await this.addScreenshot(doc, linesPage)
         // Second page
         this.$emit('switchPage', 1)
         await delay(300)
         const chartsPage = document.getElementById('v-app-root')
-        doc.addPage('p', 'pt', [chartsPage.offsetWidth, chartsPage.offsetHeight])
+        doc.addPage([chartsPage.offsetWidth, chartsPage.offsetHeight])
         await this.addScreenshot(doc, chartsPage)
         this.$emit('switchPage', 0)
         doc.save(`reporte-timeline-${timelineId}.pdf`)
