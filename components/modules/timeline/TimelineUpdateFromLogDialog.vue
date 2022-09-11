@@ -46,7 +46,7 @@ export default {
           this.$emit('update')
           return true
         }).catch(() => {
-          this.$noty.warn('No es posible actualizar la timeline porque el log asociado ha sido eliminado.')
+          this.$noty.warn('No fue posible actualizar el log.')
           return false
         })
     }
