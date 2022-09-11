@@ -103,7 +103,7 @@
           description="Representación de los usuarios que realizaron actividades sospechosas en los equipos analizados."
         >
           <ShPieChart
-            v-if="!hasData(amountPerUser, 'Sin identificar')"
+            v-if="hasData(amountPerUser, 'Sin identificar')"
             :chart-data="{
               datasets: Object.values(amountPerUser)
             }"
@@ -117,7 +117,7 @@
           description="Representación de las direcciones IP origen halladas en los equipos analizados. La dirección IP origen refleja el dispositivo en el cual se genera la conexión o envío de paquete."
         >
           <ShDoughnutChart
-            v-if="!hasData(amountPerSrcIp, 'Sin identificar')"
+            v-if="hasData(amountPerSrcIp, 'Sin identificar')"
             :chart-data="{
               datasets: Object.values(amountPerSrcIp)
             }"
@@ -131,7 +131,7 @@
           description="Representación de las direcciones IP destino halladas en los equipos analizados. La dirección IP destino refleja el dispositivo al cual se efectuó una conexión o envío de paquete."
         >
           <ShDoughnutChart
-            v-if="!hasData(amountPerDstIp, 'Sin identificar')"
+            v-if="hasData(amountPerDstIp, 'Sin identificar')"
             :chart-data="{
               datasets: Object.values(amountPerDstIp)
             }"
@@ -144,7 +144,7 @@
           title="Cronología de eventos"
           description="Representación de los eventos analizados a lo largo del tiempo."
         >
-          <div v-if="!hasData(amountPerInterval, '31/12/1969')">
+          <div v-if="hasData(amountPerInterval, '31/12/1969')">
             <div class="d-flex">
               <ShBodySmall class="d-flex align-center mr-3" neutral>
                 Agrupar eventos según:
@@ -284,8 +284,8 @@ export default {
   },
   methods: {
     hasData (countPerEvent, aString) {
-      return (Object.values(countPerEvent)[0]?.label === aString && Object.values(countPerEvent)?.length === 1) ||
-                !this.hasDataLength(countPerEvent)
+      return !((Object.values(countPerEvent)[0]?.label === aString && Object.values(countPerEvent)?.length === 1) ||
+                !this.hasDataLength(countPerEvent))
     },
     hasDataLength (countPerEvent) {
       return Object.values(countPerEvent)?.length
