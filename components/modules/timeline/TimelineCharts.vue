@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card class="w-100 pa-4 my-6" flat>
+    <v-card class="w-100 pa-4 my-6 box-shadow-none" flat>
       <div>
         <ShHeading1>
           Reportes
