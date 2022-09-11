@@ -4,6 +4,7 @@
       <v-app-bar
         flat
         app
+        class="border-bottom"
         height="56"
         color="white"
       >

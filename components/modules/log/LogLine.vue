@@ -1,7 +1,7 @@
 <template>
   <v-row
     no-gutters
-    class="d-flex log-line pl-3"
+    class="d-flex log-line"
   >
     <v-col cols="auto" class="clickable" @click="$emit('select:line', line)">
       <div class="mr-6 my-3 d-flex">

@@ -9,3 +9,16 @@
 .bg-white {
   background-color: white;
 }
+
+.border-top{
+  border-top: 1px solid var(--v-background-base) !important;
+}
+
+.border-bottom, .v-application .border-bottom.v-toolbar{
+  border-bottom: 1px solid var(--v-background-base) !important;
+  border-bottom-color: var(--v-background-base) !important;
+}
+
+.border-left{
+  border-left: 1px solid var(--v-background-base) !important;
+}
