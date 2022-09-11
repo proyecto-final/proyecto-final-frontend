@@ -14,7 +14,7 @@
             />
           </v-col>
         </v-row>
-        <v-row class="mb-6 pr-2">
+        <v-row class="pr-2">
           <v-col cols="12" md="6" lg="4">
             <ShDatePicker
               v-model="filter.dates"
@@ -37,6 +37,27 @@
               <template #selection="{item, index}">
                 <span>
                   {{ index > 3 ? (index === 4 ? '...' : '') : item }}<template v-if="index < 3 && filter.events.length > index + 1">,</template>
+                </span>
+              </template>
+            </ShAutocomplete>
+          </v-col>
+        </v-row>
+        <v-row class="mb-2 pr-2">
+          <v-col cols="12" lg="10">
+            <ShAutocomplete
+              v-model="filter.vulnerabilites"
+              :search-input.sync="vulnerabilityText"
+              hide-details
+              clearable
+              multiple
+              item-text="name"
+              return-object
+              :items="vulnerabilites"
+              placeholder="Filtrar por vulnerabilidad"
+            >
+              <template #selection="{index}">
+                <span v-if="index === 0">
+                  {{ cutTo(filter.vulnerabilites.map(vuln => vuln.name).join(', '), 50) }}
                 </span>
               </template>
             </ShAutocomplete>
@@ -139,14 +160,18 @@ export default {
     filter: {
       raw: '',
       dates: [],
-      events: []
+      events: [],
+      vulnerabilites: []
     },
+    vulnerabilityText: null,
+    vulnerabilites: [],
     lines: [],
     timelineLines: [],
     serverItemsLength: 0,
     loading: false
   }),
   fetch () {
+    this.loading = true
     this.lines = []
     this.options.page = 1
     this.getLines()
@@ -181,12 +206,23 @@ export default {
       handler (events) {
         this.$fetch()
       }
+    },
+    'filter.vulnerabilites': {
+      handler (events) {
+        this.$fetch()
+      }
+    },
+    vulnerabilityText (val) {
+      if (val) {
+        this.getVulnerabilitiesDebounce()
+      }
     }
   },
   async created () {
     this.$store.commit('navigation/SET_PAGE_TITLE', `Log - ${this.logId}`)
     this.$store.commit('navigation/CAN_GO_BACK', true)
     this.loading = true
+    this.getVulnerabilities()
     if (this.timelineId) {
       await this.getTimelineLines()
       await this.markLogLines()
@@ -196,8 +232,23 @@ export default {
     await this.getLines()
   },
   methods: {
+    getVulnerabilities () {
+      this.$logService.getVulnerabilities(this.projectId, {
+        offset: 0,
+        limit: 10,
+        name: this.vulnerabilityText
+      }).then((result) => {
+        this.vulnerabilites = result.rows
+      })
+    },
+    getVulnerabilitiesDebounce: debounce(function () {
+      this.getVulnerabilities()
+    }, 500),
     setLogLineTags ({ logLine, tags }) {
       logLine.tags = tags
+    },
+    cutTo (str, length) {
+      return str.length > length ? `${str.substr(0, length - 3)}...` : str
     },
     setTimelineLines (timelineLines) {
       this.timelineLines = timelineLines
@@ -245,6 +296,9 @@ export default {
       }
       if (this.filter.events.length) {
         filter.events = this.filter.events.join(',')
+      }
+      if (this.filter.vulnerabilites.length) {
+        filter.vulnerabilites = this.filter.vulnerabilites.map(vuln => vuln._id).join(',')
       }
       return this.$logService.getLines(this.projectId, this.logId, {
         offset: (this.options.page - 1) * this.options.itemsPerPage,
@@ -301,8 +355,8 @@ export default {
   border-left: 1px solid var(--v-background-base) !important;
 }
 .user-viewport-height-lines {
-  max-height: calc(100vh - 220px);
-  min-height: calc(100vh - 220px);
+  max-height: calc(100vh - 270px);
+  min-height: calc(100vh - 270px);
 }
 .user-viewport-height-timeline {
   max-height: calc(100vh - 116px);

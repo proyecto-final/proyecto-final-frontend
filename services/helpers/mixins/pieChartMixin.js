@@ -41,7 +41,7 @@ export default {
         label: '',
         data: this.chartData.datasets.map(dataset => dataset.data),
         borderWidth: 1,
-        backgroundColor: this.colors
+        backgroundColor: this.colors.sort((a, b) => 0.5 - Math.random())
       }]
     },
     chartDataLabels () {

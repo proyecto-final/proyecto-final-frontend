@@ -74,8 +74,9 @@ export default {
       this.loading = true
       this.$userService.authenticate(this.user).then((user) => {
         this.$router.push('/profile')
-      }).catch(() => { this.error = 'Credenciales inválidas' })
-        .finally(() => { this.loading = false })
+      }).catch((error) => {
+        this.error = error.response?.data?.msg.pop()
+      }).finally(() => { this.loading = false })
     }
   }
 }
