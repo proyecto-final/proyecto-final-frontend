@@ -45,6 +45,9 @@ export default {
         .then(() => {
           this.$emit('update')
           return true
+        }).catch(() => {
+          this.$noty.warn('No fue posible actualizar el log.')
+          return false
         })
     }
   }
