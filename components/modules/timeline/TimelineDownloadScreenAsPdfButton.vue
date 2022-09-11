@@ -36,7 +36,7 @@ export default {
         this.$emit('switchPage', 1)
         await delay(300)
         const chartsPage = document.getElementById('v-app-root')
-        doc.addPage('p', 'pt', [linesPage.offsetWidth, linesPage.offsetHeight])
+        doc.addPage('p', 'pt', [chartsPage.offsetWidth, chartsPage.offsetHeight])
         await this.addScreenshot(doc, chartsPage)
         this.$emit('switchPage', 0)
         doc.save(`reporte-timeline-${timelineId}.pdf`)
