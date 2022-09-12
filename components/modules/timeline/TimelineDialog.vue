@@ -1,15 +1,15 @@
 <template>
   <ShAsyncDialog
+    ref="dialog"
     width="700"
     :confirm-text="buttonText"
     title="Combinar timelines"
     :async-confirm-function="readyToSave ? save : nextTab"
     :submit-on-enter="false"
-    :hide-secondary-button="showSuccess"
+    :persistent="!showSuccess"
     :hide-primary-button="showSuccess"
     :hide-close-button="showSuccess"
-    :hide-title="showSuccess"
-    persistent
+    :hide-secondary-button="showSuccess"
     v-on="$listeners"
     @open="setInitialData"
   >
@@ -25,13 +25,14 @@
     </template>
     <template #default>
       <template v-if="showSuccess">
-        <TimelineShowSuccess
+        <TimelineSaved
           :project-id="projectId"
           :new-timeline-id="newTimeline._id"
+          @goToTimelines="close"
         />
       </template>
       <template v-else>
-        <div class="sh-scrollbar mh-400-px">
+        <div class="sh-scrollbar mh-600-px">
           <div class="mr-2">
             <v-alert type="warning" icon="mdi-alert" class="justify-space-between mb-4 mt-2">
               <ShBodySmall class="white-text">
@@ -62,8 +63,8 @@
             <v-tab-item class="pb-2">
               <v-expansion-panels flat padding="0">
                 <v-expansion-panel
-                  v-for="(timeline,i) in availableTimelines"
-                  :key="i"
+                  v-for="(timeline) in availableTimelines"
+                  :key="timeline._id"
                 >
                   <v-expansion-panel-header expand-icon="mdi-chevron-down">
                     <div class="d-flex justify-space-between align-center">
@@ -90,14 +91,14 @@
             <v-tab-item class="pb-2">
               <div>
                 <ShTextField
-                  v-model="timelineMetadata.title"
+                  v-model="timelineHeader.title"
                   class="mt-4 mx-4"
                   label="Título *"
                 />
               </div>
               <div>
                 <ShTextArea
-                  v-model="timelineMetadata.description"
+                  v-model="timelineHeader.description"
                   class="mx-4 mb-4"
                   height="144"
                   label="Descripción"
@@ -112,7 +113,7 @@
 </template>
 <script>
 import { debounce } from 'lodash'
-const getEmptyTimelineMetadata = () => ({
+const getEmptyTimelineHeader = () => ({
   title: '',
   description: ''
 })
@@ -125,22 +126,18 @@ export default {
   },
   data: () => ({
     filter: {
-      title: '',
-      state: null
+      title: ''
     },
     options: {
       page: 1,
-      itemsPerPage: 2
+      itemsPerPage: 10
     },
     showSuccess: false,
     selectedTab: 0,
     searchedTimelines: [],
     selectedTimelines: [],
-    allTimelineLogs: [],
-    allTimelineLines: [],
-    createdTimeline: [],
     newTimeline: null,
-    timelineMetadata: getEmptyTimelineMetadata(),
+    timelineHeader: getEmptyTimelineHeader(),
     loading: false
   }),
   fetch () {
@@ -167,35 +164,35 @@ export default {
     availableTimelines () {
       const arrayToShow = this.selectedTimelines
       const timelinesToAdd = this.searchedTimelines.filter(aTimeline =>
-        !arrayToShow.includes(ele => ele._id === aTimeline._id))
-      return arrayToShow.concat(timelinesToAdd)
+        !arrayToShow.some(ele => ele._id === aTimeline._id))
+      const timelinesToShow = [...arrayToShow, ...timelinesToAdd]
+      timelinesToShow.sort(function (timelineA, timelineB) {
+        return timelineA._id < timelineB._id ? 1 : -1
+      })
+      return timelinesToShow
     }
   },
   methods: {
     selectTimeline (timeline) {
-      if (timeline.isSelected) {
-        this.searchedTimelines.push({ ...timeline, isSelected: false })
-        this.selectedTimelines.pop(aTimeline => aTimeline._id === timeline._id)
+      if (this.selectedTimelines.some(aTimeline => aTimeline._id === timeline._id)) {
+        this.selectedTimelines = this.selectedTimelines.filter(selectedTimeline => selectedTimeline._id !== timeline._id)
       } else {
         this.selectedTimelines.push({ ...timeline, isSelected: true })
-        this.searchedTimelines.pop(aTimeline => aTimeline._id === timeline._id)
       }
     },
     async save () {
-      this.selectedTimelines.forEach(selectedTimeline => selectedTimeline.logs.forEach(logId => this.allTimelineLogs.push(logId)))
-      const uniqueTimelineLogs = [...new Set(this.allTimelineLogs)]
-      this.selectedTimelines.forEach(selectedTimeline => selectedTimeline.lines.forEach(line => this.allTimelineLines.push(line)))
+      const allLogs = this.searchedTimelines.map(selectedTimeline => selectedTimeline.logs).flat()
+      const allLines = this.searchedTimelines.map(selectedTimeline => selectedTimeline.lines).flat()
+        .map(({ line, tags }) => ({ id: line, tags }))
+      const uniqueTimelineLogs = Array.from(new Set(allLogs))
       const timeline = {
-        ...this.timelineMetadata,
+        ...this.timelineHeader,
         logs: uniqueTimelineLogs,
-        lines: this.allTimelineLines.map(({ line, tags }) => ({ id: line, tags }))
+        lines: allLines
       }
       try {
-        const [createdTimeline] = await Promise.all([
-          this.$timelineService.create(this.projectId, timeline),
-          uniqueTimelineLogs.forEach(aLogId => this.$logService.setMarkedLines(this.projectId, aLogId, []))])
+        this.newTimeline = await this.$timelineService.create(this.projectId, timeline)
         this.showSuccess = true
-        this.newTimeline = createdTimeline
       } catch (error) {
         const msg = error.response?.data?.msg
         if (msg) { this.$noty.warn(msg.join(', ')) }
@@ -211,7 +208,7 @@ export default {
     },
     setInitialData () {
       this.showSuccess = false
-      this.timelineMetadata = getEmptyTimelineMetadata()
+      this.timelineHeader = getEmptyTimelineHeader()
     },
     search () {
       this.loading = true
@@ -219,7 +216,11 @@ export default {
     },
     fetchDebounced: debounce(function () {
       this.$fetch()
-    }, 500)
+    }, 500),
+    close () {
+      this.$refs.dialog.close()
+      this.$emit('created')
+    }
   }
 }
 </script>

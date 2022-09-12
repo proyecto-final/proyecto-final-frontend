@@ -21,7 +21,7 @@
     </template>
     <template #default>
       <template v-if="showSuccess">
-        <TimelineShowSuccess
+        <TimelineSaved
           :project-id="projectId"
           :new-timeline-id="newTimeline._id"
         />
