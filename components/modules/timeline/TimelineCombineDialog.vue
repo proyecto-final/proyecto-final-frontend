@@ -32,7 +32,7 @@
         />
       </template>
       <template v-else>
-        <div class="sh-scrollbar mh-600-px">
+        <div class="sh-scrollbar mh-400-px">
           <div class="mr-2">
             <v-alert type="warning" icon="mdi-alert" class="justify-space-between mb-4 mt-2">
               <ShBodySmall class="white-text">
@@ -82,8 +82,8 @@
                     :key="timeline._id"
                   >
                     <v-expansion-panel-header expand-icon="mdi-chevron-down">
-                      <div class="d-flex justify-space-between align-center">
-                        <ShBody strong neutral>
+                      <div class="d-flex justify-space-between align-center" height="10px">
+                        <ShBody strong primary>
                           {{ timeline.title }}
                         </ShBody>
                         <v-checkbox
@@ -96,9 +96,32 @@
                       </div>
                     </v-expansion-panel-header>
                     <v-expansion-panel-content>
-                      <ShBodySmall class="neutral-lighten-text">
-                        {{ timeline.description }}
-                      </ShBodySmall>
+                      <div>
+                        <ShBodySmall strong neutral>
+                          {{ timeline.description }}
+                        </ShBodySmall>
+                      </div>
+                      <div>
+                        <ShBodySmall class="neutral-lighten-text">
+                          Creada el {{ timeline.createdAt | date }}.
+                        </ShBodySmall>
+                      </div>
+                      <div>
+                        <ShBodySmall class="neutral-lighten-text">
+                          Se analizaron {{ timeline.lines.length }} líneas de log y {{ timeline.lines.map(y => y .ips).flat().length }} direcciones IP,
+                          detectando {{ timeline.lines.map(x => x.vulnerabilites).flat().length }} vulnerabilidades.
+                        </ShBodySmall>
+                      </div>
+                      <div>
+                        <ShBodySmall class="neutral-lighten-text">
+                          Eventos encontrados: {{ Array.from(new Set(timeline.lines.map(y => y.detail.eventId))).join(', ') }}.
+                        </ShBodySmall>
+                      </div>
+                      <div>
+                        <ShBodySmall class="neutral-lighten-text">
+                          Usuarios hallados: {{ Array.from(new Set(timeline.lines.map(y => y.detail.computer))).join(', ') }}.
+                        </ShBodySmall>
+                      </div>
                     </v-expansion-panel-content>
                   </v-expansion-panel>
                 </v-expansion-panels>
@@ -240,3 +263,11 @@ export default {
   }
 }
 </script>
+<style scoped>
+::v-deep .v-expansion-panel-header{
+  padding: 0%;
+}
+::v-deep .v-expansion-panel-content__wrap{
+  padding: 0%;
+}
+</style>
