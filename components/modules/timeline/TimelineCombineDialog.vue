@@ -70,8 +70,7 @@
                     No se encontraron timelines
                   </template>
                   <template #body>
-                    No existen timelines con el nombre ingresado<br>
-                    o ya se asociaron todas las timelines posibles.
+                    No existen timelines con el nombre ingresado.
                   </template>
                 </ShTableEmptyState>
               </div>
@@ -107,19 +106,24 @@
                         </ShBodySmall>
                       </div>
                       <div>
+                        <ShChip class="my-2">
+                          Líneas de log analizadas: {{ timeline.lines.length }}
+                        </ShChip>
+                        <ShChip class="my-2">
+                          Direcciones IPs consultadas: {{ timeline.lines.map(line => line.ips).flat().length }}
+                        </ShChip>
+                        <ShChip color="vulnerability" class="my-2">
+                          Vulnerabilidades detectadas: {{ timeline.lines.map(line => line.vulnerabilites).flat().length }}
+                        </ShChip>
+                      </div>
+                      <div>
                         <ShBodySmall class="neutral-lighten-text">
-                          Se analizaron {{ timeline.lines.length }} líneas de log y {{ timeline.lines.map(y => y .ips).flat().length }} direcciones IP,
-                          detectando {{ timeline.lines.map(x => x.vulnerabilites).flat().length }} vulnerabilidades.
+                          Eventos encontrados: {{ Array.from(new Set(timeline.lines.map(line => line.detail.eventId))).join(', ') }}.
                         </ShBodySmall>
                       </div>
                       <div>
                         <ShBodySmall class="neutral-lighten-text">
-                          Eventos encontrados: {{ Array.from(new Set(timeline.lines.map(y => y.detail.eventId))).join(', ') }}.
-                        </ShBodySmall>
-                      </div>
-                      <div>
-                        <ShBodySmall class="neutral-lighten-text">
-                          Usuarios hallados: {{ Array.from(new Set(timeline.lines.map(y => y.detail.computer))).join(', ') }}.
+                          Usuarios hallados: {{ Array.from(new Set(timeline.lines.map(line => line.detail.computer))).join(', ') }}.
                         </ShBodySmall>
                       </div>
                     </v-expansion-panel-content>
