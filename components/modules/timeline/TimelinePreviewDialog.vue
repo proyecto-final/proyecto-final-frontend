@@ -55,7 +55,7 @@
               :timeline-id="timelineId"
               @update="getLinesIfExists"
             />
-            <TimelineCombineDialog v-if="combineTimelines" :project-id="projectId">
+            <TimelineCombineDialog v-if="combineTimelines" :project-id="projectId" @created="createdTimeline">
               <template #activator="{on}">
                 <slot name="activator" :on="on">
                   <ShButton :block="$vuetify.breakpoint.smAndDown" class="my-4" v-on="on">
@@ -169,6 +169,10 @@ export default {
           this.existingLines = result.lines
         })
       }
+    },
+    createdTimeline () {
+      this.open = false
+      this.$emit('created:timeline')
     },
     getShareLink () {
       return this.$timelineService.createTimelineInvitationToken(this.projectId, this.timelineId)

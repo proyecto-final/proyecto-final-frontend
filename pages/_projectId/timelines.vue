@@ -69,6 +69,7 @@
               is-read-only
               :timeline-id="item._id"
               :timeline-description="item.description"
+              @created:timeline="$fetch"
             />
             <v-menu v-model="display[item._id]" offset-y close-on-content-click>
               <template #activator="{ on, attrs }">
