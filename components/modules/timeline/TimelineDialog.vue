@@ -133,9 +133,11 @@ export default {
       itemsPerPage: 2
     },
     showSuccess: false,
+    selectedTab: 0,
     searchedTimelines: [],
     selectedTimelines: [],
-    selectedTab: 0,
+    allTimelineLogs: [],
+    allTimelineLines: [],
     createdTimeline: [],
     newTimeline: null,
     timelineMetadata: getEmptyTimelineMetadata(),
@@ -180,15 +182,13 @@ export default {
       }
     },
     async save () {
-      const allTimelineLogs = []
-      const allTimelineLines = []
-      this.selectedTimelines.forEach(selectedTimeline => selectedTimeline.logs.forEach(logId => allTimelineLogs.push(logId)))
-      const uniqueTimelineLogs = [...new Set(allTimelineLogs)]
-      this.selectedTimelines.forEach(selectedTimeline => selectedTimeline.lines.forEach(line => allTimelineLines.push(line)))
+      this.selectedTimelines.forEach(selectedTimeline => selectedTimeline.logs.forEach(logId => this.allTimelineLogs.push(logId)))
+      const uniqueTimelineLogs = [...new Set(this.allTimelineLogs)]
+      this.selectedTimelines.forEach(selectedTimeline => selectedTimeline.lines.forEach(line => this.allTimelineLines.push(line)))
       const timeline = {
         ...this.timelineMetadata,
         logs: uniqueTimelineLogs,
-        lines: allTimelineLines.map(({ line, tags }) => ({ id: line, tags }))
+        lines: this.allTimelineLines.map(({ line, tags }) => ({ id: line, tags }))
       }
       try {
         const [createdTimeline] = await Promise.all([
