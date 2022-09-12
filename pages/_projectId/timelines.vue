@@ -29,7 +29,7 @@
         </v-col>
         <v-col cols="12" md="4" lg="3">
           <div class="d-flex justify-end">
-            <TimelineDialog :project-id="projectId" @created="$fetch" />
+            <TimelineCombineDialog :project-id="projectId" @created="$fetch" />
           </div>
         </v-col>
       </v-row>

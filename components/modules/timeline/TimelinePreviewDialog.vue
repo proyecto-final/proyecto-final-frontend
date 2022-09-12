@@ -55,7 +55,7 @@
               :timeline-id="timelineId"
               @update="getLinesIfExists"
             />
-            <TimelineDialog v-if="combineTimelines" :project-id="projectId">
+            <TimelineCombineDialog v-if="combineTimelines" :project-id="projectId">
               <template #activator="{on}">
                 <slot name="activator" :on="on">
                   <ShButton :block="$vuetify.breakpoint.smAndDown" class="my-4" v-on="on">
@@ -66,7 +66,7 @@
                   </ShButton>
                 </slot>
               </template>
-            </TimelineDialog>
+            </TimelineCombineDialog>
             <ShButton v-else class="my-4" @click="redirectToLogPage">
               <v-icon>mdi-pencil</v-icon>
               Editar líneas de log
