@@ -136,7 +136,6 @@ export default {
     searchedTimelines: [],
     selectedTimelines: [],
     selectedTab: 0,
-    timelineId: '',
     createdTimeline: [],
     newTimeline: null,
     timelineMetadata: getEmptyTimelineMetadata(),
@@ -196,7 +195,6 @@ export default {
           this.$timelineService.create(this.projectId, timeline),
           uniqueTimelineLogs.forEach(aLogId => this.$logService.setMarkedLines(this.projectId, aLogId, []))])
         this.showSuccess = true
-        this.timelineId = createdTimeline._id
         this.newTimeline = createdTimeline
       } catch (error) {
         const msg = error.response?.data?.msg
