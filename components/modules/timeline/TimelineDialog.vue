@@ -61,32 +61,48 @@
               Nombrar
             </v-tab>
             <v-tab-item class="pb-2">
-              <v-expansion-panels flat padding="0">
-                <v-expansion-panel
-                  v-for="(timeline) in availableTimelines"
-                  :key="timeline._id"
+              <div v-if="availableTimelines.length === 0">
+                <ShTableEmptyState
+                  class="my-10"
+                  img-src="/empty-state/timelines.svg"
                 >
-                  <v-expansion-panel-header expand-icon="mdi-chevron-down">
-                    <div class="d-flex justify-space-between align-center">
-                      <ShBody strong neutral>
-                        {{ timeline.title }}
-                      </ShBody>
-                      <v-checkbox
-                        color="primary"
-                        class="mb-4"
-                        hide-details
-                        :value="timeline.isSelected"
-                        @click.stop="selectTimeline(timeline)"
-                      />
-                    </div>
-                  </v-expansion-panel-header>
-                  <v-expansion-panel-content>
-                    <ShBodySmall class="neutral-lighten-text">
-                      {{ timeline.description }}
-                    </ShBodySmall>
-                  </v-expansion-panel-content>
-                </v-expansion-panel>
-              </v-expansion-panels>
+                  <template #heading>
+                    No se encontraron timelines
+                  </template>
+                  <template #body>
+                    No existen timelines con el nombre ingresado<br>
+                    o ya se asociaron todas las timelines posibles.
+                  </template>
+                </ShTableEmptyState>
+              </div>
+              <div v-else>
+                <v-expansion-panels flat padding="0">
+                  <v-expansion-panel
+                    v-for="(timeline) in availableTimelines"
+                    :key="timeline._id"
+                  >
+                    <v-expansion-panel-header expand-icon="mdi-chevron-down">
+                      <div class="d-flex justify-space-between align-center">
+                        <ShBody strong neutral>
+                          {{ timeline.title }}
+                        </ShBody>
+                        <v-checkbox
+                          color="primary"
+                          class="mb-4"
+                          hide-details
+                          :value="timeline.isSelected"
+                          @click.stop="selectTimeline(timeline)"
+                        />
+                      </div>
+                    </v-expansion-panel-header>
+                    <v-expansion-panel-content>
+                      <ShBodySmall class="neutral-lighten-text">
+                        {{ timeline.description }}
+                      </ShBodySmall>
+                    </v-expansion-panel-content>
+                  </v-expansion-panel>
+                </v-expansion-panels>
+              </div>
             </v-tab-item>
             <v-tab-item class="pb-2">
               <div>

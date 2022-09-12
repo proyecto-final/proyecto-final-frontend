@@ -55,7 +55,19 @@
               :timeline-id="timelineId"
               @update="getLinesIfExists"
             />
-            <ShButton class="my-4" @click="redirectToLogPage">
+            <TimelineDialog v-if="combineTimelines" :project-id="projectId">
+              <template #activator="{on}">
+                <slot name="activator" :on="on">
+                  <ShButton :block="$vuetify.breakpoint.smAndDown" class="my-4" v-on="on">
+                    <v-icon color="white">
+                      mdi-pencil
+                    </v-icon>
+                    Editar líneas de log
+                  </ShButton>
+                </slot>
+              </template>
+            </TimelineDialog>
+            <ShButton v-else class="my-4" @click="redirectToLogPage">
               <v-icon>mdi-pencil</v-icon>
               Editar líneas de log
             </ShButton>
@@ -123,6 +135,9 @@ export default {
     selectedTab: 0
   }),
   computed: {
+    combineTimelines () {
+      return this.timeline.logs.length > 1
+    },
     lines2Show () {
       return this.timelineId && !this.isEditing ? this.existingLines : this.logLines
     },
