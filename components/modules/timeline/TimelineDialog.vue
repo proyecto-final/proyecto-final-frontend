@@ -9,6 +9,7 @@
     :hide-primary-button="showSuccess"
     :hide-close-button="showSuccess"
     :hide-title="showSuccess"
+    persistent
     v-on="$listeners"
     @open="setInitialData"
   >
@@ -135,7 +136,6 @@ export default {
     searchedTimelines: [],
     selectedTimelines: [],
     selectedTab: 0,
-    readyToSave: false,
     timelineId: '',
     createdTimeline: [],
     newTimeline: null,
@@ -159,6 +159,9 @@ export default {
     },
     buttonText () {
       return this.selectedTab === 0 ? 'Continuar' : 'Combinar'
+    },
+    readyToSave () {
+      return this.selectedTab !== 0
     },
     availableTimelines () {
       const arrayToShow = this.selectedTimelines
