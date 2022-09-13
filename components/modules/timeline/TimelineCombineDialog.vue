@@ -2,7 +2,7 @@
   <ShAsyncDialog
     ref="dialog"
     width="700"
-    :confirm-text="buttonText"
+    :confirm-text="readyToSave ? 'Combinar' : 'Continuar'"
     title="Combinar timelines"
     :async-confirm-function="readyToSave ? save : nextTab"
     :submit-on-enter="false"
@@ -46,6 +46,7 @@
                   v-model="filter.title"
                   hide-details
                   clearable
+                  :loading="loading"
                   placeholder="Buscar por nombre"
                   maxlength="32"
                   @input="search"
@@ -80,7 +81,7 @@
                     v-for="(timeline) in availableTimelines"
                     :key="timeline._id"
                   >
-                    <v-expansion-panel-header expand-icon="mdi-chevron-down">
+                    <v-expansion-panel-header expand-icon="mdi-chevron-down" class="pa-0">
                       <div class="d-flex justify-space-between align-center" height="10px">
                         <ShBody strong primary>
                           {{ timeline.title }}
@@ -198,9 +199,6 @@ export default {
     readyToCombine () {
       return this.selectedTimelines.length > 1
     },
-    buttonText () {
-      return this.selectedTab === 0 ? 'Continuar' : 'Combinar'
-    },
     readyToSave () {
       return this.selectedTab !== 0
     },
@@ -268,10 +266,7 @@ export default {
 }
 </script>
 <style scoped>
-::v-deep .v-expansion-panel-header{
-  padding: 0%;
-}
 ::v-deep .v-expansion-panel-content__wrap{
-  padding: 0%;
+  padding: 0% !important;
 }
 </style>
