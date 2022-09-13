@@ -102,7 +102,7 @@
                         </ShBodySmall>
                       </div>
                       <div>
-                        <ShBodySmall class="neutral-lighten-text">
+                        <ShBodySmall neutral>
                           Creada el {{ timeline.createdAt | date }}.
                         </ShBodySmall>
                       </div>
@@ -117,15 +117,17 @@
                           Vulnerabilidades detectadas: {{ timeline.lines.map(line => line.vulnerabilites).flat().length }}
                         </ShChip>
                       </div>
-                      <div>
-                        <ShBodySmall class="neutral-lighten-text">
-                          Eventos encontrados: {{ Array.from(new Set(timeline.lines.map(line => line.detail.eventId))).join(', ') }}.
-                        </ShBodySmall>
+                      <div class="my-2">
+                        <ShShowMoreLessText
+                          :text="`Eventos encontrados: ${ Array.from(new Set(timeline.lines.map(line => line.detail.eventId))).join(', ') }.` || 'No existen eventos asociados.'"
+                          :characters-to-show="70"
+                        />
                       </div>
-                      <div>
-                        <ShBodySmall class="neutral-lighten-text">
-                          Usuarios hallados: {{ Array.from(new Set(timeline.lines.map(line => line.detail.computer))).join(', ') }}.
-                        </ShBodySmall>
+                      <div class="my-2">
+                        <ShShowMoreLessText
+                          :text="`Usuarios hallados: ${ Array.from(new Set(timeline.lines.map(line => line.detail.computer))).join(', ') }.` || 'No existen usuarios asociados.'"
+                          :characters-to-show="70"
+                        />
                       </div>
                     </v-expansion-panel-content>
                   </v-expansion-panel>
