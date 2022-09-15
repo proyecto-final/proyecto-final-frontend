@@ -125,6 +125,7 @@ export default {
         return
       }
       this.loading = true
+      this.$store.commit('register/SET_USER', this.user)
       this.$router.push(`/configure-2FA?token=${this.$route.query.token}`)
       this.loading = false
     }

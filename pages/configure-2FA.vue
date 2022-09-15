@@ -70,6 +70,7 @@
   </v-row>
 </template>
 <script>
+import { mapState } from 'vuex'
 const qrcode = require('qrcode')
 const speakeasy = require('speakeasy')
 export default {
@@ -81,19 +82,15 @@ export default {
     }
   },
   data: () => ({
-    user: {
-      name: '',
-      email: '',
-      username: '',
-      password: '',
-      repeatedPassword: ''
-    },
     organization: {},
     loading: false,
     isValidToken: false,
     qrUrl: '',
     tempSecret: ''
   }),
+  computed: {
+    ...mapState('register', ['user'])
+  },
   created () {
     this.loading = true
     this.$organizationService.validateToken(this.$route.query.token)
@@ -109,6 +106,8 @@ export default {
   },
   methods: {
     register (userCode) {
+      // There was an issue with speakeasy built-in base32 verify function. In case of error, check:
+      // https://github.com/speakeasyjs/speakeasy/issues/105
       const verified = speakeasy.totp.verify({
         secret: this.tempSecret,
         encoding: 'base32',
@@ -132,7 +131,8 @@ export default {
       }
     },
     getSecret () {
-      const secret = speakeasy.generateSecret()
+      const authenticatorName = `Sherlock (${this.user.username})`
+      const secret = speakeasy.generateSecret({ name: authenticatorName })
       const qrSecret = secret.otpauth_url
       this.tempSecret = secret.base32
       qrcode.toDataURL(qrSecret)

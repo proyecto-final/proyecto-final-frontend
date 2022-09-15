@@ -46,14 +46,22 @@
   </v-row>
 </template>
 <script>
+const speakeasy = require('speakeasy')
 export default {
   layout: 'login',
   data: () => ({
     loading: false
   }),
   methods: {
-    login () {
-      this.$router.push('/profile')
+    login (userCode) {
+      const verified = speakeasy.totp.verify({
+        secret: this.tempSecret, // traerlo del back
+        encoding: 'base32',
+        token: userCode
+      })
+      if (verified) {
+        this.$router.push('/profile')
+      }
     }
   }
 }
