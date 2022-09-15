@@ -109,13 +109,11 @@ export default {
   },
   methods: {
     register (userCode) {
-      console.log(userCode)
       const verified = speakeasy.totp.verify({
         secret: this.tempSecret,
         encoding: 'base32',
         token: userCode
       })
-      console.log(verified)
       this.loading = true
       if (verified) {
         this.$userService.createUser({
@@ -123,6 +121,11 @@ export default {
         }).then(() => {
           this.$noty.success('Se registró correctamente al usuario')
           this.$router.push('/login')
+        }).catch((error) => {
+          const msg = error.response?.data?.msg
+          if (msg) {
+            this.$noty.warn(msg.join(', '))
+          }
         }).finally(() => {
           this.loading = false
         })
