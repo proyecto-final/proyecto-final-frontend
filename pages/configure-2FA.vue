@@ -25,9 +25,7 @@
             </div>
             <div class="d-flex justify-center my-4">
               <div>
-                <ShDisplayXL neutral>
-                  ACÁ VA EL QR
-                </ShDisplayXL>
+                <img :src="qrUrl">
               </div>
             </div>
             <div class="mb-4">
@@ -72,6 +70,8 @@
   </v-row>
 </template>
 <script>
+const qrcode = require('qrcode')
+const speakeasy = require('speakeasy')
 export default {
   layout: 'login',
   props: {
@@ -90,7 +90,9 @@ export default {
     },
     organization: {},
     loading: false,
-    isValidToken: false
+    isValidToken: false,
+    qrUrl: '',
+    tempSecret: ''
   }),
   created () {
     this.loading = true
@@ -100,12 +102,46 @@ export default {
         this.isValidToken = true
       }).catch(() => {
         this.isValidToken = false
-      }).finally(() => { this.loading = false })
+      }).finally(() => {
+        this.getSecret()
+        this.loading = false
+      })
   },
   methods: {
-    register () {
-      this.$noty.success('Se registró correctamente al usuario')
-      this.$router.push('/login')
+    register (userCode) {
+      console.log(userCode)
+      const verified = speakeasy.totp.verify({
+        secret: this.tempSecret,
+        encoding: 'base32',
+        token: userCode
+      })
+      console.log(verified)
+      this.loading = true
+      if (verified) {
+        this.$userService.createUser({
+          ...this.user, token: this.$route.query.token, mfaSecret: this.tempSecret
+        }).then(() => {
+          this.$noty.success('Se registró correctamente al usuario')
+          this.$router.push('/login')
+        }).finally(() => {
+          this.loading = false
+        })
+      }
+    },
+    getSecret () {
+      const secret = speakeasy.generateSecret()
+      const qrSecret = secret.otpauth_url
+      this.tempSecret = secret.base32
+      qrcode.toDataURL(qrSecret)
+        .then((url) => {
+          this.qrUrl = url
+        })
+        .catch((error) => {
+          const msg = error.response?.data?.msg
+          if (msg) {
+            this.$noty.warn(msg.join(', '))
+          }
+        })
     }
   }
 }

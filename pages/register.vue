@@ -125,18 +125,8 @@ export default {
         return
       }
       this.loading = true
-      this.$userService.createUser({
-        ...this.user, token: this.$route.query.token
-      }).then(() => {
-        this.$router.push(`/configure-2FA?token=${this.$route.query.token}`)
-      }).catch((error) => {
-        const msg = error.response?.data?.msg
-        if (msg) {
-          this.$noty.warn(msg.join(', '))
-        }
-      }).finally(() => {
-        this.loading = false
-      })
+      this.$router.push(`/configure-2FA?token=${this.$route.query.token}`)
+      this.loading = false
     }
   }
 }
