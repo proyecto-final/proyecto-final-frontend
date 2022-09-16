@@ -46,16 +46,20 @@
   </v-row>
 </template>
 <script>
+import { mapState } from 'vuex'
 const speakeasy = require('speakeasy')
 export default {
   layout: 'login',
   data: () => ({
     loading: false
   }),
+  computed: {
+    ...mapState('register', ['user'])
+  },
   methods: {
     login (userCode) {
       const verified = speakeasy.totp.verify({
-        secret: this.tempSecret, // traerlo del back
+        secret: this.user.mfaSecret,
         encoding: 'base32',
         token: userCode
       })

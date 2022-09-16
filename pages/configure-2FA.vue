@@ -128,6 +128,9 @@ export default {
         }).finally(() => {
           this.loading = false
         })
+      } else {
+        this.$noty.warn('Código incorrecto, intente nuevamente')
+        this.loading = false
       }
     },
     getSecret () {
