@@ -61,7 +61,7 @@ export default {
       this.$userService.verifyMfa(this.user, userCode).then(() => {
         this.$router.push('/profile')
       }).catch((error) => {
-        this.error = error.response?.data?.msg.pop()
+        this.error = error.response?.data?.msg
       })
     }
   }
