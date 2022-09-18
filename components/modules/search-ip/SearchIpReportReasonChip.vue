@@ -11,7 +11,7 @@
         {{ category }}
       </ShChip>
     </template>
-    <template>
+    <template #default>
       {{ categoryTitle }}
     </template>
   </v-tooltip>
