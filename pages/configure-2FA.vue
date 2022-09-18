@@ -86,7 +86,7 @@ export default {
     loading: false,
     isValidToken: false,
     qrUrl: '',
-    tempSecret: ''
+    mfaSecret: ''
   }),
   computed: {
     ...mapState('register', ['user'])
@@ -100,7 +100,7 @@ export default {
       }).catch(() => {
         this.isValidToken = false
       }).finally(() => {
-        this.getSecret()
+        this.setSecret()
         this.loading = false
       })
   },
@@ -109,14 +109,14 @@ export default {
       // There was an issue with speakeasy built-in base32 verify function. In case of error, check:
       // https://github.com/speakeasyjs/speakeasy/issues/105
       const verified = speakeasy.totp.verify({
-        secret: this.tempSecret,
+        secret: this.mfaSecret,
         encoding: 'base32',
         token: userCode
       })
-      this.loading = true
       if (verified) {
+        this.loading = true
         this.$userService.createUser({
-          ...this.user, token: this.$route.query.token, mfaSecret: this.tempSecret
+          ...this.user, token: this.$route.query.token, mfaSecret: this.mfaSecret
         }).then(() => {
           this.$noty.success('Se registró correctamente al usuario')
           this.$router.push('/login')
@@ -130,23 +130,19 @@ export default {
         })
       } else {
         this.$noty.warn('Código incorrecto, intente nuevamente')
-        this.loading = false
       }
     },
-    getSecret () {
+    setSecret () {
       const authenticatorName = `Sherlock (${this.user.username})`
       const secret = speakeasy.generateSecret({ name: authenticatorName })
       const qrSecret = secret.otpauth_url
-      this.tempSecret = secret.base32
+      this.mfaSecret = secret.base32
       qrcode.toDataURL(qrSecret)
         .then((url) => {
           this.qrUrl = url
         })
-        .catch((error) => {
-          const msg = error.response?.data?.msg
-          if (msg) {
-            this.$noty.warn(msg.join(', '))
-          }
+        .catch((err) => {
+          this.$noty.warn(err)
         })
     }
   }
