@@ -47,25 +47,22 @@
 </template>
 <script>
 import { mapState } from 'vuex'
-const speakeasy = require('speakeasy')
 export default {
   layout: 'login',
   data: () => ({
-    loading: false
+    loading: false,
+    error: ''
   }),
   computed: {
     ...mapState('register', ['user'])
   },
   methods: {
     login (userCode) {
-      const verified = speakeasy.totp.verify({
-        secret: this.user.mfaSecret,
-        encoding: 'base32',
-        token: userCode
-      })
-      if (verified) {
+      this.$userService.verifyMfa(this.user, userCode).then(() => {
         this.$router.push('/profile')
-      }
+      }).catch((error) => {
+        this.error = error.response?.data?.msg.pop()
+      })
     }
   }
 }

@@ -72,8 +72,8 @@ export default {
       }
       this.error = ''
       this.loading = true
-      this.$userService.authenticate(this.user).then((user) => {
-        this.$store.commit('register/SET_USER', user)
+      this.$userService.authenticate(this.user).then(() => {
+        this.$store.commit('register/SET_USER', this.user.username)
         this.$router.push('/login-verification')
       }).catch((error) => {
         this.error = error.response?.data?.msg.pop()
