@@ -10,7 +10,7 @@
           :small="small"
           v-on="$listeners"
         >
-          <v-icon :small="small" :color="color">
+          <v-icon :small="small" :color="color" :class="iconClass">
             {{ icon }}
           </v-icon>
         </v-btn>
@@ -43,6 +43,10 @@ export default {
       default: false
     },
     buttonClass: {
+      type: String,
+      default: ''
+    },
+    iconClass: {
       type: String,
       default: ''
     }

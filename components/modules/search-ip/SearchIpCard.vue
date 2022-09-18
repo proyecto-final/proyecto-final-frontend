@@ -5,21 +5,32 @@
   >
     <v-card-text class="py-2">
       <div class="pa-4">
-        <div>
-          <ShBodySmall neutral>
-            La reputación de la IP es
-          </ShBodySmall>
-          <ShBodySmall strong :class="reputation.textClass">
-            {{ `${ip.reputation}%` }}
-          </ShBodySmall>
-        </div>
-        <div>
-          <ShHeading1>
-            {{ ip.raw }}
-            <ShBodySmall strong :class="reputation.textClass">
-              {{ reputation.text }}
-            </ShBodySmall>
-          </ShHeading1>
+        <div class="d-flex justify-space-between align-center">
+          <div>
+            <div>
+              <ShBodySmall neutral>
+                La IP es
+              </ShBodySmall>
+              <ShBodySmall strong :class="reputation.textClass">
+                {{ `${ip.reputation}%` }} maliciosa
+              </ShBodySmall>
+            </div>
+            <div>
+              <ShHeading1>
+                {{ ip.raw }}
+                <ShBodySmall strong :class="reputation.textClass">
+                  {{ reputation.text }}
+                </ShBodySmall>
+              </ShHeading1>
+            </div>
+          </div>
+          <div>
+            <ShIconButton
+              icon="mdi-help-circle"
+              :icon-class="reputation.textClass"
+              title="Información proveniente de Shodan, AbuseIPDB y TorList"
+            />
+          </div>
         </div>
         <v-row no-gutters class="my-2">
           <v-col>
