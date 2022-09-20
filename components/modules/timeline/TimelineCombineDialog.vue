@@ -140,6 +140,7 @@
                   v-model="timelineHeader.title"
                   class="mt-4 mx-4"
                   label="Título *"
+                  :rules="[$rules.required('title'), $rules.fieldLength('title', 2, 32)]"
                 />
               </div>
               <div>
@@ -148,6 +149,7 @@
                   class="mx-4 mb-4"
                   height="144"
                   label="Descripción"
+                  :rules="[$rules.fieldLength('description', 0, 250)]"
                 />
               </div>
             </v-tab-item>
@@ -168,6 +170,10 @@ export default {
     projectId: {
       type: String,
       required: true
+    },
+    updatedTimelines: {
+      type: Array,
+      default: () => []
     }
   },
   data: () => ({
@@ -206,9 +212,11 @@ export default {
     },
     availableTimelines () {
       const arrayToShow = this.selectedTimelines
-      const timelinesToAdd = this.searchedTimelines.filter(aTimeline =>
+      const timelinesToAdd = this.updatedTimelines.filter(aTimeline =>
         !arrayToShow.some(ele => ele._id === aTimeline._id))
-      const timelinesToShow = [...arrayToShow, ...timelinesToAdd]
+      const searchedTimelinesToAdd = this.searchedTimelines.filter(aTimeline =>
+        !timelinesToAdd.some(ele => ele._id === aTimeline._id) && !arrayToShow.some(ele => ele._id === aTimeline._id))
+      const timelinesToShow = [...arrayToShow, ...timelinesToAdd, ...searchedTimelinesToAdd]
       timelinesToShow.sort(function (timelineA, timelineB) {
         return timelineA._id < timelineB._id ? 1 : -1
       })
@@ -224,8 +232,8 @@ export default {
       }
     },
     async save () {
-      const allLogs = this.searchedTimelines.map(selectedTimeline => selectedTimeline.logs).flat()
-      const allLines = this.searchedTimelines.map(selectedTimeline => selectedTimeline.lines).flat()
+      const allLogs = this.selectedTimelines.map(selectedTimeline => selectedTimeline.logs).flat()
+      const allLines = this.selectedTimelines.map(selectedTimeline => selectedTimeline.lines).flat()
         .map(({ line, tags }) => ({ id: line, tags }))
       const uniqueTimelineLogs = Array.from(new Set(allLogs))
       const timeline = {
@@ -251,6 +259,9 @@ export default {
     },
     setInitialData () {
       this.showSuccess = false
+      this.selectedTab = 0
+      this.selectedTimelines = []
+      this.availableTimelines = []
       this.timelineHeader = getEmptyTimelineHeader()
     },
     search () {

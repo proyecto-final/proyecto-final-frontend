@@ -60,9 +60,9 @@
                 <slot name="activator" :on="on">
                   <ShButton :block="$vuetify.breakpoint.smAndDown" class="my-4" v-on="on">
                     <v-icon color="white">
-                      mdi-pencil
+                      mdi-file-document-plus
                     </v-icon>
-                    Editar líneas de log
+                    Realizar nueva combinación
                   </ShButton>
                 </slot>
               </template>
