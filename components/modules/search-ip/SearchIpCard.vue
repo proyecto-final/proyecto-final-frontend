@@ -125,15 +125,18 @@
                     :text="report.comment || 'No comments.'"
                     :characters-to-show="70"
                   />
-                  <ShChip
-                    v-for="(category, categoryIndex) in report.categories"
-                    :key="categoryIndex"
-                    class="mr-2"
-                    small
-                    color="note1"
-                  >
-                    {{ category }}
-                  </ShChip>
+                  <div>
+                    <ShBodySmall>
+                      Motivo de reporte
+                    </ShBodySmall>
+                    <SearchIpReportReasonChip
+                      v-for="(category, categoryIndex) in report.categories"
+                      :key="categoryIndex"
+                      :category="category"
+                    >
+                      {{ category }}
+                    </SearchIpReportReasonChip>
+                  </div>
                   <v-divider class="my-2" />
                 </div>
               </div>
