@@ -23,21 +23,11 @@
             />
           </v-col>
           <v-col cols="12" md="6" lg="6">
-            <ShAutocomplete
+            <LogEventAutocomplete
               v-model="filter.events"
-              hide-details
-              clearable
-              multiple
+              :log="log"
               :disabled="loading"
-              :items="log.differentEvents"
-              placeholder="Filtrar por evento"
-            >
-              <template #selection="{item, index}">
-                <span>
-                  {{ index > 3 ? (index === 4 ? '...' : '') : item }}<template v-if="index < 3 && filter.events.length > index + 1">,</template>
-                </span>
-              </template>
-            </ShAutocomplete>
+            />
           </v-col>
           <v-col cols="12" lg="10">
             <ShAutocomplete
