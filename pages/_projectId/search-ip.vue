@@ -4,7 +4,7 @@
       <v-col cols="4">
         <v-form ref="form" @submit.prevent="search">
           <ShSearchField
-            v-model="filter.ip"
+            v-model="ip2Analyze"
             clearable
             placeholder="Buscar IP"
             class="mt-4"
@@ -13,7 +13,7 @@
         </v-form>
       </v-col>
     </v-row>
-    <span v-for="(ipToShow, index) in analyzedIPs" :key="index" @click="loadIp(ipToShow)">
+    <span v-for="(ipToShow, index) in analyzedIPs" :key="index" @click="loadExistingIpAnalysis(ipToShow)">
       <ShChip
         color="#666665"
         class="mr-2 mb-6 clickable"
@@ -21,7 +21,7 @@
         {{ ipToShow.raw }}
       </ShChip>
     </span>
-    <v-progress-linear v-if="loading && noConsultingAnIp" indeterminate color="primary" />
+    <v-progress-linear v-if="loading" indeterminate color="primary" />
     <ShTableEmptyState
       v-if="!ip"
       class="my-10"
@@ -79,7 +79,7 @@ export default {
         return
       }
       this.loading = true
-      this.$searchIpService.getIp(this.projectId, this.filter.ip).then((result) => {
+      this.$searchIpService.getIp(this.projectId, this.ip2Analyze).then((result) => {
         this.ip = result
         this.fetchDebounced()
       }).catch(() => {
@@ -91,9 +91,9 @@ export default {
     fetchDebounced: debounce(function () {
       this.$fetch()
     }, 500),
-    loadIp (anIpAddress) {
+    loadExistingIpAnalysis (anIpAddress) {
+      this.ip2Analyze = anIpAddress.raw
       this.ip = anIpAddress
-      this.noConsultingAnIp = true
     }
   }
 }
