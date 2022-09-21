@@ -53,13 +53,6 @@
                 :rules="[$rules.required('repetir contraseña'), passwordMatches]"
               />
             </div>
-            <v-expand-transition>
-              <div v-show="error">
-                <v-alert type="warning" icon="mdi-alert">
-                  {{ error }}
-                </v-alert>
-              </div>
-            </v-expand-transition>
             <ShButton block type="submit" :loading="loading">
               Registrarse
             </ShButton>
