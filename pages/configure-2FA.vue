@@ -97,7 +97,7 @@ export default {
       // https://github.com/speakeasyjs/speakeasy/issues/105
       const verified = speakeasy.totp.verify({
         secret: this.mfaSecret,
-        encoding: 'base32',
+        encoding: 'hex',
         token: userCode
       })
       if (verified) {
@@ -123,7 +123,7 @@ export default {
       const authenticatorName = `Sherlock (${this.user.username})`
       const secret = speakeasy.generateSecret({ name: authenticatorName })
       const qrSecret = secret.otpauth_url
-      this.mfaSecret = secret.base32
+      this.mfaSecret = secret.hex
       qrcode.toDataURL(qrSecret)
         .then((url) => {
           this.qrUrl = url
