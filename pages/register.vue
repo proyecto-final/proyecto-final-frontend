@@ -81,12 +81,6 @@
 <script>
 export default {
   layout: 'login',
-  props: {
-    organizationId: {
-      type: String,
-      required: true
-    }
-  },
   data: () => ({
     user: {
       name: '',
