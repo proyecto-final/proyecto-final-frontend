@@ -38,13 +38,6 @@
                 @finish="register"
               />
             </div>
-            <v-expand-transition>
-              <div v-show="error">
-                <v-alert type="warning" icon="mdi-alert">
-                  {{ error }}
-                </v-alert>
-              </div>
-            </v-expand-transition>
             <ShButton block :loading="loading">
               Configurar
             </ShButton>
@@ -75,12 +68,6 @@ const qrcode = require('qrcode')
 const speakeasy = require('speakeasy')
 export default {
   layout: 'login',
-  props: {
-    organizationId: {
-      type: String,
-      required: true
-    }
-  },
   data: () => ({
     organization: {},
     loading: false,
