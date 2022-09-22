@@ -21,7 +21,11 @@ export default class User {
     return this.$axios.$post('/api/user/logout')
   }
 
-  createUser ({ username, name, password, email, token }) {
-    return this.$axios.$post('/api/organization/user', { username, name, password, email, token })
+  createUser ({ username, name, password, email, token, mfaSecret }) {
+    return this.$axios.$post('/api/organization/user', { username, name, password, email, token, mfaSecret })
+  }
+
+  verifyMfa (user, userCode) {
+    return this.$axios.$post('/api/user/mfa', { user, userCode })
   }
 }

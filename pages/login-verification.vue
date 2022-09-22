@@ -46,14 +46,23 @@
   </v-row>
 </template>
 <script>
+import { mapState } from 'vuex'
 export default {
   layout: 'login',
   data: () => ({
-    loading: false
+    loading: false,
+    error: ''
   }),
+  computed: {
+    ...mapState('register', ['user'])
+  },
   methods: {
-    login () {
-      this.$router.push('/profile')
+    login (userCode) {
+      this.$userService.verifyMfa(this.user, userCode).then(() => {
+        this.$router.push('/profile')
+      }).catch((error) => {
+        this.error = error.response?.data?.msg[0]
+      })
     }
   }
 }

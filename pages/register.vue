@@ -53,13 +53,6 @@
                 :rules="[$rules.required('repetir contraseña'), passwordMatches]"
               />
             </div>
-            <v-expand-transition>
-              <div v-show="error">
-                <v-alert type="warning" icon="mdi-alert">
-                  {{ error }}
-                </v-alert>
-              </div>
-            </v-expand-transition>
             <ShButton block type="submit" :loading="loading">
               Registrarse
             </ShButton>
@@ -88,12 +81,6 @@
 <script>
 export default {
   layout: 'login',
-  props: {
-    organizationId: {
-      type: String,
-      required: true
-    }
-  },
   data: () => ({
     user: {
       name: '',
@@ -124,19 +111,8 @@ export default {
       if (!this.$refs.form.validate() || this.loading) {
         return
       }
-      this.loading = true
-      this.$userService.createUser({
-        ...this.user, token: this.$route.query.token
-      }).then(() => {
-        this.$router.push(`/configure-2FA?token=${this.$route.query.token}`)
-      }).catch((error) => {
-        const msg = error.response?.data?.msg
-        if (msg) {
-          this.$noty.warn(msg.join(', '))
-        }
-      }).finally(() => {
-        this.loading = false
-      })
+      this.$store.commit('register/SET_USER', this.user)
+      this.$router.push(`/configure-2FA?token=${this.$route.query.token}`)
     }
   }
 }
