@@ -19,9 +19,15 @@
       <ShHeading2 class="d-flex justify-center my-4">
         ¿Estás seguro que deseás actualizar la timeline?
       </ShHeading2>
-      <v-alert type="warning" icon="mdi-alert" class="justify-space-between mb-6 mt-2">
+      <v-alert v-if="!combined" type="warning" icon="mdi-alert" class="justify-space-between mb-6 mt-2">
         <ShBodySmall class="white-text">
           Al actualizar la timeline todos los datos actuales serán reemplazados por los que se encuentran en el log asociado a la misma.
+        </ShBodySmall>
+      </v-alert>
+      <v-alert v-else type="warning" icon="mdi-alert" class="justify-space-between mb-6 mt-2">
+        <ShBodySmall class="white-text">
+          Al actualizar la timeline todos los datos actuales serán reemplazados por los que se encuentran en los logs asociados a la misma.
+          Consecuentemente, si algun log fue eliminado, se perderán sus respectivas líneas.
         </ShBodySmall>
       </v-alert>
     </template>
@@ -37,6 +43,10 @@ export default {
     projectId: {
       type: String,
       required: true
+    },
+    combined: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {

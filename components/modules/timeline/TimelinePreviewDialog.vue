@@ -53,6 +53,7 @@
             <TimelineUpdateFromLogDialog
               :project-id="projectId"
               :timeline-id="timelineId"
+              :combined="combineTimelines"
               @update="getLinesIfExists"
             />
             <TimelineCombineDialog v-if="combineTimelines" :project-id="projectId" @created="createdTimeline">
