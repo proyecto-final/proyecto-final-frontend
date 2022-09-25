@@ -20,7 +20,7 @@
 export default {
   props: {
     category: {
-      type: Object,
+      type: Number,
       required: true
     }
   },
