@@ -38,15 +38,11 @@
               multiple
               item-text="name"
               return-object
+              show-scroll
               :items="vulnerabilites"
               placeholder="Filtrar por vulnerabilidad"
-            >
-              <template #selection="{index}">
-                <span v-if="index === 0">
-                  {{ cutTo(filter.vulnerabilites.map(vuln => vuln.name).join(', '), 50) }}
-                </span>
-              </template>
-            </ShAutocomplete>
+              cache-items
+            />
           </v-col>
         </v-row>
       </div>
