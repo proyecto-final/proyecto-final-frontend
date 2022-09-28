@@ -4,6 +4,8 @@
     hide-details
     clearable
     multiple
+    show-scroll
+    cache-items
     item-value="code"
     item-text="description"
     :items="differentEventsWithDescription"

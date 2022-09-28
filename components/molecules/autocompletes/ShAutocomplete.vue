@@ -4,6 +4,7 @@
     outlined
     dense
     class="sh-autocomplete"
+    :class="{'show-scroll': showScroll}"
     height="40"
     rounded
     append-icon="mdi-chevron-down"
@@ -28,6 +29,10 @@ export default {
     label: {
       type: String,
       default: ''
+    },
+    showScroll: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {
@@ -43,5 +48,22 @@ export default {
 }
 :not(.v-input--is-focused) ::v-deep .v-icon {
   color: var(--v-neutral-darken2) !important;
+}
+.sh-autocomplete.show-scroll ::v-deep .v-select__selections {
+  max-height: 100%;
+  overflow-y: auto;
+}
+.sh-autocomplete.show-scroll ::v-deep .v-select__slot{
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+.sh-autocomplete.show-scroll ::v-deep .v-input__append-inner{
+  margin-top: 4px !important;
+}
+.sh-autocomplete ::v-deep .v-select__selections{
+  height: 100%;
+}
+.sh-autocomplete ::v-deep .v-select__selections input{
+  max-height: 100%;
 }
 </style>

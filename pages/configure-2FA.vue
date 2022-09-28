@@ -25,9 +25,7 @@
             </div>
             <div class="d-flex justify-center my-4">
               <div>
-                <ShDisplayXL neutral>
-                  ACÁ VA EL QR
-                </ShDisplayXL>
+                <img :src="qrUrl">
               </div>
             </div>
             <div class="mb-4">
@@ -40,13 +38,6 @@
                 @finish="register"
               />
             </div>
-            <v-expand-transition>
-              <div v-show="error">
-                <v-alert type="warning" icon="mdi-alert">
-                  {{ error }}
-                </v-alert>
-              </div>
-            </v-expand-transition>
             <ShButton block :loading="loading">
               Configurar
             </ShButton>
@@ -72,26 +63,21 @@
   </v-row>
 </template>
 <script>
+import { mapState } from 'vuex'
+const qrcode = require('qrcode')
+const speakeasy = require('speakeasy')
 export default {
   layout: 'login',
-  props: {
-    organizationId: {
-      type: String,
-      required: true
-    }
-  },
   data: () => ({
-    user: {
-      name: '',
-      email: '',
-      username: '',
-      password: '',
-      repeatedPassword: ''
-    },
     organization: {},
     loading: false,
-    isValidToken: false
+    isValidToken: false,
+    qrUrl: '',
+    mfaSecret: ''
   }),
+  computed: {
+    ...mapState('register', ['user'])
+  },
   created () {
     this.loading = true
     this.$organizationService.validateToken(this.$route.query.token)
@@ -100,12 +86,51 @@ export default {
         this.isValidToken = true
       }).catch(() => {
         this.isValidToken = false
-      }).finally(() => { this.loading = false })
+      }).finally(() => {
+        this.setSecret()
+        this.loading = false
+      })
   },
   methods: {
-    register () {
-      this.$noty.success('Se registró correctamente al usuario')
-      this.$router.push('/login')
+    register (userCode) {
+      // There was an issue with speakeasy built-in base32 verify function. In case of error, check:
+      // https://github.com/speakeasyjs/speakeasy/issues/105
+      const verified = speakeasy.totp.verify({
+        secret: this.mfaSecret,
+        encoding: 'hex',
+        token: userCode
+      })
+      if (verified) {
+        this.loading = true
+        this.$userService.createUser({
+          ...this.user, token: this.$route.query.token, mfaSecret: this.mfaSecret
+        }).then(() => {
+          this.$noty.success('Se registró correctamente al usuario')
+          this.$router.push('/login')
+        }).catch((error) => {
+          const msg = error.response?.data?.msg
+          if (msg) {
+            this.$noty.warn(msg.join(', '))
+          }
+        }).finally(() => {
+          this.loading = false
+        })
+      } else {
+        this.$noty.warn('Código incorrecto, intente nuevamente')
+      }
+    },
+    setSecret () {
+      const authenticatorName = `Sherlock (${this.user.username})`
+      const secret = speakeasy.generateSecret({ name: authenticatorName })
+      const qrSecret = secret.otpauth_url
+      this.mfaSecret = secret.hex
+      qrcode.toDataURL(qrSecret)
+        .then((url) => {
+          this.qrUrl = url
+        })
+        .catch((err) => {
+          this.$noty.warn(err)
+        })
     }
   }
 }

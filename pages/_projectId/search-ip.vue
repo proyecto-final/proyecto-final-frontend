@@ -52,6 +52,7 @@ export default {
       ip: null
     },
     ip: null,
+    ip2Analyze: null,
     analyzedIPs: []
   }),
   fetch () {

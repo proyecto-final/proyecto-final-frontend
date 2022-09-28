@@ -111,6 +111,20 @@
             </div>
           </v-col>
         </v-row>
+        <v-row v-if="ip.ports.length > 0" no-gutters class="mb-2">
+          <v-col>
+            <div>
+              <ShBodySmall neutral>
+                Puertos abiertos
+              </ShBodySmall>
+            </div>
+            <div>
+              <ShBodySmall neutral strong>
+                {{ ip.ports.join(', ') }}
+              </ShBodySmall>
+            </div>
+          </v-col>
+        </v-row>
         <v-divider />
         <div class="mt-2">
           <div v-if="!reputation.isReported">
