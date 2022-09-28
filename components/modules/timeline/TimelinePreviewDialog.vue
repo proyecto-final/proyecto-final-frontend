@@ -24,7 +24,9 @@
       </div>
     </template>
     <template #prepend-title="{close}">
-      <ShIconButton color="neutral" icon="mdi-close" title="Cerrar" @click="close()" />
+      <div class="ml-2">
+        <ShIconButton color="neutral" icon="mdi-close" title="Cerrar" @click="close()" />
+      </div>
     </template>
     <template #close>
       <ShButton v-if="isEditing" class="ma-4" @click="saveExistingTimeline">

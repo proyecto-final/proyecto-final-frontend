@@ -9,7 +9,7 @@ export default class Rules {
 
   ipFormat (value) {
     const regexExp = /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/gi
-    return regexExp.test(value) || 'El campo debe poseer un formato válido de IP'
+    return regexExp.test(value) || 'El campo debe poseer un formato válido de IPv4'
   }
 
   maxLength (max) {

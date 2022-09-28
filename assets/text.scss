@@ -30,11 +30,11 @@
   color: var(--v-primary-base) !important;
 }
 
-.error-text{
+.error-text, .v-application i.error-text{
   color: var(--v-error-base) !important;
 }
 
-.success-text{
+.success-text, .v-application i.success-text{
   color: var(--v-success-base) !important;
 }
 

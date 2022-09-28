@@ -73,7 +73,7 @@ export default {
       this.error = ''
       this.loading = true
       this.$userService.authenticate(this.user).then((user) => {
-        this.$router.push('/profile')
+        this.$router.push('/login-verification')
       }).catch((error) => {
         this.error = error.response?.data?.msg.pop()
       }).finally(() => { this.loading = false })

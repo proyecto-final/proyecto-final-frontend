@@ -1,8 +1,8 @@
 <template>
   <v-row no-gutters class="border-left">
-    <v-col cols="12" md="7" lg="8" class="pt-3">
+    <v-col cols="12" md="7" lg="9" class="pt-3">
       <div class="pl-3">
-        <v-row>
+        <v-row class="mb-2">
           <v-col cols="12" lg="10">
             <ShSearchField
               v-model="filter.raw"
@@ -13,8 +13,6 @@
               @input="fetchDebounced"
             />
           </v-col>
-        </v-row>
-        <v-row class="pr-2">
           <v-col cols="12" md="6" lg="4">
             <ShDatePicker
               v-model="filter.dates"
@@ -25,24 +23,12 @@
             />
           </v-col>
           <v-col cols="12" md="6" lg="6">
-            <ShAutocomplete
+            <LogEventAutocomplete
               v-model="filter.events"
-              hide-details
-              clearable
-              multiple
+              :log="log"
               :disabled="loading"
-              :items="log.differentEvents"
-              placeholder="Filtrar por evento"
-            >
-              <template #selection="{item, index}">
-                <span>
-                  {{ index > 3 ? (index === 4 ? '...' : '') : item }}<template v-if="index < 3 && filter.events.length > index + 1">,</template>
-                </span>
-              </template>
-            </ShAutocomplete>
+            />
           </v-col>
-        </v-row>
-        <v-row class="mb-2 pr-2">
           <v-col cols="12" lg="10">
             <ShAutocomplete
               v-model="filter.vulnerabilites"
@@ -92,7 +78,7 @@
         </div>
       </div>
     </v-col>
-    <v-col cols="12" md="5" lg="4" class="border-left bg-white pt-3">
+    <v-col cols="12" md="5" lg="3" class="border-left bg-white pt-3">
       <div class="d-flex justify-center">
         <TimelinePreviewDialog
           :log-lines="timelineLines"
@@ -170,12 +156,6 @@ export default {
     serverItemsLength: 0,
     loading: false
   }),
-  fetch () {
-    this.loading = true
-    this.lines = []
-    this.options.page = 1
-    this.getLines()
-  },
   computed: {
     projectId () {
       return this.$route.params.projectId
@@ -197,24 +177,24 @@ export default {
     'filter.dates': {
       handler (dates) {
         if ([0, 2].includes(dates?.length)) {
-          this.fetchDebounced()
+          this.fetchDebounced(true)
         }
       },
       deep: true
     },
     'filter.events': {
-      handler (events) {
-        this.$fetch()
+      handler () {
+        this.getLines(true)
       }
     },
     'filter.vulnerabilites': {
-      handler (events) {
-        this.$fetch()
+      handler () {
+        this.getLines(true)
       }
     },
     vulnerabilityText (val) {
       if (val) {
-        this.getVulnerabilitiesDebounce()
+        this.getVulnerabilitiesDebounced(true)
       }
     }
   },
@@ -229,7 +209,7 @@ export default {
     }
     await this.getLog()
     await this.getSelectedLines()
-    await this.getLines()
+    await this.getLines(true)
   },
   methods: {
     getVulnerabilities () {
@@ -241,7 +221,7 @@ export default {
         this.vulnerabilites = result.rows
       })
     },
-    getVulnerabilitiesDebounce: debounce(function () {
+    getVulnerabilitiesDebounced: debounce(function () {
       this.getVulnerabilities()
     }, 500),
     setLogLineTags ({ logLine, tags }) {
@@ -257,8 +237,8 @@ export default {
         line.tags = line.isSelected ? line.tags : []
       })
     },
-    fetchDebounced: debounce(function () {
-      this.$fetch()
+    fetchDebounced: debounce(function (reset) {
+      this.getLines(reset)
     }, 500),
     getSelectedLines () {
       return this.$logService.getLines(this.projectId, this.logId, {
@@ -285,7 +265,11 @@ export default {
           }
         })
     },
-    getLines () {
+    getLines (reset = false) {
+      if (reset) {
+        this.lines = []
+        this.options.page = 1
+      }
       const filter = {}
       this.loading = true
       if (this.filter.dates?.length === 2) {
@@ -342,21 +326,14 @@ export default {
         .then((result) => {
           this.log = result
         }).catch(() => { this.$noty.warn('Hubo un error al cargar el log') })
-        .finally(() => { this.loading = false })
     }
   }
 }
 </script>
 <style scoped lang="scss">
-.border-top{
-  border-top: 1px solid var(--v-background-base) !important;
-}
-.border-left{
-  border-left: 1px solid var(--v-background-base) !important;
-}
 .user-viewport-height-lines {
-  max-height: calc(100vh - 270px);
-  min-height: calc(100vh - 270px);
+  max-height: calc(100vh - 268px);
+  min-height: calc(100vh - 268px);
 }
 .user-viewport-height-timeline {
   max-height: calc(100vh - 116px);

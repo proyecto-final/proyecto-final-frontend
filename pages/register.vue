@@ -5,7 +5,7 @@
         <v-card-text class="pa-8">
           <template v-if="loading">
             <v-progress-circular color="primary" indeterminate />
-            <ShBody>Procesando invitacion...</ShBody>
+            <ShBody>Procesando invitación...</ShBody>
           </template>
           <v-form v-else-if="isValidToken" ref="form" @submit.prevent="register">
             <div class="mb-4">
@@ -128,8 +128,7 @@ export default {
       this.$userService.createUser({
         ...this.user, token: this.$route.query.token
       }).then(() => {
-        this.$noty.success('Se registró correctamente al usuario')
-        this.$router.push('/login')
+        this.$router.push(`/configure-2FA?token=${this.$route.query.token}`)
       }).catch((error) => {
         const msg = error.response?.data?.msg
         if (msg) {
