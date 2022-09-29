@@ -4,8 +4,9 @@
     width="700"
     :confirm-text="readyToSave ? 'Combinar' : 'Continuar'"
     title="Combinar timelines"
-    :async-confirm-function="readyToSave ? save : nextTab"
+    :async-confirm-function="saveFunction"
     :submit-on-enter="false"
+    :skip-validation="!readyToSave"
     :persistent="!showSuccess"
     :hide-primary-button="showSuccess"
     :hide-close-button="showSuccess"
@@ -32,7 +33,7 @@
         />
       </template>
       <template v-else>
-        <div class="sh-scrollbar mh-400-px">
+        <div class="sh-scrollbar mh-600-px">
           <div class="mr-2">
             <v-alert type="warning" icon="mdi-alert" class="justify-space-between mb-4 mt-2">
               <ShBodySmall class="white-text">
@@ -215,6 +216,9 @@ export default {
     readyToSave () {
       return this.selectedTab !== 0
     },
+    saveFunction () {
+      return this.readyToSave ? this.save : this.nextTab
+    },
     availableTimelines () {
       const arrayToShow = this.selectedTimelines
       const timelinesToAdd = this.updatedTimelines.filter(aTimeline =>
@@ -258,7 +262,8 @@ export default {
     nextTab () {
       if (this.readyToCombine) {
         this.selectedTab = 1
-        this.readyToSave = true
+      } else {
+        this.$noty.warn('Debe seleccionar al menos dos timelines para combinar')
       }
       return Promise.resolve(false)
     },
