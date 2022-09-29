@@ -7,7 +7,7 @@
     :async-confirm-function="saveFunction"
     :submit-on-enter="false"
     :skip-validation="!readyToSave"
-    :persistent="!showSuccess"
+    persistent
     :hide-primary-button="showSuccess"
     :hide-close-button="showSuccess"
     :hide-secondary-button="showSuccess"
@@ -228,7 +228,6 @@ export default {
       const searchedTimelinesToAdd = this.searchedTimelines.filter(aTimeline =>
         !timelinesToAdd.some(ele => ele._id === aTimeline._id) && !selectedTimelines.some(ele => ele._id === aTimeline._id))
       const timelinesToShow = [...selectedTimelines, ...timelinesToAdd, ...searchedTimelinesToAdd]
-      console.log(timelinesToShow)
       timelinesToShow.sort(function (timelineA, timelineB) {
         return timelineA._id < timelineB._id ? 1 : -1
       })
@@ -276,6 +275,8 @@ export default {
       this.selectedTab = 0
       this.selectedTimelines = []
       this.timelineHeader = getEmptyTimelineHeader()
+      this.filter.title = ''
+      this.$fetch()
     },
     search () {
       this.loading = true
