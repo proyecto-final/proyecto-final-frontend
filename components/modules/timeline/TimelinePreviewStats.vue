@@ -27,9 +27,16 @@
             <v-timeline-item small color="primary">
               <v-row>
                 <v-col>
-                  <ShBody strong class="mb-4">
-                    {{ logLine.raw }}
-                  </ShBody>
+                  <div>
+                    <ShBody strong class="mb-4">
+                      {{ logLine.raw }}
+                    </ShBody>
+                  </div>
+                  <div>
+                    <ShBody v-if="logLine.detail && logLine.detail.eventId" neutral>
+                      {{ getEventById(logLine.detail.eventId).description }}
+                    </ShBody>
+                  </div>
                   <div class="my-1">
                     <LogLineVulnerabilityDialog
                       v-for="(vulnerability, vulnerabilityIndex) in logLine.vulnerabilites"
@@ -243,7 +250,9 @@
   </v-tabs>
 </template>
 <script>
+import EventTranslation from '@/services/helpers/mixins/EventTranslation'
 export default {
+  mixins: [EventTranslation],
   props: {
     lines2Show: {
       type: Array,
