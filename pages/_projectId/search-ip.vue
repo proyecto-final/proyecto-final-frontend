@@ -1,7 +1,7 @@
 <template>
   <div class="mb-6 px-4">
     <v-row justify="space-between">
-      <v-col cols="4">
+      <v-col cols="5">
         <v-form ref="form" @submit.prevent="search">
           <ShSearchField
             v-model="ip2Analyze"
@@ -36,7 +36,7 @@
       </template>
     </ShTableEmptyState>
     <v-row v-else no-gutters>
-      <v-col cols="4" lg="4" md="6" sm="8">
+      <v-col cols="5" lg="5" md="6" sm="8">
         <SearchIpCard :ip="ip" />
       </v-col>
     </v-row>
