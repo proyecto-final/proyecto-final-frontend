@@ -76,9 +76,20 @@
         </ShCode>
       </v-col>
       <v-col>
-        <ShCode>
-          {{ getEventById(line.detail.eventId).description || 'N/A' }}
-        </ShCode>
+        <v-tooltip top class="mr-2">
+          <template #activator="{on}">
+            <span v-on="on">
+              <ShCode>
+                <ShCode>
+                  {{ cutTo(getEventById(line.detail.eventId).description || 'N/A', 20) }}
+                </ShCode>
+              </ShCode>
+            </span>
+          </template>
+          <template #default>
+            {{ getEventById(line.detail.eventId).description || 'N/A' }}
+          </template>
+        </v-tooltip>
       </v-col>
     </v-row>
     <v-row no-gutters>
