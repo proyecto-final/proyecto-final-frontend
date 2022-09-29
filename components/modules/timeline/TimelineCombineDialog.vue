@@ -32,7 +32,7 @@
         />
       </template>
       <template v-else>
-        <div class="sh-scrollbar mh-400-px">
+        <div class="sh-scrollbar mh-600-px">
           <div class="mr-2">
             <v-alert type="warning" icon="mdi-alert" class="justify-space-between mb-4 mt-2">
               <ShBodySmall class="white-text">
@@ -259,6 +259,8 @@ export default {
       if (this.readyToCombine) {
         this.selectedTab = 1
         this.readyToSave = true
+      } else {
+        this.$noty.warn('Debe seleccionar al menos dos timelines para combinar')
       }
       return Promise.resolve(false)
     },
