@@ -67,7 +67,7 @@
               Nombrar
             </v-tab>
             <v-tab-item class="pb-2">
-              <div v-if="availableTimelines.length === 0">
+              <div v-if="availableTimelines.length === 0 && !filter.title">
                 <ShTableEmptyState
                   class="my-10"
                   img-src="/empty-state/timelines.svg"
@@ -225,7 +225,7 @@ export default {
       timelinesToShow.sort(function (timelineA, timelineB) {
         return timelineA._id < timelineB._id ? 1 : -1
       })
-      return timelinesToShow
+      return timelinesToShow.filter(timeline => !this.filter.title || timeline.title.toLowerCase().includes(this.filter.title.toLowerCase()))
     }
   },
   methods: {
@@ -266,7 +266,6 @@ export default {
       this.showSuccess = false
       this.selectedTab = 0
       this.selectedTimelines = []
-      this.availableTimelines = []
       this.timelineHeader = getEmptyTimelineHeader()
     },
     search () {
