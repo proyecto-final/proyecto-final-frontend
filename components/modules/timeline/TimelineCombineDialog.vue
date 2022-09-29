@@ -37,7 +37,11 @@
             <v-alert type="warning" icon="mdi-alert" class="justify-space-between mb-4 mt-2">
               <ShBodySmall class="white-text">
                 Recordá que podrás combinar las timelines generadas en una <strong>única timeline</strong>.
-                De esta manera, las agruparás según sea necesario. <br>
+                De esta manera, las agruparás según sea necesario.
+              </ShBodySmall>
+            </v-alert>
+            <v-alert type="warning" icon="mdi-alert" class="justify-space-between mb-4 mt-2">
+              <ShBodySmall class="white-text">
                 Solamente se tendrán en cuenta aquellas líneas que sigan existiendo.
               </ShBodySmall>
             </v-alert>
