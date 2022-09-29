@@ -57,7 +57,19 @@
               :timeline-id="timelineId"
               @update="getLinesIfExists"
             />
-            <ShButton class="my-4" @click="redirectToLogPage">
+            <TimelineCombineDialog v-if="combineTimelines" :project-id="projectId" @created="createdTimeline">
+              <template #activator="{on}">
+                <slot name="activator" :on="on">
+                  <ShButton :block="$vuetify.breakpoint.smAndDown" class="my-4" v-on="on">
+                    <v-icon color="white">
+                      mdi-file-document-plus
+                    </v-icon>
+                    Realizar nueva combinación
+                  </ShButton>
+                </slot>
+              </template>
+            </TimelineCombineDialog>
+            <ShButton v-else class="my-4" @click="redirectToLogPage">
               <v-icon>mdi-pencil</v-icon>
               Editar líneas de log
             </ShButton>
@@ -125,6 +137,9 @@ export default {
     selectedTab: 0
   }),
   computed: {
+    combineTimelines () {
+      return this.timeline.logs.length > 1
+    },
     lines2Show () {
       return this.timelineId && !this.isEditing ? this.existingLines : this.logLines
     },
@@ -156,6 +171,10 @@ export default {
           this.existingLines = result.lines
         })
       }
+    },
+    createdTimeline () {
+      this.open = false
+      this.$emit('created:timeline')
     },
     getShareLink () {
       return this.$timelineService.createTimelineInvitationToken(this.projectId, this.timelineId)

@@ -27,6 +27,11 @@
             @input="search"
           />
         </v-col>
+        <v-col cols="12" md="4" lg="3">
+          <div class="d-flex justify-end">
+            <TimelineCombineDialog :project-id="projectId" :updated-timelines="timelines" @created="$fetch" />
+          </div>
+        </v-col>
       </v-row>
       <ShTable
         :items="timelines"
@@ -64,6 +69,7 @@
               is-read-only
               :timeline-id="item._id"
               :timeline-description="item.description"
+              @created:timeline="$fetch"
             />
             <v-menu v-model="display[item._id]" offset-y close-on-content-click>
               <template #activator="{ on, attrs }">
