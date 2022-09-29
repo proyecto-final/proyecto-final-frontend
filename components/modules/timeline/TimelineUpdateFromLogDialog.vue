@@ -21,7 +21,8 @@
       </ShHeading2>
       <v-alert type="warning" icon="mdi-alert" class="justify-space-between mb-6 mt-2">
         <ShBodySmall class="white-text">
-          Al actualizar la timeline todos los datos actuales serán reemplazados por los que se encuentran en el log asociado a la misma.
+          Al actualizar la timeline todos los datos actuales serán reemplazados por los que se encuentran en los logs asociados a la misma.
+          Consecuentemente, si algún log fue eliminado, se perderán sus respectivas líneas.
         </ShBodySmall>
       </v-alert>
     </template>
