@@ -92,13 +92,12 @@
                         <ShBody strong primary>
                           {{ timeline.title }}
                         </ShBody>
-                        <v-checkbox
-                          color="primary"
-                          class="mb-4"
-                          hide-details
-                          :value="timeline.isSelected"
-                          @click.stop="selectTimeline(timeline)"
-                        />
+                        <v-icon v-if="timeline.isSelected" color="primary" @click.stop="selectTimeline(timeline)">
+                          mdi-checkbox-marked
+                        </v-icon>
+                        <v-icon v-else color="primary" @click.stop="selectTimeline(timeline)">
+                          mdi-checkbox-blank-outline
+                        </v-icon>
                       </div>
                     </v-expansion-panel-header>
                     <v-expansion-panel-content>
@@ -205,7 +204,10 @@ export default {
       limit: this.options.itemsPerPage,
       ...this.filter
     }).then((result) => {
-      this.searchedTimelines = result.rows
+      this.searchedTimelines = result.rows.map(timeline => ({
+        ...timeline,
+        isSelected: this.selectedTimelines.some(selectedTimeline => selectedTimeline._id === timeline._id)
+      }))
     }).catch(() => { this.$noty.warn('Hubo un error al cargar los timelines') })
       .finally(() => { this.loading = false })
   },
@@ -220,16 +222,18 @@ export default {
       return this.readyToSave ? this.save : this.nextTab
     },
     availableTimelines () {
-      const arrayToShow = this.selectedTimelines
+      const selectedTimelines = this.selectedTimelines
       const timelinesToAdd = this.updatedTimelines.filter(aTimeline =>
-        !arrayToShow.some(ele => ele._id === aTimeline._id))
+        !selectedTimelines.some(ele => ele._id === aTimeline._id))
       const searchedTimelinesToAdd = this.searchedTimelines.filter(aTimeline =>
-        !timelinesToAdd.some(ele => ele._id === aTimeline._id) && !arrayToShow.some(ele => ele._id === aTimeline._id))
-      const timelinesToShow = [...arrayToShow, ...timelinesToAdd, ...searchedTimelinesToAdd]
+        !timelinesToAdd.some(ele => ele._id === aTimeline._id) && !selectedTimelines.some(ele => ele._id === aTimeline._id))
+      const timelinesToShow = [...selectedTimelines, ...timelinesToAdd, ...searchedTimelinesToAdd]
+      console.log(timelinesToShow)
       timelinesToShow.sort(function (timelineA, timelineB) {
         return timelineA._id < timelineB._id ? 1 : -1
       })
-      return timelinesToShow.filter(timeline => !this.filter.title || timeline.title.toLowerCase().includes(this.filter.title.toLowerCase()))
+      return timelinesToShow
+        .filter(timeline => !this.filter.title || timeline.title.toLowerCase().includes(this.filter.title.toLowerCase()))
     }
   },
   methods: {
