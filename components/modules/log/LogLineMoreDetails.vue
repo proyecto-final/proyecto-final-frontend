@@ -72,6 +72,29 @@
     <v-row no-gutters>
       <v-col>
         <ShCode>
+          Descripción de evento
+        </ShCode>
+      </v-col>
+      <v-col>
+        <v-tooltip top class="mr-2">
+          <template #activator="{on}">
+            <span v-on="on">
+              <ShCode>
+                <ShCode>
+                  {{ cutTo(getEventById(line.detail.eventId).description || 'N/A', 20) }}
+                </ShCode>
+              </ShCode>
+            </span>
+          </template>
+          <template #default>
+            {{ getEventById(line.detail.eventId).description || 'N/A' }}
+          </template>
+        </v-tooltip>
+      </v-col>
+    </v-row>
+    <v-row no-gutters>
+      <v-col>
+        <ShCode>
           IP Origen
         </ShCode>
       </v-col>
@@ -96,7 +119,9 @@
   </div>
 </template>
 <script>
+import EventTranslation from '@/services/helpers/mixins/EventTranslation'
 export default {
+  mixins: [EventTranslation],
   props: {
     line: {
       type: Object,
