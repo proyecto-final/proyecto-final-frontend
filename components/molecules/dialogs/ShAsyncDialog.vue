@@ -119,6 +119,10 @@ export default {
     isNote: {
       type: Boolean,
       default: false
+    },
+    skipValidation: {
+      type: Boolean,
+      default: false
     }
   },
   data: () => ({
@@ -150,9 +154,11 @@ export default {
       if (isEnter && !this.submitOnEnter) {
         return
       }
-      this.$refs.form.validate()
-      if (!this.isValid) {
-        return
+      if (!this.skipValidation) {
+        this.$refs.form.validate()
+        if (!this.isValid) {
+          return
+        }
       }
       this.loadingFunction = true
       this.asyncConfirmFunction().then((result) => {

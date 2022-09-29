@@ -4,8 +4,9 @@
     width="700"
     :confirm-text="readyToSave ? 'Combinar' : 'Continuar'"
     title="Combinar timelines"
-    :async-confirm-function="readyToSave ? save : nextTab"
+    :async-confirm-function="saveFunction"
     :submit-on-enter="false"
+    :skip-validation="!readyToSave"
     :persistent="!showSuccess"
     :hide-primary-button="showSuccess"
     :hide-close-button="showSuccess"
@@ -215,6 +216,9 @@ export default {
     readyToSave () {
       return this.selectedTab !== 0
     },
+    saveFunction () {
+      return this.readyToSave ? this.save : this.nextTab
+    },
     availableTimelines () {
       const arrayToShow = this.selectedTimelines
       const timelinesToAdd = this.updatedTimelines.filter(aTimeline =>
@@ -258,7 +262,6 @@ export default {
     nextTab () {
       if (this.readyToCombine) {
         this.selectedTab = 1
-        this.readyToSave = true
       } else {
         this.$noty.warn('Debe seleccionar al menos dos timelines para combinar')
       }
@@ -268,7 +271,6 @@ export default {
       this.showSuccess = false
       this.selectedTab = 0
       this.selectedTimelines = []
-      this.availableTimelines = []
       this.timelineHeader = getEmptyTimelineHeader()
     },
     search () {
