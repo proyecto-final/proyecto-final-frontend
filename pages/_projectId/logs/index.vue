@@ -1,19 +1,21 @@
 <template>
   <div class="pa-6">
-    <div v-if="shouldShowEmtpyState" class="mb-6 screen-min-height align-center justify-center">
-      <ShTableEmptyState
-        class="my-10"
-        img-src="/empty-state/logs.svg"
-      >
-        <template #heading>
-          Cargá tu primer log
-        </template>
-        <template #body>
-          Cargá tus logs para empezar con su análisis.<br>
-          Una vez que lo hagas, desde acá los verás.
-        </template>
-      </ShTableEmptyState>
-      <div class="d-flex justify-center">
+    <div v-if="shouldShowEmtpyState" class="d-flex flex-column mb-6 screen-min-height align-center justify-center">
+      <div>
+        <ShTableEmptyState
+          class="my-10"
+          img-src="/empty-state/logs.svg"
+        >
+          <template #heading>
+            Cargá tu primer log
+          </template>
+          <template #body>
+            Cargá tus logs para empezar con su análisis.<br>
+            Una vez que lo hagas, desde acá los verás.
+          </template>
+        </ShTableEmptyState>
+      </div>
+      <div>
         <LogDialog :project-id="projectId" @created="$fetch" />
       </div>
     </div>
