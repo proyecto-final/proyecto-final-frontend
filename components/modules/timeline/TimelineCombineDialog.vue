@@ -43,7 +43,7 @@
             </v-alert>
             <v-alert type="warning" icon="mdi-alert" class="justify-space-between mb-4 mt-2">
               <ShBodySmall class="white-text">
-                Solamente se tendrán en cuenta aquellas líneas que sigan existiendo.
+                Solamente se tendrán en cuenta aquellas líneas que sigan existiendo, es decir, que su log no haya sido eliminado.
               </ShBodySmall>
             </v-alert>
             <v-row justify="space-between">
