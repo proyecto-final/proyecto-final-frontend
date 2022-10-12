@@ -46,7 +46,6 @@ export default {
         .then(() => {
           this.$emit('update')
           this.$emit('goToTimelines')
-          this.$router.push(`/${this.projectId}/timelines`)
           return true
         }).catch(() => {
           this.$noty.warn('No fue posible actualizar el log.')
