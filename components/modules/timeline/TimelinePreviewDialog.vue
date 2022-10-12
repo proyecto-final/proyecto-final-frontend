@@ -56,6 +56,7 @@
               :project-id="projectId"
               :timeline-id="timelineId"
               @update="getLinesIfExists"
+              @goToTimelines="createdTimeline"
             />
             <TimelineCombineDialog v-if="combineTimelines" :project-id="projectId" @created="createdTimeline">
               <template #activator="{on}">
