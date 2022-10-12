@@ -124,7 +124,7 @@
                       </div>
                       <div class="my-2">
                         <ShShowMoreLessText
-                          :text="`Eventos encontrados: ${ Array.from(new Set(timeline.lines.map(line => line.detail.eventId))).join(', ') }.` || 'No existen eventos asociados.'"
+                          :text="`Eventos encontrados: ${ Array.from(new Set(timeline.lines.map(line => `${getEventById(line.detail.eventId).description} (${line.detail.eventId})`))).join(', ') }.` || 'No existen eventos asociados.'"
                           :characters-to-show="70"
                         />
                       </div>
@@ -166,11 +166,13 @@
 </template>
 <script>
 import { debounce } from 'lodash'
+import EventTranslation from '@/services/helpers/mixins/EventTranslation'
 const getEmptyTimelineHeader = () => ({
   title: '',
   description: ''
 })
 export default {
+  mixins: [EventTranslation],
   props: {
     projectId: {
       type: String,
