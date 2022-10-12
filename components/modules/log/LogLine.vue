@@ -130,11 +130,30 @@
             </v-icon>
             Nota agregada
           </ShChip>
-          <LogLineIpAnalysisDialog
-            v-for="(ip, index) in line.ips"
-            :key="`${line._id}-${index}`"
-            :ip="ip"
-          />
+          <ShChipList
+            :items="line.ips"
+            :max-elements2-show="maxIPs2Show"
+            chip-color="neutral"
+            list-color="lightGray"
+          >
+            <template #showableChips>
+              <LogLineIpAnalysisDialog
+                v-for="(showableIP, indexshowableIP) in showableIPs"
+                :key="`${line._id}-${indexshowableIP}`"
+                :ip="showableIP"
+              />
+            </template>
+            <template #hiddenChips>
+              <v-list-item
+                v-for="(hiddenIP, indexhiddenIP) in hiddenIPs"
+                :key="`${line._id}-${indexhiddenIP}`"
+              >
+                <LogLineIpAnalysisDialog
+                  :ip="hiddenIP"
+                />
+              </v-list-item>
+            </template>
+          </ShChipList>
         </div>
       </div>
     </v-col>
@@ -154,7 +173,9 @@ export default {
   },
   data: () => ({
     showMoreInformation: false,
-    maxVulnerabilities2Show: 2
+    reputationLimit: 20,
+    maxVulnerabilities2Show: 2,
+    maxIPs2Show: 1
   }),
   computed: {
     projectId () {
@@ -171,6 +192,15 @@ export default {
     },
     showableVulnerabilities () {
       return this.line.vulnerabilites.slice(0, this.maxVulnerabilities2Show)
+    },
+    hiddenIPs () {
+      return this.line.ips.slice(this.maxIPs2Show, this.line.ips.length + 1)
+    },
+    showableIPs () {
+      return this.line.ips.slice(0, this.maxIPs2Show)
+    },
+    getReputation () {
+      return this.showableIPs?.reputation < this.reputationLimit
     }
   },
   methods: {
