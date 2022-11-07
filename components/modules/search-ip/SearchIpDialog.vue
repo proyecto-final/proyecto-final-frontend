@@ -126,6 +126,8 @@ export default {
       return false
     },
     setInitialData () {
+      this.searchedIP = null
+      this.ipToAnalyze = ''
       const detailIPs = [this.line.detail?.sourceIp, this.line.detail?.destinationIp].filter(ip => ip !== '-' && ip)
       this.availableIPs = Array.from(new Set([...detailIPs, ...this.existingAnalysis.map(ip => ip.raw)]))
     }
