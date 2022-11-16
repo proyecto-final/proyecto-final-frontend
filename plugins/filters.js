@@ -22,5 +22,5 @@ Vue.filter('dateTime', (value) => {
   const day = date.getDate()
   const month = MONTHS[date.getMonth()]
   const year = date.getFullYear()
-  return `${day} de ${month}, ${year} ${date.getHours()}:${date.getMinutes()}`
+  return `${day} de ${month}, ${year} ${date.getHours()}:${(date.getMinutes() < 10 ? '0' : '') + date.getMinutes()}`
 })
