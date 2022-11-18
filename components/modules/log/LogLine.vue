@@ -32,7 +32,7 @@
               <ShAttributeText attribute="event" :value="line.detail.eventId" />
               <ShAttributeText attribute="source-ip" :value="line.detail.sourceIp" />
               <ShAttributeText attribute="destination-ip" :value="line.detail.destinationIp" />
-              <ShAttributeText attribute="user" :value="line.detail.computer" />
+              <ShAttributeText attribute="user" :value="line.detail.userName" />
             </div>
           </div>
           <div v-else>

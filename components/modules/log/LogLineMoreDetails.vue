@@ -53,7 +53,7 @@
       </v-col>
       <v-col>
         <ShCode>
-          {{ line.detail.computer || 'N/A' }}
+          {{ line.detail.userName || 'N/A' }}
         </ShCode>
       </v-col>
     </v-row>
