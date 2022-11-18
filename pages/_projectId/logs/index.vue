@@ -1,6 +1,19 @@
 <template>
   <div class="pa-6">
-    <div v-if="shouldShowEmtpyState" class="d-flex flex-column mb-6 screen-min-height align-center justify-center">
+    <div v-if="isWaitingFirstLoad" class="mb-6 screen-min-height d-flex align-center justify-center">
+      <ShTableEmptyState
+        class="my-10"
+        img-src="/empty-state/logs.svg"
+      >
+        <template #heading>
+          Cargando logs
+        </template>
+        <template #body>
+          <v-progress-circular indeterminate color="primary" />
+        </template>
+      </ShTableEmptyState>
+    </div>
+    <div v-else-if="shouldShowEmtpyState" class="d-flex flex-column mb-6 screen-min-height align-center justify-center">
       <div>
         <ShTableEmptyState
           class="my-10"
@@ -151,7 +164,8 @@ export default {
       }
     ],
     serverItemsLength: 0,
-    loading: false
+    loading: false,
+    isWaitingFirstLoad: true
   }),
   fetch () {
     this.loading = true
@@ -162,6 +176,7 @@ export default {
     }).then((result) => {
       this.logs = result.rows
       this.serverItemsLength = result.count
+      this.isWaitingFirstLoad = false
     }).catch(() => { this.$noty.warn('Hubo un error al cargar los logs') })
       .finally(() => { this.loading = false })
   },
