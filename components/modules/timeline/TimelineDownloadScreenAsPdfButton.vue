@@ -27,7 +27,7 @@ export default {
         const delay = ms => new Promise(res => setTimeout(res, ms))
         // First page
         this.$emit('switchPage', 0)
-        await delay(300)
+        await delay(600)
         const timelineId = this.timelineId
         const linesPage = document.getElementById('v-app-root')
         const doc = new JsPDF('p', 'pt', [linesPage.offsetHeight, linesPage.offsetWidth])
@@ -36,7 +36,7 @@ export default {
         await this.addScreenshot(doc, linesPage)
         // Second page
         this.$emit('switchPage', 1)
-        await delay(300)
+        await delay(600)
         const chartsPage = document.getElementById('v-app-root')
         doc.addPage([chartsPage.offsetWidth, chartsPage.offsetHeight])
         await this.addScreenshot(doc, chartsPage)
