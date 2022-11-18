@@ -1,6 +1,19 @@
 <template>
   <div class="pa-6">
-    <div v-if="shouldShowEmtpyState" class="mb-6 screen-min-height d-flex align-center justify-center">
+    <div v-if="isWaitingFirstLoad" class="mb-6 screen-min-height d-flex align-center justify-center">
+      <ShTableEmptyState
+        class="my-10"
+        img-src="/empty-state/timelines.svg"
+      >
+        <template #heading>
+          Cargando timelines
+        </template>
+        <template #body>
+          <v-progress-circular indeterminate color="primary" />
+        </template>
+      </ShTableEmptyState>
+    </div>
+    <div v-else-if="shouldShowEmtpyState" class="mb-6 screen-min-height d-flex align-center justify-center">
       <ShTableEmptyState
         class="my-10"
         img-src="/empty-state/timelines.svg"
@@ -142,7 +155,8 @@ export default {
       }
     ],
     serverItemsLength: 0,
-    loading: false
+    loading: false,
+    isWaitingFirstLoad: true
   }),
   fetch () {
     this.loading = true
@@ -152,6 +166,7 @@ export default {
       ...this.filter
     }).then((result) => {
       this.timelines = result.rows
+      this.isWaitingFirstLoad = false
       this.serverItemsLength = result.count
     }).catch(() => { this.$noty.warn('Hubo un error al cargar los timelines') })
       .finally(() => { this.loading = false })
