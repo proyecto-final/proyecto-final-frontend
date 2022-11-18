@@ -42,9 +42,10 @@ export default {
   },
   computed: {
     differentEventsWithDescription () {
-      return this.allEventsWithDescription
-        .filter(event => this.log?.differentEvents?.includes(event.code))
-        .map(event => ({ code: event.code, description: `${event.code} - ${event.description}` }))
+      return this.log?.differentEvents?.map(event => ({
+        code: event,
+        description: this.allEventsWithDescription.find(eventWithDescription => eventWithDescription.code === event)?.description
+      })).map(event => ({ code: event.code, description: `${event.code} - ${event.description || 'Sin identificar'}` }))
     }
   }
 }
