@@ -33,6 +33,7 @@
               <ShAttributeText attribute="source-ip" :value="line.detail.sourceIp" />
               <ShAttributeText attribute="destination-ip" :value="line.detail.destinationIp" />
               <ShAttributeText attribute="user" :value="line.detail.computer" />
+              <ShAttributeText attribute="process" :value="line.detail.processName" />
             </div>
           </div>
           <div v-else>

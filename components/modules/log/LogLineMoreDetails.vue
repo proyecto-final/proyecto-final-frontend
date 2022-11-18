@@ -116,6 +116,18 @@
         </ShCode>
       </v-col>
     </v-row>
+    <v-row no-gutters>
+      <v-col>
+        <ShCode>
+          Proceso
+        </ShCode>
+      </v-col>
+      <v-col>
+        <ShCode>
+          {{ line.detail.processName || 'N/A' }}
+        </ShCode>
+      </v-col>
+    </v-row>
   </div>
 </template>
 <script>
