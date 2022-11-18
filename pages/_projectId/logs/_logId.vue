@@ -10,7 +10,7 @@
               clearable
               placeholder="Buscar por palabra clave"
               maxlength="32"
-              @input="fetchDebounced"
+              @input="fetchDebounced(true)"
             />
           </v-col>
           <v-col cols="12" md="6" lg="4">
@@ -166,7 +166,7 @@ export default {
       return this.lines.length < this.serverItemsLength
     },
     sortedTimelineLines () {
-      return [...this.timelineLines].sort((a, b) => a.timestamp > b.timestamp ? 1 : -1)
+      return [...this.timelineLines].sort((a, b) => a.index - b.index)
     }
   },
   watch: {
