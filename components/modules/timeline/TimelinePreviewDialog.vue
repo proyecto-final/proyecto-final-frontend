@@ -56,6 +56,7 @@
               :project-id="projectId"
               :timeline-id="timelineId"
               @update="getLinesIfExists"
+              @goToTimelines="updateTimelineTable"
             />
             <TimelineCombineDialog v-if="combineTimelines" :project-id="projectId" @created="createdTimeline">
               <template #activator="{on}">
@@ -174,6 +175,9 @@ export default {
     },
     createdTimeline () {
       this.open = false
+      this.$emit('created:timeline')
+    },
+    updateTimelineTable () {
       this.$emit('created:timeline')
     },
     getShareLink () {

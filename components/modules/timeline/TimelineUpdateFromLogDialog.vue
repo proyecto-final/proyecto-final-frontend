@@ -45,6 +45,7 @@ export default {
       return this.$timelineService.updateFromLog(this.projectId, this.timelineId)
         .then(() => {
           this.$emit('update')
+          this.$emit('goToTimelines')
           return true
         }).catch(() => {
           this.$noty.warn('No fue posible actualizar el log.')
