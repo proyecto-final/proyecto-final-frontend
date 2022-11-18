@@ -296,7 +296,7 @@ export default {
       return this.haveAllUndefinedItems(events)
         ? ''
         : `Eventos encontrados: ${Array.from(new Set(timeline.lines
-        .map(line => `${this.getEventById(line.detail.eventId).description} (${line.detail.eventId})`)))
+        .map(line => `${this.getEventById(line.detail.eventId).description || 'Sin identificar'} (${line.detail.eventId})`)))
         .join(', ')}.`
     },
     getUsers (timeline) {
