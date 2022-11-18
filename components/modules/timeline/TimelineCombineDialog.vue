@@ -124,13 +124,13 @@
                       </div>
                       <div class="my-2">
                         <ShShowMoreLessText
-                          :text="`Eventos encontrados: ${ Array.from(new Set(timeline.lines.map(line => line.detail.eventId))).join(', ') }.` || 'No existen eventos asociados.'"
+                          :text=" getEvents(timeline) || 'No existen eventos asociados.'"
                           :characters-to-show="70"
                         />
                       </div>
                       <div class="my-2">
                         <ShShowMoreLessText
-                          :text="`Usuarios hallados: ${ Array.from(new Set(timeline.lines.map(line => line.detail.computer))).join(', ') }.` || 'No existen usuarios asociados.'"
+                          :text=" getUsers(timeline) || 'No existen usuarios asociados.'"
                           :characters-to-show="70"
                         />
                       </div>
@@ -166,11 +166,13 @@
 </template>
 <script>
 import { debounce } from 'lodash'
+import EventTranslation from '@/services/helpers/mixins/EventTranslation'
 const getEmptyTimelineHeader = () => ({
   title: '',
   description: ''
 })
 export default {
+  mixins: [EventTranslation],
   props: {
     projectId: {
       type: String,
@@ -288,6 +290,24 @@ export default {
     close () {
       this.$refs.dialog.close()
       this.$emit('created')
+    },
+    getEvents (timeline) {
+      const events = timeline.lines.map(line => line.detail.eventId)
+      return this.haveAllUndefinedItems(events)
+        ? ''
+        : `Eventos encontrados: ${Array.from(new Set(timeline.lines
+        .map(line => `${this.getEventById(line.detail.eventId).description || 'Sin identificar'} (${line.detail.eventId})`)))
+        .join(', ')}.`
+    },
+    getUsers (timeline) {
+      const users = timeline.lines.map(line => line.detail.computer)
+      return this.haveAllUndefinedItems(users)
+        ? ''
+        : `Usuarios hallados: ${Array.from(new Set(users))
+        .join(', ')}.`
+    },
+    haveAllUndefinedItems (events) {
+      return events.every(item => item === undefined)
     }
   }
 }
